@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { buildEventFixture } from './fixtures/event.factory';
 
 test.describe('Form Validation & Duplicate Idempotency Rejection', () => {
   test.beforeEach(async ({ page }) => {
@@ -23,7 +24,8 @@ test.describe('Form Validation & Duplicate Idempotency Rejection', () => {
   });
 
   test('Deve rejeitar evento duplicado com erro de conflito 409 e alerta visual', async ({ page }) => {
-    const duplicateId = `EVT-IDEMP-E2E-${Date.now()}`;
+    const fixture = buildEventFixture({ prefix: 'EVT-IDEMP-E2E' });
+    const duplicateId = fixture.eventId;
 
     // 1st ingestion: should succeed
     await page.fill('input[formControlName="eventId"]', duplicateId);
