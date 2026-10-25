@@ -1,33 +1,37 @@
-<mat-card class="glass-panel form-card">
-  <mat-card-header>
-    <div class="header-icon">
-      <mat-icon>add_circle_outline</mat-icon>
+<div class="premium-card form-card">
+  <div class="form-header">
+    <div class="header-left">
+      <div class="header-icon-box">
+        <mat-icon>add_task</mat-icon>
+      </div>
+      <div class="header-text-block">
+        <h2 class="card-title">Registrar Novo Evento Industrial</h2>
+        <p class="card-subtitle">Ingestão via Inbound Port com validação de idempotência e roteamento de estratégia</p>
+      </div>
     </div>
-    <div class="header-text">
-      <mat-card-title>Novo Evento Industrial</mat-card-title>
-      <mat-card-subtitle>Ingestão e processamento em tempo real</mat-card-subtitle>
-    </div>
-    <span class="spacer"></span>
-    <div class="sample-actions">
-      <button mat-stroked-button type="button" class="btn-sample-prd" (click)="generateSampleEvent('PRODUCTION')">
-        <mat-icon>bolt</mat-icon> Exemplo PRD
-      </button>
-      <button mat-stroked-button type="button" class="btn-sample-qlt" (click)="generateSampleEvent('QUALITY')">
-        <mat-icon>verified</mat-icon> Exemplo QLT
-      </button>
-    </div>
-  </mat-card-header>
 
-  <mat-card-content>
+    <div class="sample-actions">
+      <span class="sample-label">Exemplos Rápidos:</span>
+      <button mat-button type="button" class="btn-sample btn-sample-prd" (click)="generateSampleEvent('PRODUCTION')">
+        <mat-icon>precision_manufacturing</mat-icon> Produção
+      </button>
+      <button mat-button type="button" class="btn-sample btn-sample-qlt" (click)="generateSampleEvent('QUALITY')">
+        <mat-icon>verified_user</mat-icon> Qualidade (Auditado)
+      </button>
+    </div>
+  </div>
+
+  <div class="form-body">
     <form [formGroup]="eventForm" (ngSubmit)="onSubmit()" class="event-form-layout">
-      <div class="form-row">
+      <div class="form-grid">
         <!-- Event ID -->
-        <mat-form-field appearance="outline" class="form-field flex-2">
-          <mat-label>Identificador do Evento (ID Único)</mat-label>
-          <input matInput formControlName="eventId" placeholder="Ex: EVT-1001" required autocomplete="off">
-          <mat-icon matSuffix>fingerprint</mat-icon>
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Identificador Único (eventId)</mat-label>
+          <input matInput formControlName="eventId" placeholder="Ex: EVT-PRD-4091" required autocomplete="off">
+          <mat-icon matSuffix class="field-icon">fingerprint</mat-icon>
+          <mat-hint>Chave de idempotência única na tabela events</mat-hint>
           <mat-error *ngIf="eventForm.get('eventId')?.hasError('required')">
-            O ID do evento é obrigatório.
+            O identificador do evento é obrigatório.
           </mat-error>
           <mat-error *ngIf="eventForm.get('eventId')?.hasError('maxlength')">
             Máximo de 100 caracteres.
@@ -35,50 +39,62 @@
         </mat-form-field>
 
         <!-- Event Type -->
-        <mat-form-field appearance="outline" class="form-field flex-1">
-          <mat-label>Tipo do Evento</mat-label>
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Tipo de Evento (Strategy Pattern)</mat-label>
           <mat-select formControlName="eventType" required>
             <mat-option value="PRODUCTION">
-              <span class="option-production">PRODUCTION</span>
+              <div class="select-option-item">
+                <span class="badge-production">PRODUCTION</span>
+                <span class="option-desc">Processamento operacional</span>
+              </div>
             </mat-option>
             <mat-option value="QUALITY">
-              <span class="option-quality">QUALITY (Auditado)</span>
+              <div class="select-option-item">
+                <span class="badge-quality">QUALITY</span>
+                <span class="option-desc">Auditoria obrigatória (audit_logs)</span>
+              </div>
             </mat-option>
           </mat-select>
+          <mat-hint>Determina o comportamento do processador</mat-hint>
           <mat-error *ngIf="eventForm.get('eventType')?.hasError('required')">
-            Selecione o tipo.
+            Selecione o tipo do evento.
           </mat-error>
         </mat-form-field>
 
         <!-- Timestamp -->
-        <mat-form-field appearance="outline" class="form-field flex-2">
-          <mat-label>Data / Hora (Opcional)</mat-label>
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Data / Hora da Ocorrência</mat-label>
           <input matInput type="datetime-local" formControlName="timestamp">
-          <mat-icon matSuffix>schedule</mat-icon>
-          <mat-hint>Deixe em branco para usar o horário atual do servidor</mat-hint>
+          <mat-icon matSuffix class="field-icon">event</mat-icon>
+          <mat-hint>Opcional: assume horário atual se vazio</mat-hint>
         </mat-form-field>
       </div>
 
       <!-- Description -->
       <mat-form-field appearance="outline" class="form-field full-width">
-        <mat-label>Descrição Operacional</mat-label>
-        <textarea matInput formControlName="description" rows="3" placeholder="Descreva os detalhes da ocorrência na fábrica..." required></textarea>
-        <mat-icon matSuffix>notes</mat-icon>
+        <mat-label>Descrição Técnica do Evento</mat-label>
+        <textarea matInput formControlName="description" rows="2" placeholder="Descreva os dados de telemetria, sensores ou ocorrência industrial..." required></textarea>
+        <mat-icon matSuffix class="field-icon">notes</mat-icon>
         <mat-error *ngIf="eventForm.get('description')?.hasError('required')">
-          A descrição do evento é obrigatória.
+          A descrição da ocorrência é obrigatória.
         </mat-error>
         <mat-error *ngIf="eventForm.get('description')?.hasError('maxlength')">
-          Máximo de 500 caracteres.
+          Máximo de 500 caracteres permitidos.
         </mat-error>
       </mat-form-field>
 
-      <div class="form-actions">
-        <button mat-flat-button color="primary" type="submit" class="submit-btn" [disabled]="isSubmitting">
-          <mat-spinner *ngIf="isSubmitting" diameter="20" class="spinner"></mat-spinner>
-          <mat-icon *ngIf="!isSubmitting">send</mat-icon>
-          <span>{{ isSubmitting ? 'Processando...' : 'Registrar Evento' }}</span>
+      <div class="form-footer">
+        <div class="architecture-note">
+          <mat-icon>info_outline</mat-icon>
+          <span>Eventos do tipo <strong>QUALITY</strong> disparam automaticamente a criação de registro imutável em <code>audit_logs</code>.</span>
+        </div>
+
+        <button mat-flat-button color="primary" type="submit" class="submit-action-btn" [disabled]="isSubmitting">
+          <mat-spinner *ngIf="isSubmitting" diameter="18" class="spinner"></mat-spinner>
+          <mat-icon *ngIf="!isSubmitting">bolt</mat-icon>
+          <span>{{ isSubmitting ? 'Processando Evento...' : 'Processar & Ingerir Evento' }}</span>
         </button>
       </div>
     </form>
-  </mat-card-content>
-</mat-card>
+  </div>
+</div>

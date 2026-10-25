@@ -1,28 +1,64 @@
 <mat-toolbar class="navbar">
-  <div class="brand">
-    <div class="logo-icon">
-      <mat-icon>precision_manufacturing</mat-icon>
-    </div>
-    <div class="brand-text">
-      <span class="title">EventHub</span>
-      <span class="subtitle">Industrial Telemetry & Event Ingestion</span>
-    </div>
-  </div>
+  <div class="nav-inner">
+    <div class="brand">
+      <div class="logo-wrapper">
+        <!-- Inline Animated SVG Logo: Industrial Gear + Telemetry Core -->
+        <svg class="brand-svg" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="brandGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#2563eb" />
+              <stop offset="100%" stop-color="#4f46e5" />
+            </linearGradient>
+            <linearGradient id="corePulse" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#60a5fa" />
+              <stop offset="100%" stop-color="#38bdf8" />
+            </linearGradient>
+          </defs>
+          <!-- Outer Rotating Cog / Tech Ring -->
+          <circle cx="24" cy="24" r="20" stroke="url(#brandGrad)" stroke-width="2.5" stroke-dasharray="8 4" class="svg-ring-outer" />
+          <!-- Inner Hexagon Shape -->
+          <polygon points="24,10 35,17 35,31 24,38 13,31 13,17" fill="url(#brandGrad)" opacity="0.12" />
+          <polygon points="24,10 35,17 35,31 24,38 13,31 13,17" stroke="url(#brandGrad)" stroke-width="1.8" />
+          <!-- Pulsing Central Telemetry Core -->
+          <circle cx="24" cy="24" r="5" fill="url(#corePulse)" class="svg-core-pulse" />
+          <circle cx="24" cy="24" r="8" stroke="#3b82f6" stroke-width="1" opacity="0.6" class="svg-core-halo" />
+        </svg>
+      </div>
 
-  <span class="spacer"></span>
+      <div class="brand-text">
+        <div class="brand-heading">
+          <span class="title">EventHub</span>
+          <span class="edition-badge">ENTERPRISE</span>
+        </div>
+        <span class="subtitle">Industrial Telemetry & Event Ingestion Platform</span>
+      </div>
+    </div>
 
-  <div class="nav-actions">
-    <button mat-button class="action-btn" (click)="openSwagger()">
-      <mat-icon>api</mat-icon>
-      <span>Swagger Docs</span>
-    </button>
-    <button mat-button class="action-btn" (click)="openActuator()">
-      <mat-icon>monitor_heart</mat-icon>
-      <span>Actuator Health</span>
-    </button>
-    <div class="status-indicator">
-      <span class="dot pulse"></span>
-      <span class="label">System Online</span>
+    <span class="spacer"></span>
+
+    <div class="nav-actions">
+      <div class="status-indicator">
+        <span class="status-beacon">
+          <span class="beacon-wave"></span>
+          <span class="beacon-dot"></span>
+        </span>
+        <div class="status-labels">
+          <span class="status-name">HEXAGONAL CORE</span>
+          <span class="status-state">100% OPERACIONAL</span>
+        </div>
+      </div>
+
+      <div class="action-divider"></div>
+
+      <button mat-button class="action-btn" (click)="openSwagger()" matTooltip="Documentação Interativa OpenAPI / Swagger">
+        <mat-icon>api</mat-icon>
+        <span>Swagger API</span>
+      </button>
+
+      <button mat-button class="action-btn" (click)="openActuator()" matTooltip="Métricas e Saúde via Spring Actuator">
+        <mat-icon>monitor_heart</mat-icon>
+        <span>Actuator Health</span>
+      </button>
     </div>
   </div>
 </mat-toolbar>

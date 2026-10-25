@@ -13,10 +13,12 @@ import { MatButtonModule } from '@angular/material/button';
 })
 export class NavbarComponent {
   openSwagger(): void {
-    window.open('http://localhost:8080/swagger-ui.html', '_blank');
+    const host = window.location.hostname || 'localhost';
+    window.open(`http://${host}:8082/swagger-ui.html`, '_blank');
   }
 
   openActuator(): void {
-    window.open('http://localhost:8080/actuator/health', '_blank');
+    const host = window.location.hostname || 'localhost';
+    window.open(`http://${host}:8082/actuator/health`, '_blank');
   }
 }
