@@ -47,20 +47,22 @@ O **EventHub Enterprise** é uma plataforma corporativa de missão crítica proj
 
 ---
 
-## 🖥️ Interface do Usuário & Telemetria em Tempo Real
+## 🖥️ Interface do Usuário & Telemetria em Tempo Real (Executive Design System)
 
-A interface do EventHub foi concebida sob rigorosos padrões visuais corporativos em **Light Mode**, garantindo legibilidade executiva, alta taxa de contraste e feedback instantâneo de processamento.
+A interface do EventHub foi concebida sob rigorosos padrões visuais corporativos modernos, combinando uma barra de navegação executiva de alto contraste com superfícies de dados em **Light Mode**, microinterações responsivas e animações vetoriais inline em SVG:
 
 <p align="center">
   <img src="docs/images/eventhub_dashboard_preview.jpg" alt="EventHub Dashboard Preview" width="100%" />
 </p>
 
 ### Destaques da Experiência do Usuário (UI/UX):
-- **Diagrama Esquemático SVG Animado**: Representação visual do pipeline hexagonal ativo (*IoT Sensors ➔ Inbound Port ➔ Core Strategy ➔ Production & Quality Branches*), proporcionando visibilidade arquitetural em tempo real.
-- **Cartões Executivos de KPI**: Quatro métricas consolidadas em tempo real com contagens auditadas diretamente no banco relacional (*Total Ingerido, Eventos de Produção, Eventos de Qualidade e Taxa de Idempotência 100%*).
-- **Indicador de Live Streaming**: Badge pulsante `SSE REAL-TIME` com conexão Server-Sent Events ativa para inserção instantânea de novas leituras na tabela histórica sem necessidade de recarregar a tela.
-- **Modal de Trilha de Auditoria Regulatória**: Diálogo dedicado para inspecionar registros imutáveis de qualidade com hash UUID, timestamps com precisão de milissegundos e certificação de gravação *Append-Only*.
-- **Ações Rápidas & Upload em Lote**: Botões de preenchimento ágil de protótipos industriais e dropzone/seletor para arquivos de lote (.csv e .json).
+- **Executive Dark Navbar (`#0f172a`)**: Barra de navegação corporativa com logotipo de pulso eletrocardiograma (ECG) animado via SVG inline, abas de acesso rápido (`Dashboard`, `Pipelines`, `Ingestion`, `Logs`, `Settings`, `Admin`), beacon de status `API ONLINE` e botões de ação rápida.
+- **Pipelines Overview (Gauges Circulares SVG)**: Três cartões modulares com indicadores visuais de capacidade e vazão em anel circular SVG inline (`75%`, `90%`, `60%`), diagramas de fluxo em degraus e métricas horárias em tempo real (`1.2M`, `980K`, `1.1M events/hr`).
+- **Diagrama Esquemático Hexagonal SVG**: Representação vetorial viva do pipeline ativo (*IoT Sensors ➔ Inbound Port ➔ Core Strategy ➔ Production & Quality Branches*), com nós reativos e micro-animações de pulso.
+- **Cartões de Telemetria com Curvas Sparkline SVG**: Quatro cartões com gráficos vetoriais inline de tendência histórica, gradientes de preenchimento translúcidos e métricas auditadas (*Disponibilidade 100%, Vazão Total Ingerida, Latência P99 de 18ms e Uptime de 99.99%*).
+- **Formulário Horizontal Industrial**: Ingestão ágil com layout em linha única (`Data Source ID`, `Data Type / Strategy`, `API Endpoint / Descrição`), botões de preenchimento rápido para prototipação e upload integrado de lotes em CSV/JSON.
+- **Tabela Reativa com Indicador `Success (LIVE)`**: Atualização dinâmica orientada a eventos via Server-Sent Events (SSE) com badge pulsante e botão de ação rápida `[Inspect]`.
+- **Modal de Inspeção Regulatória (Compliance Audit Log Inspection)**: Diálogo flutuante elevado com campo de busca em tempo real, filtro por nível de severidade, grid de integridade e tabela imutável de registros com timestamp em milissegundos e certificação *Append-Only*.
 
 ---
 
@@ -190,14 +192,14 @@ O EventHub implementa uma arquitetura em camadas de mitigação baseada no **OWA
 
 ```mermaid
 flowchart TD
-    Req["Requisição HTTP Entrante"] --> F1["1. CorrelationIdFilter\n(Gera/Injeta X-Correlation-Id + MDC Logging)"]
-    F1 --> F2["2. WafFilter\n(Inspeção Line-Rate de URI, Headers, Query & Body)"]
-    F2 -->|Violação Detectada\n(SQLi, XSS, Path Traversal, CmdInjection)| B1["403 Forbidden\nLog Audit com Incident ID"]
-    F2 -->|Aprovado| F3["3. RateLimitingFilter\n(Sliding Window Token Bucket por IP)"]
-    F3 -->|Limite Excedido| B2["429 Too Many Requests\nRetry-After Header"]
-    F3 -->|Aprovado| F4["4. SecurityHeadersFilter\n(CSP, HSTS, X-Frame-Options, NoSniff)"]
-    F4 --> F5["5. Spring Security Filter Chain\n(RBAC, Basic Auth, Stateless Session)"]
-    F5 --> F6["6. FileUploadSecurityValidator\n(Magic Bytes, MIME Type, Extensões Duplas)"]
+    Req["Requisição HTTP Entrante"] --> F1["1. CorrelationIdFilter<br/>(Gera/Injeta X-Correlation-Id + MDC Logging)"]
+    F1 --> F2["2. WafFilter<br/>(Inspeção Line-Rate de URI, Headers, Query & Body)"]
+    F2 -->|"Violação Detectada (SQLi, XSS, Path Traversal, CmdInjection)"| B1["403 Forbidden<br/>Log Audit com Incident ID"]
+    F2 -->|"Tráfego Legítimo"| F3["3. RateLimitingFilter<br/>(Sliding Window Token Bucket por IP)"]
+    F3 -->|"Limite Excedido"| B2["429 Too Many Requests<br/>Retry-After Header"]
+    F3 -->|"Dentro da Cota"| F4["4. SecurityHeadersFilter<br/>(CSP, HSTS, X-Frame-Options, NoSniff)"]
+    F4 --> F5["5. Spring Security Filter Chain<br/>(RBAC, Basic Auth, Stateless Session)"]
+    F5 --> F6["6. FileUploadSecurityValidator<br/>(Magic Bytes, MIME Type, Extensões Duplas)"]
     F6 --> App["Serviços de Domínio / UseCases"]
 ```
 
