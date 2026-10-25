@@ -969,19 +969,32 @@
   }
 }
 
-/* SVG Topology Interactive & Animated Classes */
+/* SVG Topology Interactive & Animated Classes (Zero-Jitter & Stable Hit-Testing) */
 .pipeline-node {
-  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-  cursor: default;
+  cursor: pointer;
+
+  /* Prevent texts, circles, and pulsating effects from interfering with mouse hit-testing */
+  text, circle, path {
+    pointer-events: none;
+  }
+
+  rect {
+    pointer-events: all;
+    transition: stroke-width 0.2s cubic-bezier(0.16, 1, 0.3, 1), filter 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
 
   &:hover {
-    transform: translateY(-2px);
+    rect:first-of-type {
+      stroke-width: 2.6px;
+      filter: drop-shadow(0 8px 24px rgba(15, 23, 42, 0.12));
+    }
   }
 }
 
 .anim-electron-beam {
   stroke-dasharray: 12 24;
   animation: electronBeamMove 1.8s linear infinite;
+  pointer-events: none;
 
   &.beam-delay-1 {
     animation-delay: 0.4s;
@@ -1006,6 +1019,7 @@
 .anim-radar-ping {
   animation: svgRadarPing 2s cubic-bezier(0, 0, 0.2, 1) infinite;
   transform-origin: center;
+  pointer-events: none;
 }
 
 @keyframes svgRadarPing {

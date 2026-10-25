@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 
 test.describe('End-to-End Event Ingestion Flow', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/');
+    await page.goto('/', { waitUntil: 'domcontentloaded' });
     await expect(page.locator('.form-card')).toBeVisible();
     await expect(page.locator('.table-card')).toBeVisible();
   });
