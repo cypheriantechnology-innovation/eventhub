@@ -35,3 +35,9 @@ Thumbs.db
 *.log
 .env
 .env.local
+
+# Test outputs & reports
+test-results/
+playwright-report/
+frontend/test-results/
+frontend/playwright-report/

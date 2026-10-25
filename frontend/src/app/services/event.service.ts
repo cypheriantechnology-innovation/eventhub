@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, Subject } from 'rxjs';
-import { CreateEventRequest, IndustrialEvent, PageResponse } from '../models/event.model';
+import { BatchUploadResponse, CreateEventRequest, EventStats, IndustrialEvent, PageResponse } from '../models/event.model';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +13,10 @@ export class EventService {
 
   public eventCreated$ = this.eventCreatedSource.asObservable();
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private zone: NgZone
+  ) {}
 
   createEvent(request: CreateEventRequest): Observable<IndustrialEvent> {
     return this.http.post<IndustrialEvent>(this.apiUrl, request);
@@ -36,7 +39,40 @@ export class EventService {
     return this.http.get<IndustrialEvent>(`${this.apiUrl}/${eventId}`);
   }
 
-  getEventStats(): Observable<import('../models/event.model').EventStats> {
-    return this.http.get<import('../models/event.model').EventStats>(`${this.apiUrl}/stats`);
+  getEventStats(): Observable<EventStats> {
+    return this.http.get<EventStats>(`${this.apiUrl}/stats`);
+  }
+
+  uploadBatch(file: File): Observable<BatchUploadResponse> {
+    const formData = new FormData();
+    formData.append('file', file, file.name);
+    return this.http.post<BatchUploadResponse>(`${this.apiUrl}/upload`, formData);
+  }
+
+  subscribeToTelemetryStream(): Observable<IndustrialEvent> {
+    return new Observable<IndustrialEvent>(observer => {
+      const eventSource = new EventSource(`${this.apiUrl}/stream`);
+
+      eventSource.addEventListener('EVENT_INGESTED', (event: MessageEvent) => {
+        this.zone.run(() => {
+          try {
+            const data: IndustrialEvent = JSON.parse(event.data);
+            observer.next(data);
+          } catch (err) {
+            console.error('Error parsing SSE event data', err);
+          }
+        });
+      });
+
+      eventSource.onerror = (error) => {
+        this.zone.run(() => {
+          console.warn('SSE connection closed or error, will auto-reconnect', error);
+        });
+      };
+
+      return () => {
+        eventSource.close();
+      };
+    });
   }
 }

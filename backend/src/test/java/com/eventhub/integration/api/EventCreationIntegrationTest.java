@@ -43,6 +43,12 @@ class EventCreationIntegrationTest {
     @MockBean
     private FindEventsUseCase findEventsUseCase;
 
+    @MockBean
+    private com.eventhub.infrastructure.security.upload.FileUploadSecurityValidator fileUploadSecurityValidator;
+
+    @MockBean
+    private com.eventhub.infrastructure.adapters.in.web.stream.EventStreamService eventStreamService;
+
     @Test
     @DisplayName("POST /api/events com payload de produção válido deve retornar 201 Created")
     void shouldReturn201ForValidProductionEvent() throws Exception {

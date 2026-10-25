@@ -27,11 +27,24 @@ public class FindEventsService implements FindEventsUseCase {
                 .orElseThrow(() -> new EventNotFoundException(eventId));
     }
 
+    private record CachedStats(com.eventhub.domain.model.EventStats stats, long timestamp) {}
+    private final java.util.concurrent.atomic.AtomicReference<CachedStats> statsCache = new java.util.concurrent.atomic.AtomicReference<>();
+    private static final long STATS_TTL_MS = 10_000L; // 10 seconds defensive cache
+
     @Override
     public com.eventhub.domain.model.EventStats getStats() {
+        long now = System.currentTimeMillis();
+        CachedStats cached = statsCache.get();
+        if (cached != null && (now - cached.timestamp()) < STATS_TTL_MS) {
+            return cached.stats();
+        }
+
         long total = eventRepositoryPort.countTotal();
         long production = eventRepositoryPort.countByEventType(com.eventhub.domain.model.EventType.PRODUCTION);
         long quality = eventRepositoryPort.countByEventType(com.eventhub.domain.model.EventType.QUALITY);
-        return new com.eventhub.domain.model.EventStats(total, production, quality);
+        com.eventhub.domain.model.EventStats freshStats = new com.eventhub.domain.model.EventStats(total, production, quality);
+
+        statsCache.set(new CachedStats(freshStats, now));
+        return freshStats;
     }
 }

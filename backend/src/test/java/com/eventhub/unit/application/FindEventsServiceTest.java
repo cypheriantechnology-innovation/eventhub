@@ -74,4 +74,26 @@ class FindEventsServiceTest {
                 .isInstanceOf(EventNotFoundException.class)
                 .hasMessageContaining("EVT-9999");
     }
+
+    @Test
+    @DisplayName("getStats deve consultar o repositório e cachear o resultado para chamadas subsequentes")
+    void shouldReturnAndCacheStats() {
+        when(eventRepositoryPort.countTotal()).thenReturn(50L);
+        when(eventRepositoryPort.countByEventType(EventType.PRODUCTION)).thenReturn(35L);
+        when(eventRepositoryPort.countByEventType(EventType.QUALITY)).thenReturn(15L);
+
+        // 1ª chamada: busca no repositório
+        var stats1 = findEventsService.getStats();
+        assertThat(stats1.total()).isEqualTo(50L);
+        assertThat(stats1.production()).isEqualTo(35L);
+        assertThat(stats1.quality()).isEqualTo(15L);
+
+        // 2ª chamada imediata: deve retornar do cache sem chamar repositório novamente
+        var stats2 = findEventsService.getStats();
+        assertThat(stats2).isEqualTo(stats1);
+
+        verify(eventRepositoryPort, org.mockito.Mockito.times(1)).countTotal();
+        verify(eventRepositoryPort, org.mockito.Mockito.times(1)).countByEventType(EventType.PRODUCTION);
+        verify(eventRepositoryPort, org.mockito.Mockito.times(1)).countByEventType(EventType.QUALITY);
+    }
 }

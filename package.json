@@ -1,0 +1,22 @@
+{
+  "name": "eventhub-monorepo",
+  "version": "1.0.0",
+  "description": "EventHub - Industrial Telemetry & Event Ingestion Platform Test Suite",
+  "scripts": {
+    "test:unit": "mvn -f backend/pom.xml test -Dtest=\"com.eventhub.unit.**.*Test\"",
+    "test:integration": "mvn -f backend/pom.xml test -Dtest=\"com.eventhub.security.**.*Test,com.eventhub.integration.**.*Test\"",
+    "test:e2e": "npm --prefix frontend run test:e2e",
+    "test:mutation": "mvn -f backend/pom.xml pitest:mutationCoverage",
+    "test:all": "npm run test:unit && npm run test:integration && npm run test:e2e && npm run test:mutation"
+  },
+  "keywords": [
+    "eventhub",
+    "telemetry",
+    "testing",
+    "playwright",
+    "pitest",
+    "junit5"
+  ],
+  "author": "EventHub Engineering",
+  "license": "UNLICENSED"
+}

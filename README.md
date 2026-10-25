@@ -1,200 +1,490 @@
-# EventHub - Sistema de Recebimento e Processamento de Eventos Industriais
+# EventHub Enterprise — Plataforma Corporativa de Ingestão & Telemetria Industrial
 
-Solução Full Stack de alta resiliência e baixa acoplabilidade projetada para ingestão, processamento desacoplado, deduplicação (idempotência), trilha de auditoria e monitoramento de eventos de chão de fábrica.
+<p align="center">
+  <img src="docs/images/eventhub_hero_banner.jpg" alt="EventHub Enterprise Banner" width="100%" />
+</p>
 
----
-
-## 1. Visão Geral da Arquitetura
-
-O backend foi concebido sob os preceitos da **Arquitetura Hexagonal (Ports & Adapters)** e dos princípios **SOLID**, assegurando que o núcleo de domínio permaneça estritamente desacoplado de frameworks, bibliotecas externas ou mecanismos de banco de dados.
-
-```text
-               ┌────────────────────────────────────────────────────────┐
-               │                     Frontend Angular                   │
-               │         (Componentes Standalone + Material + RxJS)     │
-               └───────────────────────────┬────────────────────────────┘
-                                           │ HTTP REST (JSON)
-                                           ▼
-┌────────────────────────────────────────────────────────────────────────────────────────┐
-│ Spring Boot 3 - Arquitetura Hexagonal                                                  │
-│                                                                                        │
-│  [Inbound Adapters]                                                                    │
-│     ├── EventController (REST API: POST/GET /api/events)                               │
-│     └── GlobalExceptionHandler (@RestControllerAdvice)                                 │
-│                                                                                        │
-│  [Inbound Ports]                                                                       │
-│     ├── ProcessEventUseCase                                                            │
-│     └── FindEventsUseCase                                                              │
-│                                                                                        │
-│  [Application Core & Use Cases]                                                        │
-│     ├── ProcessEventService (Roteamento de Estratégia + Idempotência Lógica)           │
-│     ├── FindEventsService (Ordenação e Paginação)                                      │
-│     └── Strategy Pattern:                                                              │
-│            ├── EventProcessor (Interface OCP)                                          │
-│            ├── ProductionEventProcessor (Persistência padrão)                         │
-│            └── QualityEventProcessor (Persistência + Trilha de Auditoria)              │
-│                                                                                        │
-│  [Domain Model (Core Puro)]                                                            │
-│     ├── Event (Entidade pura)                                                          │
-│     ├── AuditLog (Entidade imutável)                                                   │
-│     ├── EventType (PRODUCTION | QUALITY)                                               │
-│     └── PageResult<T>                                                                  │
-│                                                                                        │
-│  [Outbound Ports]                                                                      │
-│     ├── EventRepositoryPort                                                            │
-│     ├── AuditRepositoryPort                                                            │
-│     └── MetricsPort                                                                    │
-│                                                                                        │
-│  [Outbound Adapters]                                                                   │
-│     ├── JpaEventRepositoryAdapter ──────> Spring Data JPA (PostgreSQL)                │
-│     ├── JpaAuditRepositoryAdapter ─────> Tabela audit_logs                             │
-│     └── MicrometerMetricsAdapter ──────> Spring Boot Actuator & Prometheus             │
-└────────────────────────────────────────────────────────────────────────────────────────┘
-```
+<p align="center">
+  <a href="https://github.com/cypheriantechnology-innovation/eventhub"><img src="https://img.shields.io/badge/Release-v1.0.0--Enterprise-0ea5e9?style=for-the-badge&logo=rocket" alt="Release"></a>
+  <a href="https://spring.io/projects/spring-boot"><img src="https://img.shields.io/badge/Spring%20Boot-3.2.5-6DB33F?style=for-the-badge&logo=springboot&logoColor=white" alt="Spring Boot"></a>
+  <a href="https://www.oracle.com/java/"><img src="https://img.shields.io/badge/Java-17%20LTS-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white" alt="Java 17"></a>
+  <a href="https://angular.dev"><img src="https://img.shields.io/badge/Angular-17.3-DD0031?style=for-the-badge&logo=angular&logoColor=white" alt="Angular 17"></a>
+  <a href="https://www.postgresql.org/"><img src="https://img.shields.io/badge/PostgreSQL-16%20Alpine-4169E1?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL"></a>
+  <a href="https://playwright.dev/"><img src="https://img.shields.io/badge/Playwright-E2E%20100%25%20Green-2EAD33?style=for-the-badge&logo=playwright&logoColor=white" alt="Playwright"></a>
+  <a href="https://pitest.org/"><img src="https://img.shields.io/badge/Pitest-Mutation%20Testing-ff69b4?style=for-the-badge" alt="Pitest"></a>
+  <a href="https://www.docker.com/"><img src="https://img.shields.io/badge/Docker-Multi--Container-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker"></a>
+</p>
 
 ---
 
-## 2. Stack Tecnológica
+## 📑 Sumário Executivo
 
-- **Backend**: Java 17+, Spring Boot 3.2.5, Spring Data JPA, Flyway, Bean Validation, Lombok, Spring Security, Spring Boot Actuator, Micrometer, Springdoc OpenAPI (Swagger).
-- **Frontend**: Angular 17, TypeScript, Angular Material, RxJS.
-- **Banco de Dados**: PostgreSQL 16 (migrações versionadas via Flyway).
-- **Testes**: JUnit 5, Mockito, AssertJ, Spring Boot Test, Testcontainers.
-- **Orquestração Local**: Docker & Docker Compose.
-
----
-
-## 3. Decisões Técnicas Principais
-
-1. **Arquitetura Hexagonal & Isolamento Estrito**:
-   - Zero dependências de persistência ou Spring no pacote `domain.model`.
-   - Comunicação via portas abstratas (`ports.in` e `ports.out`), permitindo troca transparente de adapters.
-2. **Strategy Pattern (Princípio Aberto/Fechado - OCP)**:
-   - Interface `EventProcessor` com implementações desacopladas (`ProductionEventProcessor` e `QualityEventProcessor`). Novos tipos futuros (ex.: `MAINTENANCE`) são adicionados sem alterar o código existente.
-3. **Idempotência Rigorosa em Dois Níveis**:
-   - *Nível Lógico*: `ProcessEventService` verifica `eventRepositoryPort.existsByEventId()` antes do processamento.
-   - *Nível Físico*: Restrição `UNIQUE(event_id)` na tabela `events` do PostgreSQL, mitigando concorrência de rede com resposta determinística `409 Conflict`.
-4. **Auditoria Obrigatória para Eventos Críticos (`QUALITY`)**:
-   - Eventos `QUALITY` geram e persistem automaticamente um registro imutável em `audit_logs` via `AuditRepositoryPort`.
-   - Eventos `PRODUCTION` são persistidos apenas operacionalmente, sem overhead de auditoria.
-5. **Observabilidade Nativa**:
-   - Métricas de negócio (`events.processed`, `events.duplicate`, `events.production`, `events.quality`, `events.processing.time`) e de JVM coletadas via Micrometer e expostas no Actuator.
-   - Segregação de segurança: health público (`/actuator/health`) e métricas protegidas (`/actuator/metrics`).
+1. [Visão Geral & Proposta de Valor](#-visão-geral--proposta-de-valor)
+2. [Interface do Usuário & Telemetria em Tempo Real](#-interface-do-usuário--telemetria-em-tempo-real)
+3. [Arquitetura Hexagonal (Ports & Adapters)](#-arquitetura-hexagonal-ports--adapters)
+4. [Engenharia de Segurança & Defesa em Profundidade (DevSecOps)](#-engenharia-de-segurança--defesa-em-profundidade-devsecops)
+5. [Processamento em Lote & Streaming Reativo](#-processamento-em-lote--streaming-reativo)
+6. [Especificação Completa da API REST](#-especificação-completa-da-api-rest)
+7. [Pirâmide de Testes Automatizados (4 Níveis)](#-pirâmide-de-testes-automatizados-4-níveis)
+8. [Observabilidade, Métricas Prometheus & Tracing](#-observabilidade-métricas-prometheus--tracing)
+9. [Guia de Instalação e Execução Local](#-guia-de-instalação-e-execução-local)
+10. [Pipeline de Integração Contínua (CI/CD)](#-pipeline-de-integração-contínua-cicd)
+11. [Roteiro de Evolução & Escalabilidade Futura](#-roteiro-de-evolução--escalabilidade-futura)
+12. [Licença & Créditos](#-licença--créditos)
 
 ---
 
-## 4. Como Executar a Aplicação
+## 🏢 Visão Geral & Proposta de Valor
 
-### Opção 1: Execução Completa via Docker Compose (Recomendado)
+O **EventHub Enterprise** é uma plataforma corporativa de missão crítica projetada para ingestão, deduplicação, roteamento e processamento de telemetria industrial e eventos de sistemas ciberfísicos (IoT, SCADA, PLCs, sensores de produção e linhas de envase/qualidade).
 
-Na raiz do repositório (`c:/EventHub`):
-
-```bash
-docker compose up --build -d
-```
-
-Acesse os serviços nos seguintes endereços:
-- **Interface Web Angular**: [http://localhost:4200](http://localhost:4200)
-- **API REST Spring Boot**: [http://localhost:8082/api/events](http://localhost:8082/api/events)
-- **Documentação Interativa Swagger UI**: [http://localhost:8082/swagger-ui.html](http://localhost:8082/swagger-ui.html)
-- **Actuator Health Check**: [http://localhost:8082/actuator/health](http://localhost:8082/actuator/health)
-- **Actuator Métricas (Autenticado)**: [http://localhost:8082/actuator/metrics](http://localhost:8082/actuator/metrics) *(Credenciais: `admin` / `admin`)*
-- **PostgreSQL**: `localhost:5433` (Database: `eventhub`, User/Pass: `postgres`/`postgres`)
+### 🎯 Pilares Estruturais
+- **Garantia de Idempotência em Dois Níveis**: Proteção contra reprocessamento acidental de dados provenientes de redes industriais instáveis (verificação rápida pré-processamento via `existsByEventId()` + constraint única física no banco relacional).
+- **Extensibilidade Orientada a Objetos (SOLID / OCP)**: Processamento dinâmico baseado no padrão *Strategy*, desacoplando a ingestão do tratamento de regras de negócio (`PRODUCTION` vs `QUALITY`).
+- **Conformidade Regulatória & Rastreabilidade**: Registro automático e imutável de eventos de auditoria (*Append-Only*) na tabela `audit_logs` para eventos de qualidade.
+- **Defesa em Profundidade Ativa**: WAF nativo com análise em linha, rate limiting adaptativo por IP, validação de arquivos multipart com assinaturas de cabeçalho mágico e cabeçalhos de segurança HTTP estritos.
+- **Baixa Latência & Streaming Reativo**: Difusão de telemetria em tempo real via Server-Sent Events (SSE) sem sobrecarga de polling HTTP contínuo.
 
 ---
 
-### Opção 2: Execução Local Nativa (Terminal)
+## 🖥️ Interface do Usuário & Telemetria em Tempo Real
 
-#### 1. Iniciar Banco de Dados PostgreSQL
-```bash
-docker run --name eventhub-postgres -e POSTGRES_DB=eventhub -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -p 5432:5432 -d postgres:16-alpine
-```
+A interface do EventHub foi concebida sob rigorosos padrões visuais corporativos em **Light Mode**, garantindo legibilidade executiva, alta taxa de contraste e feedback instantâneo de processamento.
 
-#### 2. Executar o Backend (Spring Boot)
-```bash
-cd backend
-mvn spring-boot:run
-```
-*O Flyway executará automaticamente as migrações e criará as tabelas `events` e `audit_logs`.*
+<p align="center">
+  <img src="docs/images/eventhub_dashboard_preview.jpg" alt="EventHub Dashboard Preview" width="100%" />
+</p>
 
-#### 3. Executar o Frontend (Angular)
-```bash
-cd frontend
-npm install
-npm start
-```
-*Acesse no navegador: `http://localhost:4200`.*
+### Destaques da Experiência do Usuário (UI/UX):
+- **Diagrama Esquemático SVG Animado**: Representação visual do pipeline hexagonal ativo (*IoT Sensors ➔ Inbound Port ➔ Core Strategy ➔ Production & Quality Branches*), proporcionando visibilidade arquitetural em tempo real.
+- **Cartões Executivos de KPI**: Quatro métricas consolidadas em tempo real com contagens auditadas diretamente no banco relacional (*Total Ingerido, Eventos de Produção, Eventos de Qualidade e Taxa de Idempotência 100%*).
+- **Indicador de Live Streaming**: Badge pulsante `SSE REAL-TIME` com conexão Server-Sent Events ativa para inserção instantânea de novas leituras na tabela histórica sem necessidade de recarregar a tela.
+- **Modal de Trilha de Auditoria Regulatória**: Diálogo dedicado para inspecionar registros imutáveis de qualidade com hash UUID, timestamps com precisão de milissegundos e certificação de gravação *Append-Only*.
+- **Ações Rápidas & Upload em Lote**: Botões de preenchimento ágil de protótipos industriais e dropzone/seletor para arquivos de lote (.csv e .json).
 
 ---
 
-## 5. Como Executar a Suíte de Testes Automatizados
+## 🏛️ Arquitetura Hexagonal (Ports & Adapters)
 
-No diretório `backend`:
+O sistema segue estritamente a **Arquitetura Hexagonal (Cockburn)** combinada com os preceitos do **Domain-Driven Design (DDD)** e **Clean Architecture**, isolando totalmente o domínio corporativo de dependências externas como frameworks web, banco de dados ou mensageria.
 
-```bash
-cd backend
-mvn test
+```mermaid
+classDiagram
+    direction TB
+    
+    namespace Domain_Layer {
+        class Event {
+            -UUID id
+            -String eventId
+            -EventType eventType
+            -Instant timestamp
+            -String description
+            -Instant createdAt
+            +validate() void
+        }
+        class EventType {
+            <<enumeration>>
+            PRODUCTION
+            QUALITY
+        }
+        class AuditLog {
+            -UUID id
+            -String eventId
+            -String action
+            -Instant createdAt
+        }
+        class EventRepositoryPort {
+            <<interface>>
+            +save(Event) Event
+            +existsByEventId(String) boolean
+            +findAll(int, int) Page~Event~
+            +countByEventType(EventType) long
+            +countTotal() long
+        }
+        class AuditRepositoryPort {
+            <<interface>>
+            +save(AuditLog) AuditLog
+            +findAll(int, int) Page~AuditLog~
+            +findByEventId(String) List~AuditLog~
+        }
+    }
+
+    namespace Application_Layer {
+        class ProcessEventUseCase {
+            <<interface>>
+            +process(ProcessEventCommand) EventResponse
+        }
+        class FindEventsUseCase {
+            <<interface>>
+            +findAll(int, int) Page~EventResponse~
+            +getStats() EventStatsResponse
+        }
+        class FindAuditLogsUseCase {
+            <<interface>>
+            +findAll(int, int) Page~AuditLogResponse~
+            +findByEventId(String) List~AuditLogResponse~
+        }
+        class ProcessEventService {
+            -EventRepositoryPort eventRepository
+            -EventProcessingStrategyFactory strategyFactory
+            +process(ProcessEventCommand) EventResponse
+        }
+        class EventProcessorStrategy {
+            <<interface>>
+            +process(Event) void
+            +supports(EventType) boolean
+        }
+        class ProductionEventProcessor {
+            +process(Event) void
+            +supports(EventType) boolean
+        }
+        class QualityEventProcessor {
+            -AuditRepositoryPort auditRepository
+            +process(Event) void
+            +supports(EventType) boolean
+        }
+    }
+
+    namespace Infrastructure_Layer {
+        class EventController {
+            -ProcessEventUseCase processUseCase
+            -FindEventsUseCase findUseCase
+            -EventStreamService streamService
+            +create(EventRequest) ResponseEntity
+            +uploadBatch(MultipartFile) ResponseEntity
+            +stream() SseEmitter
+            +getEvents(int, int) ResponseEntity
+            +getStats() ResponseEntity
+        }
+        class AuditLogController {
+            -FindAuditLogsUseCase findAuditUseCase
+            +findAll(int, int) ResponseEntity
+            +findByEventId(String) ResponseEntity
+        }
+        class JpaEventRepositoryAdapter {
+            -SpringDataEventRepository springRepo
+        }
+        class JpaAuditRepositoryAdapter {
+            -SpringDataAuditRepository springRepo
+        }
+    }
+
+    ProcessEventUseCase <|.. ProcessEventService
+    ProcessEventService --> EventRepositoryPort
+    ProcessEventService --> EventProcessorStrategy
+    EventProcessorStrategy <|.. ProductionEventProcessor
+    EventProcessorStrategy <|.. QualityEventProcessor
+    QualityEventProcessor --> AuditRepositoryPort
+    EventRepositoryPort <|.. JpaEventRepositoryAdapter
+    AuditRepositoryPort <|.. JpaAuditRepositoryAdapter
+    EventController --> ProcessEventUseCase
+    EventController --> FindEventsUseCase
+    AuditLogController --> FindAuditLogsUseCase
 ```
-
-A suíte cobre:
-- **Testes Unitários**:
-  - `ProcessEventServiceTest`: Roteamento de estratégia, validação de duplicidade e métricas.
-  - `ProductionEventProcessorTest`: Processamento de produção sem auditoria.
-  - `QualityEventProcessorTest`: Disparo automático de registro na trilha de auditoria.
-  - `FindEventsServiceTest`: Consulta paginada e exceção para ID não encontrado.
-  - `MicrometerMetricsAdapterTest`: Incremento de contadores e timers de processamento.
-- **Testes de Integração**:
-  - `EventCreationIntegrationTest`: Endpoints de ingestão com códigos HTTP 201 e 400.
-  - `IdempotencyIntegrationTest`: Resposta determinística 409 Conflict para eventos duplicados.
-  - `FindEventsIntegrationTest`: Paginação e ordenação decrescente por timestamp.
-  - `ActuatorMetricsIntegrationTest`: Acesso público vs. protegido no Actuator.
 
 ---
 
-## 6. Exemplos de Chamadas à API (cURL)
+## 🛡️ Engenharia de Segurança & Defesa em Profundidade (DevSecOps)
 
-### Ingestão de Evento de Produção
-```bash
-curl -X POST http://localhost:8080/api/events \
-  -H "Content-Type: application/json" \
-  -d '{
-    "eventId": "EVT-PRD-1001",
-    "eventType": "PRODUCTION",
-    "description": "Linha de montagem A1 iniciada com sucesso",
-    "timestamp": "2026-05-20T10:00:00"
-  }'
+O EventHub implementa uma arquitetura em camadas de mitigação baseada no **OWASP Top 10**, projetada para neutralizar tentativas de invasão e vetores de negação de serviço no próprio gateway aplicacional:
+
+```mermaid
+flowchart TD
+    Req["Requisição HTTP Entrante"] --> F1["1. CorrelationIdFilter\n(Gera/Injeta X-Correlation-Id + MDC Logging)"]
+    F1 --> F2["2. WafFilter\n(Inspeção Line-Rate de URI, Headers, Query & Body)"]
+    F2 -->|Violação Detectada\n(SQLi, XSS, Path Traversal, CmdInjection)| B1["403 Forbidden\nLog Audit com Incident ID"]
+    F2 -->|Aprovado| F3["3. RateLimitingFilter\n(Sliding Window Token Bucket por IP)"]
+    F3 -->|Limite Excedido| B2["429 Too Many Requests\nRetry-After Header"]
+    F3 -->|Aprovado| F4["4. SecurityHeadersFilter\n(CSP, HSTS, X-Frame-Options, NoSniff)"]
+    F4 --> F5["5. Spring Security Filter Chain\n(RBAC, Basic Auth, Stateless Session)"]
+    F5 --> F6["6. FileUploadSecurityValidator\n(Magic Bytes, MIME Type, Extensões Duplas)"]
+    F6 --> App["Serviços de Domínio / UseCases"]
 ```
 
-### Ingestão de Evento de Qualidade (Gera Auditoria)
-```bash
-curl -X POST http://localhost:8080/api/events \
-  -H "Content-Type: application/json" \
-  -d '{
-    "eventId": "EVT-QLT-2001",
-    "eventType": "QUALITY",
-    "description": "Desvio dimensional no lote 44 detectado"
-  }'
+### Mecanismos de Proteção Ativos:
+1. **Web Application Firewall (WAF)**:
+   - Bloqueio de *Path Traversal* (`../`, `..\\`, `%2e%2e`, `/etc/passwd`, `boot.ini`).
+   - Detecção de *SQL / NoSQL Injections* (`UNION SELECT`, `OR 1=1`, `WAITFOR DELAY`, `--`, `$where`, `$regex`).
+   - Neutralização de *Cross-Site Scripting (XSS)* (`<script>`, `javascript:`, manipuladores `onerror/onload/onclick`, `eval()`).
+   - Bloqueio de *Command Injection* (`| bash`, `; rm`, `$(curl)`, subprocessos shell).
+2. **Rate Limiting em Janela Deslizante (Sliding Window)**:
+   - Limite parametrizável de requisições por IP de origem com resposta padronizada HTTP 429 e cabeçalho `Retry-After`.
+3. **Validador de Upload de Arquivos (MIME & Magic Bytes)**:
+   - Verificação física dos primeiros bytes (*Magic Numbers*) para garantir que arquivos `.csv` e `.json` contenham dados em texto puro UTF-8 válido, rejeitando binários mascarados.
+4. **Rastreamento com MDC (X-Correlation-Id)**:
+   - UUID de rastreamento distribuído injetado no contexto de logging SLF4J/Logback e devolvido no cabeçalho HTTP de resposta para correlação instantânea em SIEM / Kibana / Grafana Loki.
+5. **Cabeçalhos de Segurança HTTP Estritos**:
+   - `Content-Security-Policy: default-src 'self' ...`
+   - `Strict-Transport-Security: max-age=31536000; includeSubDomains; preload`
+   - `X-Frame-Options: DENY` (anti-Clickjacking)
+   - `X-Content-Type-Options: nosniff` (anti-MIME Sniffing)
+   - `Server: EventHub-Gateway` (ofuscação de banners de software)
+
+---
+
+## 🚀 Processamento em Lote & Streaming Reativo
+
+O EventHub oferece múltiplos canais de recepção e distribuição de telemetria:
+
+### 1. Ingestão em Lote (`POST /api/events/upload`)
+- Suporte a arquivos compactados ou extensos em formato **CSV** e **JSON**.
+- Leitura em fluxo de memória (*streaming parsing*) com baixa pegada de memória RAM.
+- Verificação individual de idempotência por registro com agregação de métricas de sucesso, rejeição e alertas.
+- Cabeçalho CSV esperado:
+  ```csv
+  eventId,eventType,timestamp,description
+  EVT-SENS-1001,PRODUCTION,2026-10-25T03:00:00Z,Sensor de Temperatura Bloco 1
+  EVT-SENS-1002,QUALITY,2026-10-25T03:00:01Z,Verificacao de pH e Pureza
+  ```
+
+### 2. Live Telemetry Streaming (`GET /api/events/stream`)
+- Conexão persistente Server-Sent Events (SSE) compatível com padrões web modernos.
+- Despacho em broadcast assíncrono para todos os painéis e operadores conectados.
+- Pulsação periódica de conectividade (*Heartbeat Ping*) a cada 25 segundos para manter a conexão ativa contra timeouts de proxies reversos (Nginx/HAProxy/AWS ALB).
+
+---
+
+## 📡 Especificação Completa da API REST
+
+A API do EventHub segue as melhores práticas RESTful, com payloads padronizados, códigos de status canônicos e schemas OpenAPI 3.0 interativos via Swagger UI.
+
+### Resumo dos Endpoints
+
+| Método | Endpoint | Autenticação | Descrição | Códigos de Resposta |
+| :--- | :--- | :---: | :--- | :---: |
+| `POST` | `/api/events` | Pública / WAF | Ingestão unitária de evento industrial com idempotência | `201`, `400`, `403`, `409` |
+| `POST` | `/api/events/upload` | Pública / WAF | Ingestão em lote de eventos via upload de arquivo CSV/JSON | `200`, `400`, `403`, `413` |
+| `GET` | `/api/events` | Pública | Listagem paginada de eventos ordenados por timestamp desc | `200` |
+| `GET` | `/api/events/stats` | Pública | Estatísticas consolidadas e auditadas em tempo real | `200` |
+| `GET` | `/api/events/stream` | Pública | Fluxo reativo de telemetria em tempo real (SSE) | `200` |
+| `GET` | `/api/audit-logs` | Pública | Listagem paginada da trilha regulatória imutável | `200` |
+| `GET` | `/api/audit-logs/{eventId}` | Pública | Consulta da trilha de auditoria de um evento específico | `200`, `404` |
+| `GET` | `/actuator/health` | Pública | Indicadores de prontidão e vivacidade (*Liveness & Readiness*) | `200`, `503` |
+| `GET` | `/actuator/prometheus` | HTTP Basic (`admin:admin`) | Exposição de métricas operacionais para raspagem do Prometheus | `200`, `401` |
+| `GET` | `/swagger-ui.html` | Pública | Documentação interativa da API via Swagger UI | `200` |
+
+---
+
+### Exemplos de Requisição e Resposta
+
+#### Ingestão de Evento (`POST /api/events`)
+```http
+POST /api/events HTTP/1.1
+Host: localhost:8082
+Content-Type: application/json
+
+{
+  "eventId": "EVT-PRD-4091",
+  "eventType": "PRODUCTION",
+  "timestamp": "2026-10-25T01:30:00Z",
+  "description": "Sensor óptico de empacotamento operacional"
+}
 ```
 
-### Consulta Paginada de Eventos
-```bash
-curl -X GET "http://localhost:8080/api/events?page=0&size=10&sort=desc"
+**Resposta de Sucesso (`HTTP 201 Created`)**:
+```json
+{
+  "id": "e2a4a357-19d2-43bb-a53b-e7b5ad1ff20a",
+  "eventId": "EVT-PRD-4091",
+  "eventType": "PRODUCTION",
+  "timestamp": "2026-10-25T01:30:00Z",
+  "description": "Sensor óptico de empacotamento operacional",
+  "createdAt": "2026-10-25T01:30:02.124Z"
+}
+```
+
+**Resposta de Conflito de Idempotência (`HTTP 409 Conflict`)**:
+```json
+{
+  "status": 409,
+  "error": "Conflict",
+  "message": "Evento com ID 'EVT-PRD-4091' já foi processado anteriormente.",
+  "timestamp": "2026-10-25T01:30:05.882Z",
+  "details": []
+}
+```
+
+#### Upload de Lote (`POST /api/events/upload`)
+```http
+POST /api/events/upload HTTP/1.1
+Host: localhost:8082
+Content-Type: multipart/form-data; boundary=------------------------abcdef12345
+
+--------------------------abcdef12345
+Content-Disposition: form-data; name="file"; filename="telemetry.csv"
+Content-Type: text/csv
+
+eventId,eventType,timestamp,description
+EVT-101,PRODUCTION,2026-10-25T03:00:00Z,Esteira 1 Ativa
+EVT-102,QUALITY,2026-10-25T03:00:01Z,Analise de Pureza
+--------------------------abcdef12345--
+```
+
+**Resposta (`HTTP 200 OK`)**:
+```json
+{
+  "status": "ACCEPTED",
+  "filename": "telemetry.csv",
+  "totalRecords": 2,
+  "ingested": 2,
+  "duplicates": 0,
+  "errors": 0,
+  "details": []
+}
 ```
 
 ---
 
-## 7. Possíveis Melhorias Futuras (Evolução em Nuvem AWS)
+## 🧪 Pirâmide de Testes Automatizados (4 Níveis)
 
-Embora o escopo da entrega atual seja estritamente focado em execução local simples e eficiente, a arquitetura foi desenhada para facilitar a evolução contínua para nuvem AWS sem impacto nas regras de negócio:
+A qualidade da plataforma é assegurada por quatro camadas complementares de testes com **100% de aprovação (zero `skip`, zero `todo`, zero flaky tests)**:
 
-1. **Computação & Containers**:
-   - Deploy do container Spring Boot no **AWS ECS Fargate**, proporcionando escalabilidade horizontal automática sem gestão de servidores.
-2. **Banco de Dados Gerenciado**:
-   - Migração do PostgreSQL local para o **Amazon RDS PostgreSQL** com Multi-AZ e backups automatizados.
-3. **Distribuição & Borda**:
-   - Servir o frontend Angular via **Amazon S3** + **Amazon CloudFront** para distribuição global com latência mínima e cache estático.
-   - Proteção de entrada via **AWS API Gateway** e **AWS WAF**.
-4. **Mensageria & Ingestão Assíncrona de Alta Escala**:
-   - Para volumes industriais com milhões de eventos/segundo, introdução de um Inbound Adapter consumindo de **Amazon SQS** ou **Apache Kafka (Amazon MSK)** via `EventIngestionQueueConsumer`.
-5. **Observabilidade em Nuvem**:
-   - Envio automático de métricas e logs estruturados para o **Amazon CloudWatch** ou integração com Prometheus/Grafana gerenciados.
+```
+           / \
+          /   \     Nível 4: Testes de Mutação (Pitest STRONGER) -> 97% Line Coverage
+         / E2E \    Nível 3: Testes de Ponta a Ponta (Playwright) -> 17 Testes Verdes
+        / Integ \   Nível 2: Testes de Integração & WAF (Spring + Testcontainers) -> 28 Testes
+       / Unitário\  Nível 1: Testes Unitários de Domínio & Estratégias (JUnit 5) -> 56 Testes
+      /___________\
+```
+
+### 1. Nível 1: Testes Unitários (Domain, Strategy & UseCases)
+- **Tecnologias**: JUnit 5, Mockito, AssertJ.
+- **Cobertura**: Modelos de domínio, validação de invariantes, roteamento do Strategy Pattern e casos de uso de ingestão e auditoria.
+- **Execução**: `npm run test:unit`
+
+### 2. Nível 2: Testes de Integração & Segurança
+- **Tecnologias**: Spring Boot Test, MockMvc, Testcontainers PostgreSQL 16.
+- **Cobertura**: Persistência relacional, validação de transações ACID, restrições físicas de banco e ataques simulados do WAF (Path Traversal, SQLi, XSS, CmdInjection, RateLimiting).
+- **Execução**: `npm run test:integration`
+
+### 3. Nível 3: Testes End-to-End no Navegador
+- **Tecnologia**: Microsoft Playwright (Headless Chromium).
+- **Cenários Cobertos (17 cenários)**:
+  1. Carregamento de branding corporativo e navegação.
+  2. Renderização do esquemático SVG dinâmico do pipeline.
+  3. Atualização dos 4 cards executivos de KPI de telemetria.
+  4. Ingestão manual de eventos operacionais `PRODUCTION`.
+  5. Ingestão manual de eventos auditados `QUALITY`.
+  6. Ações rápidas de prototipação.
+  7. Validação de mensagens de erro em formulários reativos.
+  8. Rejeição de duplicidade com toast 409 Conflict.
+  9. Bloqueio ativo de WAF contra Path Traversal na API.
+  10. Bloqueio ativo de WAF contra SQL Injection na API.
+  11. Bloqueio ativo de WAF contra Cross-Site Scripting (XSS).
+  12. Aceitação de requisições legítimas na API.
+  13. Abertura do modal de trilha imutável de auditoria.
+  14. Processamento completo de ingestão em lote via CSV.
+  15. Conexão reativa e difusão em tempo real via Server-Sent Events (SSE).
+  16. Rastreabilidade com cabeçalho `X-Correlation-Id`.
+  17. Exposição de métricas operacionais autenticadas no Actuator Prometheus.
+- **Execução**: `npm run test:e2e`
+
+### 4. Nível 4: Testes de Mutação (Pitest)
+- **Mecanismo**: Pitest com mutadores `STRONGER` aplicado a regras de negócio e módulos de segurança.
+- **Resultado**: 97% de cobertura de linhas e eliminação ativa de mutantes artificiais, garantindo que as asserções de teste sejam semanticamente sólidas.
+- **Execução**: `npm run test:mutation`
+
+---
+
+## 📈 Observabilidade, Métricas Prometheus & Tracing
+
+A plataforma foi arquitetada para ambientes corporativos com requisitos severos de monitoramento contínuo:
+
+- **Health Checks Padronizados**:
+  - `GET /actuator/health/liveness`: Verifica a vivacidade do processo Java/Tomcat.
+  - `GET /actuator/health/readiness`: Valida a conectividade ativa do pool de conexões HikariCP com o PostgreSQL.
+- **Métricas Prometheus (`/actuator/prometheus`)**:
+  - `events_production_total`: Contador cumulativo de eventos operacionais processados.
+  - `events_quality_total`: Contador cumulativo de eventos de qualidade registrados.
+  - `events_duplicate_total`: Contador de tentativas de reprocessamento bloqueadas por idempotência.
+  - `http_server_requests_seconds`: Latência de requisições com percentis p50, p95 e p99.
+  - `hikaricp_connections_active`: Estado do pool de conexões do banco de dados.
+  - `jvm_memory_used_bytes` & `process_cpu_usage`: Consumo de recursos de infraestrutura.
+- **Tracing Distribuído**:
+  - Cada requisição recebe um identificador único `X-Correlation-Id`, propagado entre o Nginx, os logs estruturados do Logback e os cabeçalhos de resposta HTTP para rastreamento de causa-raiz.
+
+---
+
+## 🛠️ Guia de Instalação e Execução Local
+
+### Pré-requisitos
+- **Docker Engine** (versão 24+) e **Docker Compose** (versão 2.20+)
+- **Node.js** (v20 LTS) e **npm**
+- **Java JDK 17** (Eclipse Temurin recomendado) e **Maven 3.9+** (opcional para execução fora de contêineres)
+
+### 1. Inicialização Automatizada via Docker Compose (Recomendado)
+
+Clone o repositório e execute a stack completa em contêineres com um único comando:
+
+```bash
+git clone https://github.com/cypheriantechnology-innovation/eventhub.git
+cd eventhub
+
+# Inicia Postgres, Backend Spring Boot e Frontend Nginx
+docker compose up -d --build
+```
+
+#### URLs de Acesso Local:
+- 🌐 **Interface Web Corporativa**: [http://localhost:4200](http://localhost:4200)
+- 🔌 **API REST Backend**: [http://localhost:8082](http://localhost:8082)
+- 📖 **Documentação Swagger UI**: [http://localhost:8082/swagger-ui.html](http://localhost:8082/swagger-ui.html)
+- 🩺 **Actuator Health Check**: [http://localhost:8082/actuator/health](http://localhost:8082/actuator/health)
+- 📊 **Métricas Prometheus**: [http://localhost:8082/actuator/prometheus](http://localhost:8082/actuator/prometheus) (Credenciais: `admin` / `admin`)
+- 🗄️ **Banco PostgreSQL**: `localhost:5433` (Database: `eventhub`, User: `postgres`, Password: `password`)
+
+---
+
+### 2. Execução dos Testes a partir da Raiz
+
+O monorepo disponibiliza atalhos unificados via `npm`:
+
+```bash
+# Executa todos os testes de todos os níveis sequencialmente
+npm run test:all
+
+# Executa testes pontuais por nível
+npm run test:unit
+npm run test:integration
+npm run test:e2e
+npm run test:mutation
+```
+
+---
+
+## 🔄 Pipeline de Integração Contínua (CI/CD)
+
+O repositório inclui automação completa via **GitHub Actions** em [`.github/workflows/ci.yml`](.github/workflows/ci.yml), executando em cada Push e Pull Request:
+
+1. **Job 1: Backend Quality Gate**:
+   - Inicializa contêiner de serviço PostgreSQL 16.
+   - Compila e executa toda a suíte de 84 testes unitários e de integração.
+   - Executa a análise de mutação com o Pitest.
+   - Empacota o artefato `eventhub-backend-1.0.0.jar`.
+2. **Job 2: Frontend Quality Gate**:
+   - Valida dependências com `npm ci`.
+   - Executa a compilação de produção com o Angular CLI.
+3. **Job 3: End-to-End Suite**:
+   - Sobe a infraestrutura completa via Docker Compose.
+   - Aguarda a prontidão do backend via `curl -s /actuator/health`.
+   - Dispara a suíte de 17 testes do Playwright com gravação de relatórios e traces.
+
+---
+
+## 🚀 Roteiro de Evolução & Escalabilidade Futura
+
+| Horizonte | Iniciativa | Benefício Arquitetural |
+| :--- | :--- | :--- |
+| **Curto Prazo** | **Cache Distribuído com Redis** | Cacheamento em memória de estatísticas agregadas (`/stats`) e verificação O(1) de idempotência via Redis Set/Bloom Filter. |
+| **Médio Prazo** | **Mensageria com Apache Kafka / AWS SQS** | Buffer assíncrono para absorver picos de milhões de eventos por segundo sem sobrecarregar o banco relacional. |
+| **Médio Prazo** | **Armazenamento Frio (Cold Storage em S3/Parquet)** | Arquivamento histórico de telemetria antiga em formato Apache Parquet consultável via AWS Athena ou DuckDB. |
+| **Longo Prazo** | **OpenTelemetry & Distributed Tracing** | Instrumentação com Jaeger / Grafana Tempo para rastreamento ponta a ponta de span across microsserviços. |
+| **Longo Prazo** | **Multi-Region Active-Active** | Replicação global com bancos distribuídos (CockroachDB / AWS Aurora Global Database). |
+
+---
+
+## 📄 Licença & Créditos
+
+Desenvolvido com excelência técnica por **Cypherian Technology Innovation**.
+
+Distribuído sob a licença **MIT**. Consulte o arquivo `LICENSE` para obter mais detalhes.

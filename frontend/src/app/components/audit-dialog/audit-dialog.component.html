@@ -1,0 +1,79 @@
+<div class="audit-dialog-container">
+  <div class="dialog-header">
+    <div class="header-left">
+      <div class="icon-box">
+        <mat-icon>verified_user</mat-icon>
+      </div>
+      <div>
+        <h2 class="dialog-title">Trilha de Auditoria Imutável</h2>
+        <p class="dialog-subtitle">
+          Event ID: <code>{{ data.eventId }}</code> (Persistido na tabela <code>audit_logs</code>)
+        </p>
+      </div>
+    </div>
+    <button mat-icon-button (click)="close()" aria-label="Fechar" class="close-btn">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <mat-progress-bar *ngIf="isLoading" mode="indeterminate" class="loading-bar"></mat-progress-bar>
+
+  <div class="dialog-content">
+    <div *ngIf="errorMessage" class="error-box">
+      <mat-icon>error_outline</mat-icon>
+      <span>{{ errorMessage }}</span>
+    </div>
+
+    <div *ngIf="!isLoading && auditLogs.length === 0 && !errorMessage" class="empty-box">
+      <mat-icon>info_outline</mat-icon>
+      <span>Nenhum registro de auditoria encontrado para este evento.</span>
+    </div>
+
+    <table mat-table [dataSource]="auditLogs" *ngIf="!isLoading && auditLogs.length > 0" class="audit-table">
+      <!-- ID Column -->
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef> UUID da Auditoria </th>
+        <td mat-cell *matCellDef="let log" class="cell-uuid">
+          <code>{{ log.id }}</code>
+        </td>
+      </ng-container>
+
+      <!-- Action Column -->
+      <ng-container matColumnDef="action">
+        <th mat-header-cell *matHeaderCellDef> Ação Regulamentada </th>
+        <td mat-cell *matCellDef="let log">
+          <span class="action-pill">{{ log.action }}</span>
+        </td>
+      </ng-container>
+
+      <!-- Timestamp Column -->
+      <ng-container matColumnDef="createdAt">
+        <th mat-header-cell *matHeaderCellDef> Timestamp Imutável </th>
+        <td mat-cell *matCellDef="let log" class="cell-timestamp">
+          {{ log.createdAt | date:'dd/MM/yyyy HH:mm:ss.SSS' }}
+        </td>
+      </ng-container>
+
+      <!-- Status Column -->
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef> Integridade </th>
+        <td mat-cell *matCellDef="let log">
+          <span class="integrity-badge">
+            <mat-icon>lock</mat-icon> Gravado
+          </span>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </div>
+
+  <div class="dialog-footer">
+    <div class="security-note">
+      <mat-icon>security</mat-icon>
+      <span>Registros assinados e gravados sem permissão de alteração (Append-Only).</span>
+    </div>
+    <button mat-flat-button color="primary" (click)="close()">Fechar</button>
+  </div>
+</div>

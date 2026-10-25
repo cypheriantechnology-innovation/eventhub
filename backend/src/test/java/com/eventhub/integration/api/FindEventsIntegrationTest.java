@@ -39,6 +39,12 @@ class FindEventsIntegrationTest {
     @MockBean
     private FindEventsUseCase findEventsUseCase;
 
+    @MockBean
+    private com.eventhub.infrastructure.security.upload.FileUploadSecurityValidator fileUploadSecurityValidator;
+
+    @MockBean
+    private com.eventhub.infrastructure.adapters.in.web.stream.EventStreamService eventStreamService;
+
     @Test
     @DisplayName("GET /api/events deve retornar lista paginada com sucesso")
     void shouldReturnPaginatedEvents() throws Exception {

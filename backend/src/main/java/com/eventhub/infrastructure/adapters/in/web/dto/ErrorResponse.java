@@ -21,6 +21,7 @@ public class ErrorResponse {
     private String message;
     private LocalDateTime timestamp;
     private List<String> details;
+    private String incidentId;
 
     public static ErrorResponse of(int status, String error, String message) {
         return ErrorResponse.builder()
@@ -39,6 +40,17 @@ public class ErrorResponse {
                 .message(message)
                 .timestamp(LocalDateTime.now())
                 .details(details)
+                .build();
+    }
+
+    public static ErrorResponse of(int status, String error, String message, String incidentId) {
+        return ErrorResponse.builder()
+                .status(status)
+                .error(error)
+                .message(message)
+                .timestamp(LocalDateTime.now())
+                .incidentId(incidentId)
+                .details(List.of())
                 .build();
     }
 }

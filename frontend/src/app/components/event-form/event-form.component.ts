@@ -35,6 +35,7 @@ export class EventFormComponent {
   eventForm: FormGroup;
   eventTypes: EventType[] = ['PRODUCTION', 'QUALITY'];
   isSubmitting = false;
+  isUploading = false;
 
   constructor(
     private fb: FormBuilder,
@@ -116,6 +117,41 @@ export class EventFormComponent {
       eventType: type,
       description: sampleDesc,
       timestamp: localDateTime
+    });
+  }
+
+  onFileSelected(event: Event): void {
+    const target = event.target as HTMLInputElement;
+    if (target.files && target.files.length > 0) {
+      const file = target.files[0];
+      this.uploadBatchFile(file);
+      target.value = ''; // Reset input to allow selecting same file again
+    }
+  }
+
+  uploadBatchFile(file: File): void {
+    this.isUploading = true;
+    this.snackBar.open(`Iniciando ingestão em lote de '${file.name}'...`, undefined, { duration: 2000 });
+
+    this.eventService.uploadBatch(file).subscribe({
+      next: (res) => {
+        this.isUploading = false;
+        const msg = `Lote '${res.filename}': ${res.ingested} ingeridos, ${res.duplicates} duplicados, ${res.errors} erros.`;
+        this.snackBar.open(msg, 'Fechar', {
+          duration: 7000,
+          panelClass: res.errors > 0 ? ['snack-error'] : ['snack-success']
+        });
+        // Trigger table refresh
+        this.eventService.notifyEventCreated({} as any);
+      },
+      error: (err) => {
+        this.isUploading = false;
+        const errMsg = err?.error?.message || 'Falha no processamento do arquivo.';
+        this.snackBar.open(`Erro no upload: ${errMsg}`, 'Fechar', {
+          duration: 6000,
+          panelClass: ['snack-error']
+        });
+      }
     });
   }
 }

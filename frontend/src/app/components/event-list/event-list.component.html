@@ -14,6 +14,12 @@
     </div>
 
     <div class="header-actions">
+      <!-- Live SSE Stream Status Pill -->
+      <div class="live-stream-badge" matTooltip="Recepção instantânea de telemetria via Server-Sent Events (SSE)">
+        <span class="live-stream-dot"></span>
+        <span class="live-stream-text">SSE REAL-TIME</span>
+      </div>
+
       <button mat-button class="btn-refresh" (click)="loadEvents()" [disabled]="isLoading" matTooltip="Atualizar dados da tabela">
         <mat-icon [class.spinning]="isLoading">sync</mat-icon>
         <span>Atualizar</span>
@@ -38,7 +44,7 @@
   </div>
 
   <div class="table-container" *ngIf="!hasError">
-    <table mat-table [dataSource]="events" class="event-table">
+    <table mat-table [dataSource]="events" [trackBy]="trackByEventId" class="event-table">
 
       <!-- Event ID Column -->
       <ng-container matColumnDef="eventId">
@@ -100,6 +106,22 @@
             <mat-icon>tune</mat-icon>
             <span>Operacional</span>
           </span>
+        </td>
+      </ng-container>
+
+      <!-- Actions Column -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef> Ações </th>
+        <td mat-cell *matCellDef="let event">
+          <button *ngIf="event.eventType === 'QUALITY'"
+                  mat-stroked-button
+                  color="accent"
+                  class="btn-inspect-audit"
+                  (click)="openAuditDetails(event.eventId)"
+                  matTooltip="Ver registros imutáveis de auditoria">
+            <mat-icon>history_edu</mat-icon> Auditoria
+          </button>
+          <span *ngIf="event.eventType !== 'QUALITY'" class="text-muted text-small">—</span>
         </td>
       </ng-container>
 

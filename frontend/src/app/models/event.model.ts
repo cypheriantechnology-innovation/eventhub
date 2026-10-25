@@ -38,3 +38,21 @@ export interface EventStats {
   production: number;
   quality: number;
 }
+
+export interface AuditLog {
+  id: string;
+  eventId: string;
+  action: string;
+  createdAt: string;
+}
+
+export interface BatchUploadResponse {
+  status: string;
+  filename: string;
+  totalRecords: number;
+  ingested: number;
+  duplicates: number;
+  errors: number;
+  details: string[];
+}
+

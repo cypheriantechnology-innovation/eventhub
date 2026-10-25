@@ -102,11 +102,13 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGenericException(Exception ex) {
-        log.error("Erro inesperado no servidor: ", ex);
+        String incidentId = java.util.UUID.randomUUID().toString();
+        log.error("[INCIDENT-{}] Erro inesperado no servidor: ", incidentId, ex);
         ErrorResponse response = ErrorResponse.of(
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
-                "Ocorreu um erro interno no servidor ao processar a requisição."
+                "Ocorreu um erro interno no servidor ao processar a requisição. Código do incidente: " + incidentId,
+                incidentId
         );
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
     }

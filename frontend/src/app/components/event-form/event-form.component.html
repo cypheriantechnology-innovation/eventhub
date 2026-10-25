@@ -11,12 +11,18 @@
     </div>
 
     <div class="sample-actions">
-      <span class="sample-label">Exemplos Rápidos:</span>
+      <span class="sample-label">Ações Ágeis:</span>
       <button mat-button type="button" class="btn-sample btn-sample-prd" (click)="generateSampleEvent('PRODUCTION')">
         <mat-icon>precision_manufacturing</mat-icon> Produção
       </button>
       <button mat-button type="button" class="btn-sample btn-sample-qlt" (click)="generateSampleEvent('QUALITY')">
-        <mat-icon>verified_user</mat-icon> Qualidade (Auditado)
+        <mat-icon>verified_user</mat-icon> Qualidade
+      </button>
+
+      <input type="file" #fileInput id="batchFileInput" (change)="onFileSelected($event)" accept=".csv,.json" style="display:none">
+      <button mat-button type="button" class="btn-sample btn-sample-batch" (click)="fileInput.click()" [disabled]="isUploading">
+        <mat-spinner *ngIf="isUploading" diameter="14"></mat-spinner>
+        <mat-icon *ngIf="!isUploading">upload_file</mat-icon> Lote (CSV/JSON)
       </button>
     </div>
   </div>

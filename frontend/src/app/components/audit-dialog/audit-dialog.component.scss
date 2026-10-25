@@ -1,0 +1,185 @@
+.audit-dialog-container {
+  padding: 24px;
+  min-width: 650px;
+  max-width: 850px;
+  background: #ffffff;
+  border-radius: 16px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  color: #1e293b;
+
+  .dialog-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+
+      .icon-box {
+        width: 48px;
+        height: 48px;
+        background: #ecfdf5;
+        color: #059669;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        mat-icon {
+          font-size: 26px;
+          width: 26px;
+          height: 26px;
+        }
+      }
+
+      .dialog-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        margin: 0;
+        color: #0f172a;
+      }
+
+      .dialog-subtitle {
+        font-size: 0.85rem;
+        color: #64748b;
+        margin: 4px 0 0;
+
+        code {
+          background: #f1f5f9;
+          padding: 2px 6px;
+          border-radius: 6px;
+          font-family: 'JetBrains Mono', monospace;
+          color: #0f172a;
+        }
+      }
+    }
+
+    .close-btn {
+      color: #94a3b8;
+      &:hover {
+        color: #475569;
+      }
+    }
+  }
+
+  .loading-bar {
+    margin-bottom: 16px;
+  }
+
+  .dialog-content {
+    max-height: 400px;
+    overflow-y: auto;
+    margin-bottom: 20px;
+
+    .error-box, .empty-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 18px;
+      border-radius: 10px;
+      font-size: 0.9rem;
+    }
+
+    .error-box {
+      background: #fef2f2;
+      color: #dc2626;
+      border: 1px solid #fee2e2;
+    }
+
+    .empty-box {
+      background: #f8fafc;
+      color: #64748b;
+    }
+
+    .audit-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+
+      th {
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: #64748b;
+        border-bottom: 1px solid #e2e8f0;
+        padding: 12px 14px;
+      }
+
+      td {
+        padding: 12px 14px;
+        border-bottom: 1px solid #f1f5f9;
+        font-size: 0.85rem;
+      }
+
+      .cell-uuid code {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.75rem;
+        background: #f1f5f9;
+        padding: 2px 6px;
+        border-radius: 4px;
+        color: #475569;
+      }
+
+      .action-pill {
+        display: inline-block;
+        background: #eff6ff;
+        color: #2563eb;
+        font-size: 0.75rem;
+        font-weight: 700;
+        padding: 3px 10px;
+        border-radius: 12px;
+        border: 1px solid #dbeafe;
+      }
+
+      .cell-timestamp {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.8rem;
+        color: #475569;
+      }
+
+      .integrity-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        background: #ecfdf5;
+        color: #059669;
+        font-size: 0.75rem;
+        font-weight: 600;
+        padding: 3px 8px;
+        border-radius: 6px;
+
+        mat-icon {
+          font-size: 14px;
+          width: 14px;
+          height: 14px;
+        }
+      }
+    }
+  }
+
+  .dialog-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid #f1f5f9;
+    padding-top: 16px;
+
+    .security-note {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.75rem;
+      color: #64748b;
+
+      mat-icon {
+        font-size: 16px;
+        width: 16px;
+        height: 16px;
+        color: #10b981;
+      }
+    }
+  }
+}

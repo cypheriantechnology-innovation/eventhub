@@ -42,6 +42,12 @@ class IdempotencyIntegrationTest {
     @MockBean
     private FindEventsUseCase findEventsUseCase;
 
+    @MockBean
+    private com.eventhub.infrastructure.security.upload.FileUploadSecurityValidator fileUploadSecurityValidator;
+
+    @MockBean
+    private com.eventhub.infrastructure.adapters.in.web.stream.EventStreamService eventStreamService;
+
     @Test
     @DisplayName("Tentativa de submeter eventId duplicado deve retornar 409 Conflict")
     void shouldReturn409ForDuplicateEventId() throws Exception {
