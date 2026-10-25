@@ -58,10 +58,13 @@ export class EventFormComponent {
     this.isSubmitting = true;
     const formValue = this.eventForm.value;
 
+    const rawEventId = formValue.eventId ? String(formValue.eventId).trim() : '';
+    const rawDescription = formValue.description ? String(formValue.description).trim() : '';
+
     const request: CreateEventRequest = {
-      eventId: formValue.eventId.trim(),
+      eventId: rawEventId,
       eventType: formValue.eventType,
-      description: formValue.description.trim(),
+      description: rawDescription,
       timestamp: formValue.timestamp ? formValue.timestamp : undefined
     };
 
@@ -100,11 +103,19 @@ export class EventFormComponent {
       ? 'Linha de prensagem iniciou ciclo operacional padrão'
       : 'Sensor térmico identificou oscilação de temperatura fora da tolerância';
 
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const localDateTime = `${year}-${month}-${day}T${hours}:${minutes}`;
+
     this.eventForm.patchValue({
       eventId: `EVT-${prefix}-${randomNum}`,
       eventType: type,
       description: sampleDesc,
-      timestamp: new Date().toISOString().slice(0, 19)
+      timestamp: localDateTime
     });
   }
 }

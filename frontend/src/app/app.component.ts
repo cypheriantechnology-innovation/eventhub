@@ -27,15 +27,10 @@ export class AppComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadStats();
 
-    // Listen to new events in real-time
+    // Listen to new events in real-time and refresh exact stats from DB
     this.sub.add(
-      this.eventService.eventCreated$.subscribe((newEvent) => {
-        this.totalEvents++;
-        if (newEvent.eventType === 'PRODUCTION') {
-          this.productionCount++;
-        } else if (newEvent.eventType === 'QUALITY') {
-          this.qualityCount++;
-        }
+      this.eventService.eventCreated$.subscribe(() => {
+        this.loadStats();
       })
     );
   }
@@ -45,14 +40,19 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   loadStats(): void {
-    this.eventService.getEvents(0, 50).subscribe({
-      next: (res) => {
-        this.totalEvents = res.totalElements;
-        this.productionCount = res.content.filter(e => e.eventType === 'PRODUCTION').length;
-        this.qualityCount = res.content.filter(e => e.eventType === 'QUALITY').length;
+    this.eventService.getEventStats().subscribe({
+      next: (stats) => {
+        this.totalEvents = stats.total;
+        this.productionCount = stats.production;
+        this.qualityCount = stats.quality;
       },
       error: () => {
-        // Fallback or offline graceful handling
+        // Fallback to getEvents if stats endpoint is unavailable
+        this.eventService.getEvents(0, 10).subscribe({
+          next: (res) => {
+            this.totalEvents = res.totalElements;
+          }
+        });
       }
     });
   }

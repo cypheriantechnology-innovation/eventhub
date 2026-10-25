@@ -14,4 +14,8 @@ public interface EventRepositoryPort {
     boolean existsByEventId(String eventId);
 
     PageResult<Event> findAll(int page, int size, String sortDirection);
+
+    long countByEventType(com.eventhub.domain.model.EventType eventType);
+
+    long countTotal();
 }

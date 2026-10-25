@@ -8,4 +8,6 @@ public interface FindEventsUseCase {
     PageResult<Event> findAll(int page, int size, String sortDirection);
 
     Event findByEventId(String eventId);
+
+    com.eventhub.domain.model.EventStats getStats();
 }

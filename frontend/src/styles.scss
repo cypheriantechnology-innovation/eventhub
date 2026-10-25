@@ -193,3 +193,21 @@ code, pre {
   border-color: var(--primary) !important;
   border-width: 2px !important;
 }
+
+/* Global Material SnackBar Styling */
+.snack-success {
+  --mdc-snackbar-container-color: #065f46 !important;
+  --mdc-snackbar-supporting-text-color: #ffffff !important;
+  --mat-snack-bar-button-color: #a7f3d0 !important;
+  border-radius: 10px !important;
+  box-shadow: 0 10px 15px -3px rgba(5, 150, 105, 0.3) !important;
+}
+
+.snack-error {
+  --mdc-snackbar-container-color: #991b1b !important;
+  --mdc-snackbar-supporting-text-color: #ffffff !important;
+  --mat-snack-bar-button-color: #fecaca !important;
+  border-radius: 10px !important;
+  box-shadow: 0 10px 15px -3px rgba(220, 38, 38, 0.3) !important;
+}
+

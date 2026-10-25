@@ -35,4 +35,8 @@ export class EventService {
   getEventById(eventId: string): Observable<IndustrialEvent> {
     return this.http.get<IndustrialEvent>(`${this.apiUrl}/${eventId}`);
   }
+
+  getEventStats(): Observable<import('../models/event.model').EventStats> {
+    return this.http.get<import('../models/event.model').EventStats>(`${this.apiUrl}/stats`);
+  }
 }

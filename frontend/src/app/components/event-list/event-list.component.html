@@ -23,7 +23,21 @@
 
   <mat-progress-bar *ngIf="isLoading" mode="indeterminate" class="loading-bar"></mat-progress-bar>
 
-  <div class="table-container">
+  <!-- Error Alert Banner -->
+  <div *ngIf="hasError" class="error-banner">
+    <div class="error-content">
+      <mat-icon class="error-icon">error_outline</mat-icon>
+      <div class="error-texts">
+        <span class="error-title">Falha na Comunicação com o Servidor</span>
+        <span class="error-desc">{{ errorMessage }}</span>
+      </div>
+    </div>
+    <button mat-button (click)="loadEvents()" class="btn-retry">
+      <mat-icon>refresh</mat-icon> Tentar Novamente
+    </button>
+  </div>
+
+  <div class="table-container" *ngIf="!hasError">
     <table mat-table [dataSource]="events" class="event-table">
 
       <!-- Event ID Column -->

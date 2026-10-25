@@ -3,7 +3,7 @@
     <div class="brand">
       <div class="logo-wrapper">
         <!-- Inline Animated SVG Logo: Industrial Gear + Telemetry Core -->
-        <svg class="brand-svg" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg class="brand-svg" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Logotipo EventHub Enterprise">
           <defs>
             <linearGradient id="brandGrad" x1="0%" y1="0%" x2="100%" y2="100%">
               <stop offset="0%" stop-color="#2563eb" />
@@ -37,7 +37,7 @@
     <span class="spacer"></span>
 
     <div class="nav-actions">
-      <div class="status-indicator">
+      <div class="status-indicator" role="status" aria-label="Status do sistema: 100% operacional">
         <span class="status-beacon">
           <span class="beacon-wave"></span>
           <span class="beacon-dot"></span>
@@ -50,12 +50,12 @@
 
       <div class="action-divider"></div>
 
-      <button mat-button class="action-btn" (click)="openSwagger()" matTooltip="Documentação Interativa OpenAPI / Swagger">
+      <button mat-button class="action-btn" (click)="openSwagger()" aria-label="Abrir Documentação Swagger API" matTooltip="Documentação Interativa OpenAPI / Swagger">
         <mat-icon>api</mat-icon>
         <span>Swagger API</span>
       </button>
 
-      <button mat-button class="action-btn" (click)="openActuator()" matTooltip="Métricas e Saúde via Spring Actuator">
+      <button mat-button class="action-btn" (click)="openActuator()" aria-label="Abrir Actuator Health Check" matTooltip="Métricas e Saúde via Spring Actuator">
         <mat-icon>monitor_heart</mat-icon>
         <span>Actuator Health</span>
       </button>

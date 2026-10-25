@@ -32,3 +32,9 @@ export interface ApiErrorResponse {
   timestamp: string;
   details?: string[];
 }
+
+export interface EventStats {
+  total: number;
+  production: number;
+  quality: number;
+}

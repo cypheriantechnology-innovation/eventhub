@@ -13,4 +13,6 @@ public interface SpringDataEventRepository extends JpaRepository<EventJpaEntity,
     Optional<EventJpaEntity> findByEventId(String eventId);
 
     boolean existsByEventId(String eventId);
+
+    long countByEventType(String eventType);
 }

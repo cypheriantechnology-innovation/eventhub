@@ -38,6 +38,8 @@ export class EventListComponent implements OnInit, OnDestroy {
   pageSize = 10;
   pageIndex = 0;
   isLoading = false;
+  hasError = false;
+  errorMessage = '';
 
   private subscription: Subscription = new Subscription();
 
@@ -60,14 +62,17 @@ export class EventListComponent implements OnInit, OnDestroy {
 
   loadEvents(): void {
     this.isLoading = true;
+    this.hasError = false;
     this.eventService.getEvents(this.pageIndex, this.pageSize, 'desc').subscribe({
       next: (response) => {
         this.events = response.content;
         this.totalElements = response.totalElements;
         this.isLoading = false;
       },
-      error: () => {
+      error: (err) => {
         this.isLoading = false;
+        this.hasError = true;
+        this.errorMessage = err?.error?.message || 'Falha ao carregar eventos da telemetria. Verifique a conectividade com o backend.';
       }
     });
   }

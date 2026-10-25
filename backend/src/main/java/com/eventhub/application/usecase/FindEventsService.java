@@ -26,4 +26,12 @@ public class FindEventsService implements FindEventsUseCase {
         return eventRepositoryPort.findByEventId(eventId)
                 .orElseThrow(() -> new EventNotFoundException(eventId));
     }
+
+    @Override
+    public com.eventhub.domain.model.EventStats getStats() {
+        long total = eventRepositoryPort.countTotal();
+        long production = eventRepositoryPort.countByEventType(com.eventhub.domain.model.EventType.PRODUCTION);
+        long quality = eventRepositoryPort.countByEventType(com.eventhub.domain.model.EventType.QUALITY);
+        return new com.eventhub.domain.model.EventStats(total, production, quality);
+    }
 }

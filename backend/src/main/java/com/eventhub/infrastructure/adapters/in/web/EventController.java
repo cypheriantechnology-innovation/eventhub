@@ -33,15 +33,25 @@ public class EventController {
     @PostMapping
     @Operation(summary = "Ingestão e processamento de evento industrial")
     public ResponseEntity<EventResponse> createEvent(@Valid @RequestBody CreateEventRequest request) {
+        String sanitizedEventId = request.getEventId() != null ? request.getEventId().trim() : null;
+        String sanitizedDescription = request.getDescription() != null ? request.getDescription().trim() : null;
+
         Event domainEvent = Event.create(
-                request.getEventId(),
+                sanitizedEventId,
                 request.getEventType(),
-                request.getDescription(),
+                sanitizedDescription,
                 request.getTimestamp()
         );
 
         Event processed = processEventUseCase.process(domainEvent);
         return ResponseEntity.status(HttpStatus.CREATED).body(EventResponse.fromDomain(processed));
+    }
+
+    @GetMapping("/stats")
+    @Operation(summary = "Estatísticas consolidadas de eventos industriais (total, produção, qualidade)")
+    public ResponseEntity<com.eventhub.infrastructure.adapters.in.web.dto.EventStatsResponse> getStats() {
+        com.eventhub.domain.model.EventStats stats = findEventsUseCase.getStats();
+        return ResponseEntity.ok(com.eventhub.infrastructure.adapters.in.web.dto.EventStatsResponse.fromDomain(stats));
     }
 
     @GetMapping

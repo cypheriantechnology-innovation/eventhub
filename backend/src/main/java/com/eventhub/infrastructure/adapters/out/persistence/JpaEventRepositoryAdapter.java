@@ -42,8 +42,10 @@ public class JpaEventRepositoryAdapter implements EventRepositoryPort {
 
     @Override
     public PageResult<Event> findAll(int page, int size, String sortDirection) {
+        int clampedPage = Math.max(page, 0);
+        int clampedSize = Math.min(Math.max(size, 1), 100);
         Sort.Direction direction = "asc".equalsIgnoreCase(sortDirection) ? Sort.Direction.ASC : Sort.Direction.DESC;
-        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(direction, "timestamp"));
+        PageRequest pageRequest = PageRequest.of(clampedPage, clampedSize, Sort.by(direction, "timestamp"));
         Page<EventJpaEntity> pageResult = springDataEventRepository.findAll(pageRequest);
 
         List<Event> events = pageResult.getContent().stream()
@@ -51,5 +53,16 @@ public class JpaEventRepositoryAdapter implements EventRepositoryPort {
                 .toList();
 
         return new PageResult<>(events, pageResult.getNumber(), pageResult.getSize(), pageResult.getTotalElements());
+    }
+
+    @Override
+    public long countByEventType(com.eventhub.domain.model.EventType eventType) {
+        if (eventType == null) return 0;
+        return springDataEventRepository.countByEventType(eventType.name());
+    }
+
+    @Override
+    public long countTotal() {
+        return springDataEventRepository.count();
     }
 }

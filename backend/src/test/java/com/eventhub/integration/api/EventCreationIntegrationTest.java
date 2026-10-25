@@ -80,4 +80,29 @@ class EventCreationIntegrationTest {
                 .andExpect(jsonPath("$.status").value(400))
                 .andExpect(jsonPath("$.details").isArray());
     }
+
+    @Test
+    @DisplayName("POST /api/events com tipo de evento inválido deve retornar 400 Bad Request")
+    void shouldReturn400ForInvalidEnumType() throws Exception {
+        String invalidEnumJson = "{\"eventId\":\"EVT-BAD\",\"eventType\":\"INVALID\",\"description\":\"Sensor failure\"}";
+
+        mockMvc.perform(post("/api/events")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(invalidEnumJson))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status").value(400))
+                .andExpect(jsonPath("$.message").exists());
+    }
+
+    @Test
+    @DisplayName("GET /api/events/stats deve retornar 200 OK com estatísticas agregadas")
+    void shouldReturn200ForGetStats() throws Exception {
+        when(findEventsUseCase.getStats()).thenReturn(new com.eventhub.domain.model.EventStats(100, 70, 30));
+
+        mockMvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get("/api/events/stats"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.total").value(100))
+                .andExpect(jsonPath("$.production").value(70))
+                .andExpect(jsonPath("$.quality").value(30));
+    }
 }
