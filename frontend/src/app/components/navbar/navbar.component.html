@@ -1,19 +1,33 @@
-<mat-toolbar class="navbar">
+<mat-toolbar class="navbar" role="banner">
   <div class="nav-inner">
-    <!-- Brand / Logo -->
-    <div class="brand">
+    <!-- Brand / Executive Logo Block -->
+    <div class="brand" (click)="setActiveTab('dashboard'); scrollTo('dashboard-hero')" tabindex="0" (keydown.enter)="setActiveTab('dashboard')" role="button" aria-label="EventHub Enterprise Home">
       <div class="logo-wrapper">
-        <!-- High-Impact Pulse / Hexagon SVG Logo -->
-        <svg class="brand-svg" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Logotipo EventHub Enterprise">
+        <!-- Multi-layered Inline SVG Hexagonal Cyber Shield -->
+        <svg class="brand-svg" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="EventHub Enterprise Hexagonal Core">
           <defs>
-            <linearGradient id="logoPulseGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
               <stop offset="0%" stop-color="#0284c7" />
               <stop offset="50%" stop-color="#38bdf8" />
               <stop offset="100%" stop-color="#10b981" />
             </linearGradient>
+            <linearGradient id="innerGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#0f172a" stop-opacity="0.95" />
+              <stop offset="100%" stop-color="#1e293b" stop-opacity="0.8" />
+            </linearGradient>
+            <filter id="neonGlow" x="-20%" y="-20%" width="140%" height="140%">
+              <feGaussianBlur stdDeviation="1.5" result="glow" />
+              <feComposite in="SourceGraphic" in2="glow" operator="over" />
+            </filter>
           </defs>
-          <polygon points="18,3 31,10 31,26 18,33 5,26 5,10" stroke="url(#logoPulseGrad)" stroke-width="2.2" fill="#0f172a" fill-opacity="0.8" />
-          <path d="M10 18 L14 18 L17 12 L20 24 L23 15 L25 18 L27 18" stroke="#38bdf8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="ecg-pulse-anim" />
+          <!-- Outer Hex Shield -->
+          <polygon points="20,2 36,11 36,29 20,38 4,29 4,11" stroke="url(#shieldGrad)" stroke-width="2" fill="url(#innerGrad)" class="hex-outer" />
+          <!-- Inner Core Hexagon -->
+          <polygon points="20,7 31,14 31,26 20,33 9,26 9,14" stroke="rgba(56, 189, 248, 0.35)" stroke-width="1.2" fill="none" class="hex-inner" />
+          <!-- Animated ECG Pulse Line -->
+          <path d="M11 20 L15 20 L17.5 13 L21 27 L24 16 L26 20 L29 20" stroke="#38bdf8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="ecg-pulse-anim" filter="url(#neonGlow)" />
+          <!-- Orbiting Quantum Particle -->
+          <circle cx="20" cy="2" r="2.2" fill="#10b981" class="orbital-node" />
         </svg>
       </div>
 
@@ -22,74 +36,101 @@
           <span class="title">EventHub</span>
           <span class="edition-badge">ENTERPRISE</span>
         </div>
+        <div class="brand-sub">
+          <span class="tech-tag">HEXAGONAL ARCHITECTURE</span>
+          <span class="version-dot">•</span>
+          <span class="version-tag">v2.4 LTS</span>
+        </div>
       </div>
     </div>
 
-    <!-- Navigation Tabs matching mockup -->
-    <nav class="nav-menu">
-      <a class="nav-tab active">
-        <span>Dashboard</span>
-        <span class="tab-indicator"></span>
+    <!-- Capsule Segmented Command Tabs -->
+    <nav class="nav-menu" aria-label="Navegação Principal do Sistema">
+      <a class="nav-tab" [class.active]="activeTab === 'dashboard'" (click)="setActiveTab('dashboard')" tabindex="0" (keydown.enter)="setActiveTab('dashboard')">
+        <mat-icon class="tab-icon">dashboard</mat-icon>
+        <span class="tab-label">Dashboard</span>
+        <span class="tab-indicator" *ngIf="activeTab === 'dashboard'"></span>
       </a>
-      <a class="nav-tab" (click)="scrollTo('pipelines-overview')">
-        <span>Pipelines</span>
+
+      <a class="nav-tab" [class.active]="activeTab === 'pipelines'" (click)="setActiveTab('pipelines', 'pipelines-overview')" tabindex="0" (keydown.enter)="setActiveTab('pipelines', 'pipelines-overview')">
+        <mat-icon class="tab-icon">account_tree</mat-icon>
+        <span class="tab-label">Pipelines</span>
+        <span class="tab-indicator" *ngIf="activeTab === 'pipelines'"></span>
       </a>
-      <a class="nav-tab" (click)="scrollTo('ingestion-section')">
-        <span>Ingestion</span>
+
+      <a class="nav-tab" [class.active]="activeTab === 'ingestion'" (click)="setActiveTab('ingestion', 'ingestion-section')" tabindex="0" (keydown.enter)="setActiveTab('ingestion', 'ingestion-section')">
+        <mat-icon class="tab-icon">input</mat-icon>
+        <span class="tab-label">Ingestion</span>
+        <span class="tab-indicator" *ngIf="activeTab === 'ingestion'"></span>
       </a>
-      <a class="nav-tab" (click)="scrollTo('stream-section')">
-        <span>Logs</span>
+
+      <a class="nav-tab" [class.active]="activeTab === 'logs'" (click)="setActiveTab('logs', 'stream-section')" tabindex="0" (keydown.enter)="setActiveTab('logs', 'stream-section')">
+        <mat-icon class="tab-icon">receipt_long</mat-icon>
+        <span class="tab-label">Logs</span>
+        <span class="tab-indicator" *ngIf="activeTab === 'logs'"></span>
       </a>
-      <a class="nav-tab" (click)="openActuator()">
-        <span>Settings</span>
+
+      <a class="nav-tab" [class.active]="activeTab === 'settings'" (click)="setActiveTab('settings'); openActuator()" tabindex="0" (keydown.enter)="setActiveTab('settings'); openActuator()">
+        <mat-icon class="tab-icon">tune</mat-icon>
+        <span class="tab-label">Settings</span>
+        <span class="tab-indicator" *ngIf="activeTab === 'settings'"></span>
       </a>
-      <a class="nav-tab nav-tab-dropdown" (click)="openSwagger()">
-        <span>Admin</span>
+
+      <a class="nav-tab nav-tab-dropdown" [class.active]="activeTab === 'admin'" (click)="setActiveTab('admin'); openSwagger()" tabindex="0" (keydown.enter)="setActiveTab('admin'); openSwagger()">
+        <mat-icon class="tab-icon">admin_panel_settings</mat-icon>
+        <span class="tab-label">Admin</span>
         <mat-icon class="tab-chevron">expand_more</mat-icon>
+        <span class="tab-indicator" *ngIf="activeTab === 'admin'"></span>
       </a>
     </nav>
 
     <span class="spacer"></span>
 
-    <!-- Right Utility Actions -->
+    <!-- Right Executive Deck: Cyber Telemetry & Utility Actions -->
     <div class="nav-actions">
-      <!-- Status Beacon -->
-      <div class="status-indicator" role="status" aria-label="Status do sistema: 100% operacional">
+      <!-- Live DevSecOps & Telemetry Status Beacon (Strictly height-contained to 34px) -->
+      <div class="status-indicator" role="status" aria-label="Status do sistema: Hexagonal Core 100% Operacional e WAF Ativo" matTooltip="Núcleo Hexagonal Ativo • Proteção WAF Ativa • Latência p99 < 8ms">
         <span class="status-beacon">
-          <span class="beacon-wave"></span>
+          <span class="beacon-wave beacon-wave-1"></span>
+          <span class="beacon-wave beacon-wave-2"></span>
           <span class="beacon-dot"></span>
         </span>
         <div class="status-labels">
-          <span class="status-name">HEXAGONAL CORE</span>
-          <span class="status-state">100% OPERACIONAL</span>
+          <div class="status-row-top">
+            <span class="status-name">HEXAGONAL CORE</span>
+            <span class="security-chip">WAF ACTIVE</span>
+          </div>
+          <div class="status-row-bottom">
+            <span class="status-state">100% OPERACIONAL</span>
+          </div>
         </div>
       </div>
 
       <div class="action-divider"></div>
 
-      <!-- Quick Links -->
-      <button mat-icon-button class="nav-icon-btn action-btn" (click)="openSwagger()" aria-label="Abrir Documentação Swagger API" matTooltip="Swagger API Docs">
+      <!-- Quick Action Buttons -->
+      <button mat-icon-button class="nav-icon-btn action-btn" (click)="openSwagger()" aria-label="Abrir Documentação Swagger API" matTooltip="OpenAPI 3.0 / Swagger UI">
         <mat-icon>api</mat-icon>
       </button>
 
-      <button mat-icon-button class="nav-icon-btn action-btn" (click)="openActuator()" aria-label="Abrir Actuator Health Check" matTooltip="Spring Actuator Health">
+      <button mat-icon-button class="nav-icon-btn action-btn" (click)="openActuator()" aria-label="Abrir Actuator Health Check" matTooltip="Spring Boot Actuator Health">
         <mat-icon>monitor_heart</mat-icon>
       </button>
 
-      <!-- Settings Icon -->
-      <button mat-icon-button class="nav-icon-btn" aria-label="Configurações">
-        <mat-icon>settings</mat-icon>
-      </button>
-
-      <!-- Notifications Icon with Indicator -->
-      <button mat-icon-button class="nav-icon-btn notif-btn" aria-label="Notificações">
+      <!-- Notifications Icon with Neon Glow Indicator -->
+      <button mat-icon-button class="nav-icon-btn notif-btn" aria-label="Notificações do Sistema" matTooltip="Alertas em tempo real: Todos os pipelines operando normalmente">
         <mat-icon>notifications</mat-icon>
         <span class="notif-badge"></span>
       </button>
 
-      <!-- User Profile Avatar -->
-      <div class="user-avatar-pill" title="Operador Logado: Admin (Secured)">
-        <mat-icon class="avatar-icon">account_circle</mat-icon>
+      <!-- Executive User Profile Pill -->
+      <div class="user-avatar-pill" title="Sessão Operacional: DevSecOps Admin (Secured)" tabindex="0">
+        <div class="avatar-ring">
+          <mat-icon class="avatar-icon">shield_person</mat-icon>
+        </div>
+        <div class="user-meta">
+          <span class="user-role">ADMIN</span>
+        </div>
       </div>
 
       <!-- Mobile Menu Toggle Button (Visible < 992px) -->
@@ -104,7 +145,7 @@
 <nav class="mobile-drawer" *ngIf="isMobileMenuOpen" aria-label="Menu Mobile de Navegação">
   <div class="mobile-drawer-inner">
     <a class="mobile-nav-link" (click)="scrollTo('pipelines-overview')">
-      <mat-icon>dashboard</mat-icon>
+      <mat-icon>account_tree</mat-icon>
       <span>Pipelines Overview</span>
     </a>
     <a class="mobile-nav-link" (click)="scrollTo('ingestion-section')">
@@ -112,7 +153,7 @@
       <span>Event Ingestion</span>
     </a>
     <a class="mobile-nav-link" (click)="scrollTo('stream-section')">
-      <mat-icon>stream</mat-icon>
+      <mat-icon>receipt_long</mat-icon>
       <span>Real-time Stream & Logs</span>
     </a>
     <div class="mobile-divider"></div>

@@ -14,6 +14,16 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 })
 export class NavbarComponent {
   isMobileMenuOpen = false;
+  activeTab = 'dashboard';
+
+  setActiveTab(tab: string, sectionId?: string): void {
+    this.activeTab = tab;
+    if (sectionId) {
+      this.scrollTo(sectionId);
+    } else {
+      this.closeMobileMenu();
+    }
+  }
 
   toggleMobileMenu(): void {
     this.isMobileMenuOpen = !this.isMobileMenuOpen;

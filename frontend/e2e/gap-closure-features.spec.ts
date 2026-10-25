@@ -87,7 +87,7 @@ test.describe('End-to-End Gap Closure UI Flows', () => {
     await page.click('button.submit-action-btn');
 
     // Confirm presence in table
-    await expect(page.locator(`text=${sseEventId}`)).toBeVisible({ timeout: 10000 });
+    await expect(page.locator('table.event-table').locator(`text=${sseEventId}`)).toBeVisible({ timeout: 10000 });
   });
 
   test('Deve exibir menu mobile e gaveta de navegação em viewport responsivo pequeno', async ({ page }) => {
