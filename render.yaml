@@ -1,0 +1,52 @@
+databases:
+  - name: eventhub-postgres
+    databaseName: eventhub
+    user: eventhub_user
+    plan: free
+    region: oregon
+    ipAllowList: []
+
+services:
+  # Backend Web Service (Spring Boot 3.2, Java 17)
+  - type: web
+    name: eventhub-backend
+    runtime: docker
+    dockerContext: backend
+    dockerfilePath: backend/Dockerfile
+    plan: free
+    region: oregon
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: DB_HOST
+        fromDatabase:
+          name: eventhub-postgres
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: eventhub-postgres
+          property: port
+      - key: DB_NAME
+        fromDatabase:
+          name: eventhub-postgres
+          property: database
+      - key: DB_USER
+        fromDatabase:
+          name: eventhub-postgres
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: eventhub-postgres
+          property: password
+      - key: PORT
+        value: 8080
+
+  # Frontend Static Site (Angular 17 CDN)
+  - type: static_site
+    name: eventhub-frontend
+    buildCommand: npm install && npm run build
+    publishPath: dist/eventhub-frontend
+    rootDir: frontend
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html

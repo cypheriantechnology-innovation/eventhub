@@ -8,10 +8,20 @@ import { BatchUploadResponse, CreateEventRequest, EventStats, IndustrialEvent, P
 })
 export class EventService {
 
-  private readonly apiUrl = '/api/events';
+  private readonly apiUrl: string = this.resolveApiUrl();
   private eventCreatedSource = new Subject<IndustrialEvent>();
 
   public eventCreated$ = this.eventCreatedSource.asObservable();
+
+  private resolveApiUrl(): string {
+    if (typeof window !== 'undefined' && (window as any).__EVENTHUB_API_URL__) {
+      return (window as any).__EVENTHUB_API_URL__;
+    }
+    if (typeof window !== 'undefined' && window.location.hostname.includes('onrender.com')) {
+      return 'https://eventhub-backend.onrender.com/api/events';
+    }
+    return '/api/events';
+  }
 
   constructor(
     private http: HttpClient,
