@@ -14,7 +14,15 @@
   <a href="https://www.postgresql.org/"><img src="https://img.shields.io/badge/PostgreSQL-16%20Alpine-4169E1?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL"></a>
   <a href="https://www.docker.com/"><img src="https://img.shields.io/badge/Docker-Multi--Container-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker"></a>
   <a href="#"><img src="https://img.shields.io/badge/Bateria%20de%20Testes-112%20Passando%20(100%25)-10B981?style=for-the-badge&logo=checkmarx&logoColor=white" alt="112 Tests Passed"></a>
+  <a href="https://eventhub-frontend-ujb9.onrender.com/"><img src="https://img.shields.io/badge/Render-Live%20Demo%20Online-10B981?style=for-the-badge&logo=render&logoColor=white" alt="Live Demo on Render"></a>
 </p>
+
+> [!TIP]
+> ### 🚀 Acesse a Aplicação em Produção na Nuvem (Render)
+> O ecossistema está **100% implantado e operacional na nuvem** (sem necessidade de instalar nada):
+> - 🌐 **Aplicação Web (Frontend)**: **[https://eventhub-frontend-ujb9.onrender.com/](https://eventhub-frontend-ujb9.onrender.com/)**
+> - ⚙️ **API REST & Healthcheck**: **[https://eventhub-backend-sr93.onrender.com/actuator/health](https://eventhub-backend-sr93.onrender.com/actuator/health)**
+> - 🗄️ **Banco de Dados**: PostgreSQL 16 Alpine Gerenciado em Nuvem
 
 ---
 
@@ -174,9 +182,20 @@ Clicando no botão de auditoria em um evento de qualidade, abre-se uma janela fl
 
 # ⚡ Parte 2: Experimentação Imediata
 
-## 🚀 7. Como Rodar o Sistema em 2 Minutos (Com Docker)
+## 🚀 7. Como Acessar e Rodar o Sistema
 
-Você não precisa instalar Java, Node.js nem banco de dados na sua máquina. Se você tem o **Docker Desktop** instalado, basta 1 comando:
+### Opção A: Acesso Remoto Imediato em Nuvem (Sem Instalação)
+Você pode testar e navegar pelo sistema imediatamente sem precisar baixar ou instalar nada:
+- 🌐 **Interface Web (Frontend)**: **[https://eventhub-frontend-ujb9.onrender.com/](https://eventhub-frontend-ujb9.onrender.com/)**
+- ⚙️ **API REST & Healthcheck**: **[https://eventhub-backend-sr93.onrender.com/actuator/health](https://eventhub-backend-sr93.onrender.com/actuator/health)**
+- 📊 **Métricas de Telemetria**: **[https://eventhub-backend-sr93.onrender.com/api/events/stats](https://eventhub-backend-sr93.onrender.com/api/events/stats)**
+
+<p align="center">
+  <img src="docs/images/evidence_render_cloud_live.png" alt="EventHub em Produção na Nuvem Render" width="100%" />
+</p>
+
+### Opção B: Execução Local Completa (Com Docker)
+Caso deseje rodar o ecossistema na sua máquina local, você só precisa do **Docker Desktop**:
 
 ```bash
 # 1. Clone o repositório
@@ -188,8 +207,8 @@ docker compose up -d --build
 ```
 
 Em poucos instantes, três serviços estarão rodando de forma orquestrada e saudável:
-- 🌐 **Interface Web (Frontend)**: Acesse no seu navegador em [http://localhost:4200](http://localhost:4200)
-- ⚙️ **Servidor da API (Backend Spring Boot)**: Rodando em [http://localhost:8082](http://localhost:8082)
+- 🌐 **Interface Web (Frontend)**: [http://localhost:4200](http://localhost:4200)
+- ⚙️ **Servidor da API (Backend Spring Boot)**: [http://localhost:8082](http://localhost:8082)
 - 🗄️ **Banco Relacional (PostgreSQL 16)**: Porta 5432 gerenciando os dados industriais com integridade ACID.
 
 ---
