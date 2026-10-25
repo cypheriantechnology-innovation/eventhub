@@ -18,7 +18,7 @@ export class EventService {
       return (window as any).__EVENTHUB_API_URL__;
     }
     if (typeof window !== 'undefined' && window.location.hostname.includes('onrender.com')) {
-      return 'https://eventhub-backend.onrender.com/api/events';
+      return 'https://eventhub-backend-sr93.onrender.com/api/events';
     }
     return '/api/events';
   }
