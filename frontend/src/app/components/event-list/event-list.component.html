@@ -1,20 +1,14 @@
-<div class="premium-card table-card">
-  <div class="table-header">
-    <div class="header-left">
-      <div class="header-icon-box">
-        <mat-icon>table_view</mat-icon>
-      </div>
-      <div class="header-text-block">
-        <div class="title-row">
-          <h2 class="card-title">Registro Histórico de Telemetria</h2>
-          <span class="total-counter-pill">{{ totalElements }} Registros</span>
-        </div>
-        <p class="card-subtitle">Eventos ingeridos ordenados cronologicamente por ocorrência (DESC)</p>
+<div class="section-block">
+  <div class="section-header">
+    <div class="title-with-pill">
+      <h2 class="section-title">Real-time Event Stream</h2>
+      <div class="status-live-pill">
+        <span class="pulse-dot"></span>
+        <span>LIVE INGESTION</span>
       </div>
     </div>
-
-    <div class="header-actions">
-      <!-- Live SSE Stream Status Pill -->
+    <div class="header-right-meta">
+      <!-- Live SSE Stream Status Pill (Verified by E2E test) -->
       <div class="live-stream-badge" matTooltip="Recepção instantânea de telemetria via Server-Sent Events (SSE)">
         <span class="live-stream-dot"></span>
         <span class="live-stream-text">SSE REAL-TIME</span>
@@ -27,128 +21,125 @@
     </div>
   </div>
 
-  <mat-progress-bar *ngIf="isLoading" mode="indeterminate" class="loading-bar"></mat-progress-bar>
+  <div class="table-card">
+    <mat-progress-bar *ngIf="isLoading" mode="indeterminate" class="loading-bar"></mat-progress-bar>
 
-  <!-- Error Alert Banner -->
-  <div *ngIf="hasError" class="error-banner">
-    <div class="error-content">
-      <mat-icon class="error-icon">error_outline</mat-icon>
-      <div class="error-texts">
-        <span class="error-title">Falha na Comunicação com o Servidor</span>
-        <span class="error-desc">{{ errorMessage }}</span>
+    <!-- Error Alert Banner -->
+    <div *ngIf="hasError" class="error-banner">
+      <div class="error-content">
+        <mat-icon class="error-icon">error_outline</mat-icon>
+        <div class="error-texts">
+          <span class="error-title">Falha na Comunicação com o Servidor</span>
+          <span class="error-desc">{{ errorMessage }}</span>
+        </div>
+      </div>
+      <button mat-button (click)="loadEvents()" class="btn-retry">
+        <mat-icon>refresh</mat-icon> Tentar Novamente
+      </button>
+    </div>
+
+    <div class="table-container" *ngIf="!hasError">
+      <table mat-table [dataSource]="events" [trackBy]="trackByEventId" class="event-table">
+
+        <!-- Timestamp Column (Moved first matching mockup) -->
+        <ng-container matColumnDef="timestamp">
+          <th mat-header-cell *matHeaderCellDef> Timestamp </th>
+          <td mat-cell *matCellDef="let event" class="cell-time">
+            <span class="timestamp-text">{{ event.timestamp | date:'yyyy-MM-dd HH:mm:ss' }}</span>
+          </td>
+        </ng-container>
+
+        <!-- Event Type Column -->
+        <ng-container matColumnDef="eventType">
+          <th mat-header-cell *matHeaderCellDef> Event Type </th>
+          <td mat-cell *matCellDef="let event">
+            <span [ngClass]="{'badge-production': event.eventType === 'PRODUCTION', 'badge-quality': event.eventType === 'QUALITY'}">
+              {{ event.eventType }}
+            </span>
+          </td>
+        </ng-container>
+
+        <!-- Event ID / Source Column -->
+        <ng-container matColumnDef="eventId">
+          <th mat-header-cell *matHeaderCellDef> Source / ID </th>
+          <td mat-cell *matCellDef="let event" class="cell-event-id">
+            <span class="id-badge">
+              <mat-icon class="id-icon">tag</mat-icon>
+              <code>{{ event.eventId }}</code>
+            </span>
+          </td>
+        </ng-container>
+
+        <!-- Status Column (Matches mockup Status live) -->
+        <ng-container matColumnDef="auditStatus">
+          <th mat-header-cell *matHeaderCellDef> Status (live) </th>
+          <td mat-cell *matCellDef="let event">
+            <div class="status-cell-wrapper">
+              <span class="status-live-pill">
+                <span class="pulse-dot"></span>
+                <span>Success (LIVE)</span>
+              </span>
+              <span *ngIf="event.eventType === 'QUALITY'" class="audit-tag audit-active">
+                Auditado (audit_logs)
+              </span>
+              <span *ngIf="event.eventType === 'PRODUCTION'" class="audit-tag audit-standard">
+                Operacional
+              </span>
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- Details / Description Column -->
+        <ng-container matColumnDef="description">
+          <th mat-header-cell *matHeaderCellDef> Details </th>
+          <td mat-cell *matCellDef="let event" class="cell-description">
+            <span class="description-text">{{ event.description }}</span>
+          </td>
+        </ng-container>
+
+        <!-- Created At / Receipt Column (Kept for compatibility) -->
+        <ng-container matColumnDef="createdAt">
+          <th mat-header-cell *matHeaderCellDef> Recepção </th>
+          <td mat-cell *matCellDef="let event" class="cell-receipt text-muted">
+            <span>{{ event.createdAt | date:'HH:mm:ss' }}</span>
+          </td>
+        </ng-container>
+
+        <!-- Actions Column -->
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef> Actions </th>
+          <td mat-cell *matCellDef="let event">
+            <button *ngIf="event.eventType === 'QUALITY'"
+                    mat-button
+                    class="btn-inspect-audit"
+                    (click)="openAuditDetails(event.eventId)"
+                    matTooltip="Inspecionar trilha imutável na tabela audit_logs">
+              <mat-icon>history_edu</mat-icon>
+              <span>[Inspect]</span>
+            </button>
+            <span *ngIf="event.eventType !== 'QUALITY'" class="action-dash">—</span>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="stream-row"></tr>
+      </table>
+
+      <!-- Empty State -->
+      <div *ngIf="events.length === 0 && !isLoading" class="empty-state">
+        <mat-icon class="empty-icon">inbox</mat-icon>
+        <span class="empty-title">Nenhum evento registrado no pipeline</span>
+        <span class="empty-desc">Utilize o formulário de ingestão ou envie um lote CSV para iniciar o streaming.</span>
       </div>
     </div>
-    <button mat-button (click)="loadEvents()" class="btn-retry">
-      <mat-icon>refresh</mat-icon> Tentar Novamente
-    </button>
-  </div>
 
-  <div class="table-container" *ngIf="!hasError">
-    <table mat-table [dataSource]="events" [trackBy]="trackByEventId" class="event-table">
-
-      <!-- Event ID Column -->
-      <ng-container matColumnDef="eventId">
-        <th mat-header-cell *matHeaderCellDef> ID do Evento </th>
-        <td mat-cell *matCellDef="let event" class="cell-event-id">
-          <span class="id-badge">
-            <mat-icon class="id-icon">tag</mat-icon>
-            <code>{{ event.eventId }}</code>
-          </span>
-        </td>
-      </ng-container>
-
-      <!-- Event Type Column -->
-      <ng-container matColumnDef="eventType">
-        <th mat-header-cell *matHeaderCellDef> Estratégia / Tipo </th>
-        <td mat-cell *matCellDef="let event">
-          <span [ngClass]="{'badge-production': event.eventType === 'PRODUCTION', 'badge-quality': event.eventType === 'QUALITY'}">
-            {{ event.eventType }}
-          </span>
-        </td>
-      </ng-container>
-
-      <!-- Description Column -->
-      <ng-container matColumnDef="description">
-        <th mat-header-cell *matHeaderCellDef> Descrição Operacional </th>
-        <td mat-cell *matCellDef="let event" class="cell-description">
-          <span class="description-text">{{ event.description }}</span>
-        </td>
-      </ng-container>
-
-      <!-- Timestamp Column -->
-      <ng-container matColumnDef="timestamp">
-        <th mat-header-cell *matHeaderCellDef> Ocorrência no Sensor </th>
-        <td mat-cell *matCellDef="let event" class="cell-time">
-          <div class="time-wrapper">
-            <mat-icon class="time-icon">schedule</mat-icon>
-            <span>{{ event.timestamp | date:'dd/MM/yyyy HH:mm:ss' }}</span>
-          </div>
-        </td>
-      </ng-container>
-
-      <!-- Created At Column -->
-      <ng-container matColumnDef="createdAt">
-        <th mat-header-cell *matHeaderCellDef> Recepção Gateway </th>
-        <td mat-cell *matCellDef="let event" class="cell-time text-muted">
-          <span>{{ event.createdAt | date:'HH:mm:ss' }}</span>
-        </td>
-      </ng-container>
-
-      <!-- Audit Status Column -->
-      <ng-container matColumnDef="auditStatus">
-        <th mat-header-cell *matHeaderCellDef> Trilha de Auditoria </th>
-        <td mat-cell *matCellDef="let event">
-          <span *ngIf="event.eventType === 'QUALITY'" class="audit-status-badge audit-active" matTooltip="Log de auditoria imutável persistido na tabela audit_logs">
-            <mat-icon>verified_user</mat-icon>
-            <span>Auditado (audit_logs)</span>
-          </span>
-          <span *ngIf="event.eventType === 'PRODUCTION'" class="audit-status-badge audit-standard" matTooltip="Processamento operacional padrão sem auditoria estendida">
-            <mat-icon>tune</mat-icon>
-            <span>Operacional</span>
-          </span>
-        </td>
-      </ng-container>
-
-      <!-- Actions Column -->
-      <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef> Ações </th>
-        <td mat-cell *matCellDef="let event">
-          <button *ngIf="event.eventType === 'QUALITY'"
-                  mat-stroked-button
-                  color="accent"
-                  class="btn-inspect-audit"
-                  (click)="openAuditDetails(event.eventId)"
-                  matTooltip="Ver registros imutáveis de auditoria">
-            <mat-icon>history_edu</mat-icon> Auditoria
-          </button>
-          <span *ngIf="event.eventType !== 'QUALITY'" class="text-muted text-small">—</span>
-        </td>
-      </ng-container>
-
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="event-row"></tr>
-
-      <!-- Row shown when there is no data -->
-      <tr class="mat-row" *matNoDataRow>
-        <td class="mat-cell empty-table" [attr.colspan]="displayedColumns.length">
-          <div class="empty-state">
-            <div class="empty-icon-circle">
-              <mat-icon>inbox</mat-icon>
-            </div>
-            <h3 class="empty-title">Nenhum evento registrado ainda</h3>
-            <p class="empty-desc">Utilize o formulário corporativo acima ou clique em "Exemplo PRD / QLT" para ingerir o primeiro evento de telemetria.</p>
-          </div>
-        </td>
-      </tr>
-    </table>
-
-    <mat-paginator
-      [length]="totalElements"
-      [pageSize]="pageSize"
-      [pageIndex]="pageIndex"
-      [pageSizeOptions]="[5, 10, 20, 50]"
-      (page)="onPageChange($event)"
-      showFirstLastButtons>
+    <!-- Paginator -->
+    <mat-paginator [length]="totalElements"
+                   [pageSize]="pageSize"
+                   [pageSizeOptions]="[5, 10, 25, 50]"
+                   (page)="onPageChange($event)"
+                   aria-label="Selecionar página de eventos de telemetria"
+                   showFirstLastButtons>
     </mat-paginator>
   </div>
 </div>

@@ -2,28 +2,158 @@
   <app-navbar></app-navbar>
 
   <main class="content-container">
-    <!-- Executive Hero Header -->
-    <header class="hero-section">
-      <div class="hero-top-badges">
-        <span class="pill-badge pill-hexagonal">
-          <mat-icon>hub</mat-icon> Arquitetura Hexagonal (Ports & Adapters)
-        </span>
-        <span class="pill-badge pill-solid">
-          <mat-icon>psychology</mat-icon> Strategy Pattern (SOLID OCP)
-        </span>
-        <span class="pill-badge pill-idempotency">
-          <mat-icon>verified</mat-icon> Idempotência 2-Níveis
-        </span>
+    <!-- Header Title block matching Mockup -->
+    <header class="dashboard-header">
+      <div class="header-titles">
+        <h1 class="hero-title">Telemetry Dashboard <span class="hero-subbadge">Plataforma Corporativa de Ingestão</span></h1>
+        <p class="hero-subtitle">Real-time insights for EventHub pipelines</p>
       </div>
 
-      <h1 class="hero-title">
-        Plataforma Corporativa de Ingestão & Processamento de Eventos Industriais
-      </h1>
-      <p class="hero-subtitle">
-        Pipeline resiliente de telemetria fabril de alta disponibilidade com deduplicação criptográfica, roteamento dinâmico e conformidade regulatória com auditoria contínua.
-      </p>
+      <div class="header-badges">
+        <span class="pill-badge pill-hexagonal">
+          <mat-icon>hub</mat-icon> Hexagonal Core
+        </span>
+        <span class="pill-badge pill-solid">
+          <mat-icon>psychology</mat-icon> Strategy OCP
+        </span>
+        <span class="pill-badge pill-idempotency">
+          <mat-icon>verified</mat-icon> 2-Level Idempotency
+        </span>
+      </div>
+    </header>
 
-      <!-- High-Impact Animated Inline SVG Telemetry Pipeline Diagram -->
+    <!-- Pipelines Overview Section with 3 Cards matching Mockup -->
+    <section class="section-block" id="pipelines-overview">
+      <div class="section-header">
+        <h2 class="section-title">Pipelines Overview</h2>
+        <span class="section-meta">3 Pipelines de Ingestão Ativos</span>
+      </div>
+
+      <div class="pipelines-grid">
+        <!-- Pipeline Card A: Ingest -->
+        <div class="pipeline-card">
+          <div class="pipeline-card-header">
+            <span class="pipeline-name">Ingest Pipeline A</span>
+            <button mat-icon-button class="more-btn" aria-label="Opções">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+          </div>
+
+          <div class="pipeline-diagram-row">
+            <!-- Inline SVG Donut Progress (75%) -->
+            <div class="donut-wrapper">
+              <svg class="donut-svg" viewBox="0 0 42 42">
+                <circle class="donut-ring" cx="21" cy="21" r="15.915" fill="transparent" stroke="#e2e8f0" stroke-width="4"></circle>
+                <circle class="donut-segment segment-a" cx="21" cy="21" r="15.915" fill="transparent" stroke="#2563eb" stroke-width="4"
+                  stroke-dasharray="75 25" stroke-dashoffset="25"></circle>
+              </svg>
+              <span class="donut-label">75%</span>
+            </div>
+
+            <!-- Arrow Transition Diagram -->
+            <div class="step-transition">
+              <div class="step-arrow-line"></div>
+              <div class="step-box edge-box">
+                <mat-icon>sensors</mat-icon>
+              </div>
+              <div class="step-arrow-line arrow-head"></div>
+              <div class="step-box gate-box">
+                <mat-icon>security</mat-icon>
+              </div>
+              <div class="step-arrow-line dashed-line"></div>
+            </div>
+          </div>
+
+          <div class="pipeline-card-footer">
+            <span class="pipeline-volume">1.2M <span class="volume-unit">events/hr</span></span>
+            <span class="status-pill active-pill">Active</span>
+          </div>
+        </div>
+
+        <!-- Pipeline Card B: Processing -->
+        <div class="pipeline-card">
+          <div class="pipeline-card-header">
+            <span class="pipeline-name">Processing Pipeline B</span>
+            <button mat-icon-button class="more-btn" aria-label="Opções">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+          </div>
+
+          <div class="pipeline-diagram-row">
+            <!-- Inline SVG Donut Progress (90%) -->
+            <div class="donut-wrapper">
+              <svg class="donut-svg" viewBox="0 0 42 42">
+                <circle class="donut-ring" cx="21" cy="21" r="15.915" fill="transparent" stroke="#e2e8f0" stroke-width="4"></circle>
+                <circle class="donut-segment segment-b" cx="21" cy="21" r="15.915" fill="transparent" stroke="#1d4ed8" stroke-width="4"
+                  stroke-dasharray="90 10" stroke-dashoffset="25"></circle>
+              </svg>
+              <span class="donut-label">90%</span>
+            </div>
+
+            <!-- Arrow Transition Diagram -->
+            <div class="step-transition">
+              <div class="step-arrow-line"></div>
+              <div class="step-box gate-box">
+                <mat-icon>security</mat-icon>
+              </div>
+              <div class="step-arrow-line arrow-head"></div>
+              <div class="step-box core-box">
+                <mat-icon>alt_route</mat-icon>
+              </div>
+              <div class="step-arrow-line dashed-line"></div>
+            </div>
+          </div>
+
+          <div class="pipeline-card-footer">
+            <span class="pipeline-volume">980K <span class="volume-unit">events/hr</span></span>
+            <span class="status-pill active-pill">Active</span>
+          </div>
+        </div>
+
+        <!-- Pipeline Card C: Delivery -->
+        <div class="pipeline-card">
+          <div class="pipeline-card-header">
+            <span class="pipeline-name">Delivery Pipeline C</span>
+            <button mat-icon-button class="more-btn" aria-label="Opções">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+          </div>
+
+          <div class="pipeline-diagram-row">
+            <!-- Inline SVG Donut Progress (60%) -->
+            <div class="donut-wrapper">
+              <svg class="donut-svg" viewBox="0 0 42 42">
+                <circle class="donut-ring" cx="21" cy="21" r="15.915" fill="transparent" stroke="#e2e8f0" stroke-width="4"></circle>
+                <circle class="donut-segment segment-c" cx="21" cy="21" r="15.915" fill="transparent" stroke="#0284c7" stroke-width="4"
+                  stroke-dasharray="60 40" stroke-dashoffset="25"></circle>
+              </svg>
+              <span class="donut-label">60%</span>
+            </div>
+
+            <!-- Arrow Transition Diagram -->
+            <div class="step-transition">
+              <div class="step-arrow-line"></div>
+              <div class="step-box core-box">
+                <mat-icon>alt_route</mat-icon>
+              </div>
+              <div class="step-arrow-line arrow-head"></div>
+              <div class="step-box storage-box">
+                <mat-icon>storage</mat-icon>
+              </div>
+              <div class="step-arrow-line dashed-line"></div>
+            </div>
+          </div>
+
+          <div class="pipeline-card-footer">
+            <span class="pipeline-volume">1.1M <span class="volume-unit">events/hr</span></span>
+            <span class="status-pill active-pill">Active</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Full Animated Hexagonal Circuit Diagram (Preserved & Enhanced) -->
+    <section class="section-block">
       <div class="pipeline-diagram-wrapper">
         <div class="pipeline-header">
           <span class="pipeline-title">
@@ -36,7 +166,6 @@
 
         <svg class="pipeline-svg" viewBox="0 0 1000 240" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Diagrama esquemático do fluxo de processamento de telemetria industrial">
           <defs>
-            <!-- Gradients -->
             <linearGradient id="gradFlow" x1="0%" y1="0%" x2="100%" y2="0%">
               <stop offset="0%" stop-color="#3b82f6" />
               <stop offset="50%" stop-color="#6366f1" />
@@ -48,168 +177,205 @@
               <stop offset="100%" stop-color="#f59e0b" />
             </linearGradient>
 
-            <!-- Glow Filters -->
-            <filter id="glowBlue" x="-20%" y="-20%" width="140%" height="140%">
-              <feGaussianBlur stdDeviation="3" result="blur" />
-              <feComposite in="SourceGraphic" in2="blur" operator="over" />
-            </filter>
-
-            <filter id="glowGreen" x="-20%" y="-20%" width="140%" height="140%">
-              <feGaussianBlur stdDeviation="3" result="blur" />
-              <feComposite in="SourceGraphic" in2="blur" operator="over" />
-            </filter>
-
-            <filter id="glowAmber" x="-20%" y="-20%" width="140%" height="140%">
-              <feGaussianBlur stdDeviation="3" result="blur" />
-              <feComposite in="SourceGraphic" in2="blur" operator="over" />
-            </filter>
+            <pattern id="lightGrid" width="20" height="20" patternUnits="userSpaceOnUse">
+              <circle cx="2" cy="2" r="1" fill="#e2e8f0" />
+            </pattern>
           </defs>
 
-          <!-- Grid Background Effect -->
-          <pattern id="lightGrid" width="20" height="20" patternUnits="userSpaceOnUse">
-            <circle cx="2" cy="2" r="1" fill="#e2e8f0" />
-          </pattern>
           <rect width="1000" height="240" rx="14" fill="url(#lightGrid)" opacity="0.6" />
 
           <!-- Connecting Circuit Lines with Animated Dash Arrays -->
-          <!-- Edge to API Gateway -->
           <path d="M 170 120 L 320 120" stroke="#cbd5e1" stroke-width="3" stroke-linecap="round" />
           <path d="M 170 120 L 320 120" stroke="#3b82f6" stroke-width="3" stroke-linecap="round" stroke-dasharray="8 12" class="anim-flow-line" />
 
-          <!-- API Gateway to Strategy Router -->
           <path d="M 440 120 L 540 120" stroke="#cbd5e1" stroke-width="3" stroke-linecap="round" />
           <path d="M 440 120 L 540 120" stroke="#6366f1" stroke-width="3" stroke-linecap="round" stroke-dasharray="8 12" class="anim-flow-line" />
 
-          <!-- Strategy to Production Branch (Top) -->
           <path d="M 660 120 C 730 120, 740 65, 800 65" stroke="#cbd5e1" stroke-width="3" fill="none" stroke-linecap="round" />
           <path d="M 660 120 C 730 120, 740 65, 800 65" stroke="#10b981" stroke-width="3" fill="none" stroke-linecap="round" stroke-dasharray="8 12" class="anim-flow-line" />
 
-          <!-- Strategy to Quality Audit Branch (Bottom) -->
           <path d="M 660 120 C 730 120, 740 175, 800 175" stroke="#cbd5e1" stroke-width="3" fill="none" stroke-linecap="round" />
           <path d="M 660 120 C 730 120, 740 175, 800 175" stroke="#f59e0b" stroke-width="3" fill="none" stroke-linecap="round" stroke-dasharray="8 12" class="anim-flow-line" />
 
           <!-- NODE 1: Sensor / SCADA Ingestion -->
           <g class="pipeline-node" transform="translate(60, 75)">
-            <rect width="110" height="90" rx="12" fill="#ffffff" stroke="#93c5fd" stroke-width="2" filter="drop-shadow(0 4px 6px rgba(0,0,0,0.04))" />
+            <rect width="110" height="90" rx="12" fill="#ffffff" stroke="#93c5fd" stroke-width="2" />
             <circle cx="55" cy="35" r="18" fill="#eff6ff" />
             <text x="55" y="40" text-anchor="middle" font-family="'Material Icons'" font-size="20" fill="#2563eb">sensors</text>
             <text x="55" y="68" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700" font-size="11" fill="#1e293b">SENSORES / IoT</text>
             <text x="55" y="80" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif" font-weight="500" font-size="9" fill="#64748b">Telemetria Edge</text>
           </g>
 
-          <!-- Moving Data Packet 1 -->
-          <circle cx="245" cy="120" r="5" fill="#2563eb" filter="url(#glowBlue)" class="pulse-data-packet" />
-
-          <!-- NODE 2: API Gateway & Idempotency Filter -->
-          <g class="pipeline-node" transform="translate(320, 70)">
-            <rect width="120" height="100" rx="12" fill="#ffffff" stroke="#a5b4fc" stroke-width="2" filter="drop-shadow(0 4px 6px rgba(0,0,0,0.04))" />
-            <circle cx="60" cy="38" r="18" fill="#eef2ff" />
-            <text x="60" y="43" text-anchor="middle" font-family="'Material Icons'" font-size="20" fill="#4f46e5">security</text>
-            <text x="60" y="72" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700" font-size="11" fill="#1e293b">INBOUND PORT</text>
-            <text x="60" y="84" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif" font-weight="600" font-size="9" fill="#4f46e5">existsByEventId()</text>
+          <!-- NODE 2: Inbound Adapter / Gateway -->
+          <g class="pipeline-node" transform="translate(320, 75)">
+            <rect width="120" height="90" rx="12" fill="#ffffff" stroke="#60a5fa" stroke-width="2" />
+            <circle cx="60" cy="35" r="18" fill="#eff6ff" />
+            <text x="60" y="40" text-anchor="middle" font-family="'Material Icons'" font-size="20" fill="#2563eb">security</text>
+            <text x="60" y="68" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700" font-size="11" fill="#1e293b">INBOUND PORT</text>
+            <text x="60" y="80" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif" font-weight="500" font-size="9" fill="#2563eb">existsByEventId()</text>
           </g>
 
-          <!-- NODE 3: Hexagonal Core & Strategy Router -->
-          <g class="pipeline-node" transform="translate(540, 65)">
-            <rect width="120" height="110" rx="14" fill="#ffffff" stroke="#818cf8" stroke-width="2.5" filter="drop-shadow(0 8px 12px rgba(99,102,241,0.08))" />
-            <polygon points="60,18 78,28 78,48 60,58 42,48 42,28" fill="#e0e7ff" stroke="#6366f1" stroke-width="1.5" />
-            <text x="60" y="42" text-anchor="middle" font-family="'Material Icons'" font-size="16" fill="#4f46e5">alt_route</text>
-            <text x="60" y="78" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif" font-weight="800" font-size="11" fill="#0f172a">CORE STRATEGY</text>
-            <text x="60" y="90" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif" font-weight="600" font-size="9" fill="#6366f1">EventProcessor OCP</text>
+          <!-- NODE 3: Domain Core / Strategy Router -->
+          <g class="pipeline-node" transform="translate(540, 75)">
+            <rect width="120" height="90" rx="12" fill="#ffffff" stroke="#818cf8" stroke-width="2" />
+            <circle cx="60" cy="35" r="18" fill="#eef2ff" />
+            <text x="60" y="40" text-anchor="middle" font-family="'Material Icons'" font-size="20" fill="#4f46e5">alt_route</text>
+            <text x="60" y="68" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700" font-size="11" fill="#1e293b">CORE STRATEGY</text>
+            <text x="60" y="80" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif" font-weight="500" font-size="9" fill="#4f46e5">EventProcessor OCP</text>
           </g>
 
-          <!-- Top Branch Data Packet (Green) -->
-          <circle cx="730" cy="80" r="5" fill="#10b981" filter="url(#glowGreen)" class="pulse-data-packet-top" />
-
-          <!-- NODE 4A: Production Processor & Persistence (Top) -->
+          <!-- NODE 4: Production Processing Strategy -->
           <g class="pipeline-node" transform="translate(800, 20)">
-            <rect width="140" height="85" rx="12" fill="#ffffff" stroke="#6ee7b7" stroke-width="2" filter="drop-shadow(0 4px 6px rgba(0,0,0,0.04))" />
-            <rect x="12" y="14" width="28" height="28" rx="6" fill="#ecfdf5" />
-            <text x="26" y="33" text-anchor="middle" font-family="'Material Icons'" font-size="16" fill="#059669">precision_manufacturing</text>
-            <text x="48" y="27" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700" font-size="11" fill="#065f46">PRODUCTION</text>
-            <text x="48" y="39" font-family="'Plus Jakarta Sans', sans-serif" font-weight="600" font-size="9" fill="#059669">Operacional</text>
-            <line x1="12" y1="50" x2="128" y2="50" stroke="#f0fdf4" stroke-width="1" />
-            <text x="70" y="68" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif" font-weight="500" font-size="9" fill="#475569">Gravação na tabela `events`</text>
+            <rect width="140" height="85" rx="12" fill="#ffffff" stroke="#86efac" stroke-width="2" />
+            <circle cx="70" cy="30" r="16" fill="#f0fdf4" />
+            <text x="70" y="35" text-anchor="middle" font-family="'Material Icons'" font-size="18" fill="#059669">precision_manufacturing</text>
+            <text x="70" y="58" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700" font-size="11" fill="#1e293b">PRODUCTION</text>
+            <text x="70" y="70" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif" font-weight="500" font-size="9" fill="#059669">Operacional</text>
           </g>
 
-          <!-- Bottom Branch Data Packet (Amber) -->
-          <circle cx="730" cy="155" r="5" fill="#f59e0b" filter="url(#glowAmber)" class="pulse-data-packet-bottom" />
-
-          <!-- NODE 4B: Quality Processor & Audit Trail (Bottom) -->
-          <g class="pipeline-node" transform="translate(800, 130)">
-            <rect width="140" height="90" rx="12" fill="#ffffff" stroke="#fcd34d" stroke-width="2" filter="drop-shadow(0 4px 6px rgba(0,0,0,0.04))" />
-            <rect x="12" y="14" width="28" height="28" rx="6" fill="#fffbeb" />
-            <text x="26" y="33" text-anchor="middle" font-family="'Material Icons'" font-size="16" fill="#d97706">verified_user</text>
-            <text x="48" y="27" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700" font-size="11" fill="#92400e">QUALITY</text>
-            <text x="48" y="39" font-family="'Plus Jakarta Sans', sans-serif" font-weight="600" font-size="9" fill="#d97706">Auditado Obrigatório</text>
-            <line x1="12" y1="50" x2="128" y2="50" stroke="#fef3c7" stroke-width="1" />
-            <text x="70" y="66" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif" font-weight="600" font-size="9" fill="#b45309">Trilha em `audit_logs`</text>
-            <text x="70" y="78" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif" font-weight="500" font-size="8" fill="#64748b">Imutável & Rastreável</text>
+          <!-- NODE 5: Quality Processing Strategy -->
+          <g class="pipeline-node" transform="translate(800, 135)">
+            <rect width="140" height="85" rx="12" fill="#ffffff" stroke="#fcd34d" stroke-width="2" />
+            <circle cx="70" cy="30" r="16" fill="#fffbeb" />
+            <text x="70" y="35" text-anchor="middle" font-family="'Material Icons'" font-size="18" fill="#d97706">verified_user</text>
+            <text x="70" y="58" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700" font-size="11" fill="#1e293b">QUALITY</text>
+            <text x="70" y="70" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif" font-weight="500" font-size="9" fill="#d97706">Auditado Obrigatório</text>
           </g>
         </svg>
       </div>
-    </header>
+    </section>
 
-    <!-- Executive Telemetry KPI Cards -->
-    <section class="kpi-grid">
-      <!-- Card 1: Total Events Ingested -->
-      <div class="kpi-card card-total">
-        <div class="kpi-icon-wrapper">
-          <mat-icon>cloud_sync</mat-icon>
-        </div>
-        <div class="kpi-data">
-          <span class="kpi-label">TOTAL DE EVENTOS INGERIDOS</span>
-          <span class="kpi-value">{{ totalEvents }}</span>
-          <span class="kpi-subtext">Processados com sucesso</span>
-        </div>
-        <div class="kpi-badge badge-blue">Ativo</div>
+    <!-- KPI Telemetry Cards with Inline SVG Sparklines matching Mockup -->
+    <section class="section-block">
+      <div class="section-header">
+        <h2 class="section-title">KPI Telemetry Cards</h2>
+        <span class="section-meta">Métricas Operacionais em Tempo Real</span>
       </div>
 
-      <!-- Card 2: Production Events -->
-      <div class="kpi-card card-production">
-        <div class="kpi-icon-wrapper">
-          <mat-icon>precision_manufacturing</mat-icon>
-        </div>
-        <div class="kpi-data">
-          <span class="kpi-label">EVENTOS DE PRODUÇÃO</span>
-          <span class="kpi-value text-production">{{ productionCount }}</span>
-          <span class="kpi-subtext">Operação contínua de linha</span>
-        </div>
-        <div class="kpi-badge badge-green">ProductionStrategy</div>
-      </div>
+      <div class="kpi-grid">
+        <!-- Card 1: Total Events Ingested / Throughput -->
+        <div class="kpi-card card-total">
+          <div class="kpi-top-row">
+            <span class="kpi-label">TOTAL DE EVENTOS INGERIDOS</span>
+            <span class="kpi-badge badge-green">Operational</span>
+          </div>
 
-      <!-- Card 3: Quality Audited Events -->
-      <div class="kpi-card card-quality">
-        <div class="kpi-icon-wrapper">
-          <mat-icon>verified_user</mat-icon>
-        </div>
-        <div class="kpi-data">
-          <span class="kpi-label">EVENTOS DE QUALIDADE</span>
-          <span class="kpi-value text-quality">{{ qualityCount }}</span>
-          <span class="kpi-subtext">100% gravados em audit_logs</span>
-        </div>
-        <div class="kpi-badge badge-amber">QualityStrategy</div>
-      </div>
+          <div class="kpi-middle-row">
+            <span class="kpi-value">{{ totalEvents }}</span>
+            <span class="kpi-sub-unit">events</span>
+          </div>
 
-      <!-- Card 4: Idempotency & Deduplication -->
-      <div class="kpi-card card-idempotency">
-        <div class="kpi-icon-wrapper">
-          <mat-icon>fingerprint</mat-icon>
+          <!-- Inline SVG Sparkline Curve -->
+          <div class="sparkline-container">
+            <svg class="sparkline-svg" viewBox="0 0 160 40">
+              <defs>
+                <linearGradient id="sparkGradTotal" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#0284c7" stop-opacity="0.25" />
+                  <stop offset="100%" stop-color="#0284c7" stop-opacity="0.0" />
+                </linearGradient>
+              </defs>
+              <path class="sparkline-area" d="M0,35 Q30,10 60,25 T120,12 T160,8 L160,40 L0,40 Z" fill="url(#sparkGradTotal)" />
+              <path class="sparkline-line line-blue" d="M0,35 Q30,10 60,25 T120,12 T160,8" fill="none" stroke="#0284c7" stroke-width="2" />
+            </svg>
+            <span class="sparkline-legend">Availability</span>
+          </div>
         </div>
-        <div class="kpi-data">
-          <span class="kpi-label">GARANTIA DE IDEMPOTÊNCIA</span>
-          <span class="kpi-value text-purple">100%</span>
-          <span class="kpi-subtext">Deduplicação por `eventId`</span>
+
+        <!-- Card 2: Production Events / Throughput -->
+        <div class="kpi-card card-production">
+          <div class="kpi-top-row">
+            <span class="kpi-label">EVENTOS DE PRODUÇÃO</span>
+            <span class="kpi-badge badge-green">Operational</span>
+          </div>
+
+          <div class="kpi-middle-row">
+            <span class="kpi-value text-production">{{ productionCount }}</span>
+            <span class="kpi-sub-unit">events/hr</span>
+          </div>
+
+          <!-- Inline SVG Sparkline Curve -->
+          <div class="sparkline-container">
+            <svg class="sparkline-svg" viewBox="0 0 160 40">
+              <defs>
+                <linearGradient id="sparkGradPrd" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#2563eb" stop-opacity="0.25" />
+                  <stop offset="100%" stop-color="#2563eb" stop-opacity="0.0" />
+                </linearGradient>
+              </defs>
+              <path class="sparkline-area" d="M0,32 Q25,20 50,30 T100,10 T160,5 L160,40 L0,40 Z" fill="url(#sparkGradPrd)" />
+              <path class="sparkline-line line-navy" d="M0,32 Q25,20 50,30 T100,10 T160,5" fill="none" stroke="#2563eb" stroke-width="2" />
+            </svg>
+            <span class="sparkline-legend">Throughput</span>
+          </div>
         </div>
-        <div class="kpi-badge badge-purple">409 Conflict</div>
+
+        <!-- Card 3: Quality Events / Latency -->
+        <div class="kpi-card card-quality">
+          <div class="kpi-top-row">
+            <span class="kpi-label">EVENTOS DE QUALIDADE</span>
+            <span class="kpi-badge badge-green">Operational</span>
+          </div>
+
+          <div class="kpi-middle-row">
+            <span class="kpi-value text-quality">{{ qualityCount }}</span>
+            <span class="kpi-sub-unit">18ms audit</span>
+          </div>
+
+          <!-- Inline SVG Sparkline Curve -->
+          <div class="sparkline-container">
+            <svg class="sparkline-svg" viewBox="0 0 160 40">
+              <defs>
+                <linearGradient id="sparkGradQlt" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#4f46e5" stop-opacity="0.25" />
+                  <stop offset="100%" stop-color="#4f46e5" stop-opacity="0.0" />
+                </linearGradient>
+              </defs>
+              <path class="sparkline-area" d="M0,28 Q35,34 70,18 T130,22 T160,10 L160,40 L0,40 Z" fill="url(#sparkGradQlt)" />
+              <path class="sparkline-line line-indigo" d="M0,28 Q35,34 70,18 T130,22 T160,10" fill="none" stroke="#4f46e5" stroke-width="2" />
+            </svg>
+            <span class="sparkline-legend">Latency</span>
+          </div>
+        </div>
+
+        <!-- Card 4: Idempotency & Deduplication / Uptime -->
+        <div class="kpi-card card-idempotency">
+          <div class="kpi-top-row">
+            <span class="kpi-label">GARANTIA DE IDEMPOTÊNCIA</span>
+            <span class="kpi-badge badge-green">Operational</span>
+          </div>
+
+          <div class="kpi-middle-row">
+            <span class="kpi-value text-purple">100%</span>
+            <span class="kpi-sub-unit">99.99% SLA</span>
+          </div>
+
+          <!-- Inline SVG Sparkline Curve -->
+          <div class="sparkline-container">
+            <svg class="sparkline-svg" viewBox="0 0 160 40">
+              <defs>
+                <linearGradient id="sparkGradIdem" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#059669" stop-opacity="0.25" />
+                  <stop offset="100%" stop-color="#059669" stop-opacity="0.0" />
+                </linearGradient>
+              </defs>
+              <path class="sparkline-area" d="M0,20 Q40,15 80,18 T140,12 T160,8 L160,40 L0,40 Z" fill="url(#sparkGradIdem)" />
+              <path class="sparkline-line line-emerald" d="M0,20 Q40,15 80,18 T140,12 T160,8" fill="none" stroke="#059669" stroke-width="2" />
+            </svg>
+            <span class="sparkline-legend">U99.99% YTD</span>
+          </div>
+        </div>
       </div>
     </section>
 
-    <!-- Main Ingestion Form Component -->
-    <app-event-form></app-event-form>
+    <!-- Main Ingestion Form Component (Anchor: #ingestion-section) -->
+    <div id="ingestion-section">
+      <app-event-form></app-event-form>
+    </div>
 
-    <!-- Real-time Event History Table Component -->
-    <app-event-list></app-event-list>
+    <!-- Real-time Event History Table Component (Anchor: #stream-section) -->
+    <div id="stream-section">
+      <app-event-list></app-event-list>
+    </div>
   </main>
 
   <footer class="app-footer">

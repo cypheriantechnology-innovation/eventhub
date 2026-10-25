@@ -1,104 +1,75 @@
-<div class="premium-card form-card">
-  <div class="form-header">
-    <div class="header-left">
-      <div class="header-icon-box">
-        <mat-icon>add_task</mat-icon>
-      </div>
-      <div class="header-text-block">
-        <h2 class="card-title">Registrar Novo Evento Industrial</h2>
-        <p class="card-subtitle">Ingestão via Inbound Port com validação de idempotência e roteamento de estratégia</p>
-      </div>
-    </div>
-
-    <div class="sample-actions">
-      <span class="sample-label">Ações Ágeis:</span>
-      <button mat-button type="button" class="btn-sample btn-sample-prd" (click)="generateSampleEvent('PRODUCTION')">
-        <mat-icon>precision_manufacturing</mat-icon> Produção
-      </button>
-      <button mat-button type="button" class="btn-sample btn-sample-qlt" (click)="generateSampleEvent('QUALITY')">
-        <mat-icon>verified_user</mat-icon> Qualidade
-      </button>
-
-      <input type="file" #fileInput id="batchFileInput" (change)="onFileSelected($event)" accept=".csv,.json" style="display:none">
-      <button mat-button type="button" class="btn-sample btn-sample-batch" (click)="fileInput.click()" [disabled]="isUploading">
-        <mat-spinner *ngIf="isUploading" diameter="14"></mat-spinner>
-        <mat-icon *ngIf="!isUploading">upload_file</mat-icon> Lote (CSV/JSON)
-      </button>
-    </div>
+<div class="section-block">
+  <div class="section-header">
+    <h2 class="section-title">Industrial Event Ingestion</h2>
+    <span class="section-meta">Inbound Port & Idempotência</span>
   </div>
 
-  <div class="form-body">
-    <form [formGroup]="eventForm" (ngSubmit)="onSubmit()" class="event-form-layout">
-      <div class="form-grid">
-        <!-- Event ID -->
-        <mat-form-field appearance="outline" class="form-field">
-          <mat-label>Identificador Único (eventId)</mat-label>
-          <input matInput formControlName="eventId" placeholder="Ex: EVT-PRD-4091" required autocomplete="off">
-          <mat-icon matSuffix class="field-icon">fingerprint</mat-icon>
-          <mat-hint>Chave de idempotência única na tabela events</mat-hint>
+  <div class="form-card">
+    <div class="card-inner-header">
+      <div class="header-left">
+        <span class="card-title">Ingest New Data Source / Event</span>
+        <span class="card-desc">Validação de esquema, deduplicação por chave única e roteamento OCP</span>
+      </div>
+
+      <!-- Quick sample actions -->
+      <div class="sample-actions">
+        <button mat-button type="button" class="btn-sample btn-sample-prd" (click)="generateSampleEvent('PRODUCTION')">
+          <mat-icon>precision_manufacturing</mat-icon> Produção
+        </button>
+        <button mat-button type="button" class="btn-sample btn-sample-qlt" (click)="generateSampleEvent('QUALITY')">
+          <mat-icon>verified_user</mat-icon> Qualidade
+        </button>
+      </div>
+    </div>
+
+    <form [formGroup]="eventForm" (ngSubmit)="onSubmit()" class="horizontal-form-grid">
+      <!-- Col 1: Data Source Name / eventId -->
+      <div class="form-col col-id">
+        <label class="form-label" for="eventIdInput">Data Source Name / ID <span class="req">*</span></label>
+        <mat-form-field appearance="outline" class="clean-field">
+          <input matInput id="eventIdInput" formControlName="eventId" placeholder="Ex: EVT-PRD-4091" required autocomplete="off">
           <mat-error *ngIf="eventForm.get('eventId')?.hasError('required')">
             O identificador do evento é obrigatório.
           </mat-error>
-          <mat-error *ngIf="eventForm.get('eventId')?.hasError('maxlength')">
-            Máximo de 100 caracteres.
-          </mat-error>
-        </mat-form-field>
-
-        <!-- Event Type -->
-        <mat-form-field appearance="outline" class="form-field">
-          <mat-label>Tipo de Evento (Strategy Pattern)</mat-label>
-          <mat-select formControlName="eventType" required>
-            <mat-option value="PRODUCTION">
-              <div class="select-option-item">
-                <span class="badge-production">PRODUCTION</span>
-                <span class="option-desc">Processamento operacional</span>
-              </div>
-            </mat-option>
-            <mat-option value="QUALITY">
-              <div class="select-option-item">
-                <span class="badge-quality">QUALITY</span>
-                <span class="option-desc">Auditoria obrigatória (audit_logs)</span>
-              </div>
-            </mat-option>
-          </mat-select>
-          <mat-hint>Determina o comportamento do processador</mat-hint>
-          <mat-error *ngIf="eventForm.get('eventType')?.hasError('required')">
-            Selecione o tipo do evento.
-          </mat-error>
-        </mat-form-field>
-
-        <!-- Timestamp -->
-        <mat-form-field appearance="outline" class="form-field">
-          <mat-label>Data / Hora da Ocorrência</mat-label>
-          <input matInput type="datetime-local" formControlName="timestamp">
-          <mat-icon matSuffix class="field-icon">event</mat-icon>
-          <mat-hint>Opcional: assume horário atual se vazio</mat-hint>
         </mat-form-field>
       </div>
 
-      <!-- Description -->
-      <mat-form-field appearance="outline" class="form-field full-width">
-        <mat-label>Descrição Técnica do Evento</mat-label>
-        <textarea matInput formControlName="description" rows="2" placeholder="Descreva os dados de telemetria, sensores ou ocorrência industrial..." required></textarea>
-        <mat-icon matSuffix class="field-icon">notes</mat-icon>
-        <mat-error *ngIf="eventForm.get('description')?.hasError('required')">
-          A descrição da ocorrência é obrigatória.
-        </mat-error>
-        <mat-error *ngIf="eventForm.get('description')?.hasError('maxlength')">
-          Máximo de 500 caracteres permitidos.
-        </mat-error>
-      </mat-form-field>
+      <!-- Col 2: Data Type / eventType -->
+      <div class="form-col col-type">
+        <label class="form-label">Data Type / Strategy <span class="req">*</span></label>
+        <mat-form-field appearance="outline" class="clean-field">
+          <mat-select formControlName="eventType" required>
+            <mat-option value="PRODUCTION">PRODUCTION (Operação)</mat-option>
+            <mat-option value="QUALITY">QUALITY (Auditoria)</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
 
-      <div class="form-footer">
-        <div class="architecture-note">
-          <mat-icon>info_outline</mat-icon>
-          <span>Eventos do tipo <strong>QUALITY</strong> disparam automaticamente a criação de registro imutável em <code>audit_logs</code>.</span>
-        </div>
+      <!-- Col 3: API Endpoint / Description -->
+      <div class="form-col col-desc">
+        <label class="form-label" for="descInput">API Endpoint / Descrição <span class="req">*</span></label>
+        <mat-form-field appearance="outline" class="clean-field">
+          <textarea matInput id="descInput" formControlName="description" rows="1" placeholder="Descreva os dados do sensor ou rota industrial..." required></textarea>
+          <mat-error *ngIf="eventForm.get('description')?.hasError('required')">
+            A descrição da ocorrência é obrigatória.
+          </mat-error>
+        </mat-form-field>
+      </div>
 
-        <button mat-flat-button color="primary" type="submit" class="submit-action-btn" [disabled]="isSubmitting">
-          <mat-spinner *ngIf="isSubmitting" diameter="18" class="spinner"></mat-spinner>
-          <mat-icon *ngIf="!isSubmitting">bolt</mat-icon>
-          <span>{{ isSubmitting ? 'Processando Evento...' : 'Processar & Ingerir Evento' }}</span>
+      <!-- Actions: Batch CSV Upload + Add Source / Submit -->
+      <div class="form-col col-actions">
+        <input type="file" #fileInput id="batchFileInput" (change)="onFileSelected($event)" accept=".csv,.json" style="display:none">
+        
+        <button mat-button type="button" class="btn-upload-csv btn-sample-batch" (click)="fileInput.click()" [disabled]="isUploading">
+          <mat-spinner *ngIf="isUploading" diameter="16" class="btn-spinner"></mat-spinner>
+          <mat-icon *ngIf="!isUploading">cloud_upload</mat-icon>
+          <span>{{ isUploading ? 'Enviando...' : 'Upload CSV' }}</span>
+        </button>
+
+        <button mat-flat-button color="primary" type="submit" class="btn-add-source submit-action-btn" [disabled]="isSubmitting">
+          <mat-spinner *ngIf="isSubmitting" diameter="16" class="btn-spinner"></mat-spinner>
+          <mat-icon *ngIf="!isSubmitting">add</mat-icon>
+          <span>{{ isSubmitting ? 'Processando...' : 'Add Source' }}</span>
         </button>
       </div>
     </form>
