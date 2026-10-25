@@ -772,72 +772,269 @@
 }
 
 
-/* Full Circuit Diagram Container */
+/* Full Circuit Diagram Container (Executive Topology Center) */
 .pipeline-diagram-wrapper {
   background: #ffffff;
-  border-radius: 12px;
+  border-radius: 16px;
   border: 1px solid #e2e8f0;
-  padding: 1.25rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  padding: 1.5rem;
+  box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.05), 0 2px 6px -1px rgba(15, 23, 42, 0.03);
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #0284c7 0%, #6366f1 50%, #10b981 100%);
+  }
 
   .pipeline-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 0.75rem;
+    flex-wrap: wrap;
+    gap: 1.25rem;
+    margin-bottom: 1.25rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #f1f5f9;
 
-    .pipeline-title {
-      display: inline-flex;
+    .pipeline-header-main {
+      display: flex;
       align-items: center;
-      gap: 6px;
-      font-size: 0.76rem;
-      font-weight: 700;
-      color: #475569;
-      letter-spacing: 0.05em;
+      gap: 12px;
 
-      mat-icon {
-        font-size: 18px;
-        width: 18px;
-        height: 18px;
-        color: #2563eb;
+      .pipeline-title-icon-box {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        background: #eff6ff;
+        border: 1px solid #bfdbfe;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #0284c7;
+
+        mat-icon {
+          font-size: 24px;
+          width: 24px;
+          height: 24px;
+        }
+      }
+
+      .pipeline-title-texts {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+
+        .pipeline-title-row {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          flex-wrap: wrap;
+
+          .pipeline-title {
+            font-size: 0.95rem;
+            font-weight: 800;
+            color: #0f172a;
+            letter-spacing: 0.04em;
+          }
+
+          .pipeline-arch-badge {
+            font-size: 0.62rem;
+            font-weight: 800;
+            font-family: 'JetBrains Mono', monospace;
+            padding: 2px 8px;
+            border-radius: 9999px;
+            background: #eff6ff;
+            color: #0284c7;
+            border: 1px solid #bfdbfe;
+            letter-spacing: 0.05em;
+          }
+        }
+
+        .pipeline-subtitle {
+          font-size: 0.78rem;
+          color: #64748b;
+          font-weight: 500;
+        }
       }
     }
 
-    .pipeline-status {
-      display: inline-flex;
+    .pipeline-header-meta {
+      display: flex;
       align-items: center;
-      gap: 6px;
-      font-size: 0.68rem;
-      font-weight: 800;
-      color: #059669;
-      background: #ecfdf5;
-      padding: 3px 8px;
-      border-radius: 9999px;
-      border: 1px solid #a7f3d0;
+      gap: 14px;
+      flex-wrap: wrap;
 
-      .live-dot {
-        width: 6px;
-        height: 6px;
-        border-radius: 50%;
-        background: #10b981;
+      .pipeline-specs-deck {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        .spec-chip {
+          display: flex;
+          align-items: center;
+          gap: 5px;
+          background: #f8fafc;
+          border: 1px solid #e2e8f0;
+          padding: 4px 10px;
+          border-radius: 8px;
+          font-size: 0.68rem;
+          font-family: 'JetBrains Mono', monospace;
+          line-height: 1;
+
+          .spec-label {
+            color: #94a3b8;
+            font-weight: 700;
+          }
+
+          .spec-val {
+            color: #334155;
+            font-weight: 800;
+          }
+        }
+      }
+
+      .pipeline-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.72rem;
+        font-weight: 800;
+        color: #059669;
+        background: #ecfdf5;
+        padding: 5px 12px;
+        border-radius: 9999px;
+        border: 1px solid #a7f3d0;
+
+        .live-dot-container {
+          position: relative;
+          width: 8px;
+          height: 8px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          .live-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #10b981;
+            z-index: 2;
+          }
+
+          .radar-echo {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #10b981;
+            animation: radarEchoPing 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+            z-index: 1;
+          }
+        }
+
+        .status-label {
+          letter-spacing: 0.04em;
+        }
       }
     }
   }
 
-  .pipeline-svg {
+  .svg-canvas-container {
     width: 100%;
-    height: auto;
-    display: block;
+    overflow-x: auto;
+    border-radius: 12px;
+    border: 1px solid #f1f5f9;
+    background: #ffffff;
+
+    &::-webkit-scrollbar {
+      height: 6px;
+    }
+    &::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+
+    .pipeline-svg {
+      width: 100%;
+      min-width: 980px;
+      height: auto;
+      display: block;
+    }
   }
 }
 
-.anim-flow-line {
-  animation: flowLine 2s linear infinite;
+/* SVG Topology Interactive & Animated Classes */
+.pipeline-node {
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: default;
+
+  &:hover {
+    transform: translateY(-2px);
+  }
 }
 
-@keyframes flowLine {
+.anim-electron-beam {
+  stroke-dasharray: 12 24;
+  animation: electronBeamMove 1.8s linear infinite;
+
+  &.beam-delay-1 {
+    animation-delay: 0.4s;
+  }
+  &.beam-delay-2 {
+    animation-delay: 0.8s;
+  }
+  &.beam-delay-3 {
+    animation-delay: 0.8s;
+  }
+}
+
+@keyframes electronBeamMove {
+  from {
+    stroke-dashoffset: 36;
+  }
   to {
-    stroke-dashoffset: -40;
+    stroke-dashoffset: 0;
+  }
+}
+
+.anim-radar-ping {
+  animation: svgRadarPing 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+  transform-origin: center;
+}
+
+@keyframes svgRadarPing {
+  0% {
+    r: 3.5;
+    opacity: 0.9;
+  }
+  70% {
+    r: 9;
+    opacity: 0.2;
+  }
+  100% {
+    r: 12;
+    opacity: 0;
+  }
+}
+
+@keyframes radarEchoPing {
+  0% {
+    transform: scale(1);
+    opacity: 0.9;
+  }
+  70% {
+    transform: scale(2.6);
+    opacity: 0.15;
+  }
+  100% {
+    transform: scale(3.2);
+    opacity: 0;
   }
 }
 

@@ -365,96 +365,262 @@
       </div>
     </section>
 
-    <!-- Full Animated Hexagonal Circuit Diagram (Preserved & Enhanced) -->
-    <section class="section-block">
+    <!-- Full Animated Hexagonal Circuit Diagram (Executive Topology Center) -->
+    <section class="section-block" id="schematic-pipeline-section">
       <div class="pipeline-diagram-wrapper">
         <div class="pipeline-header">
-          <span class="pipeline-title">
-            <mat-icon>account_tree</mat-icon> FLUXO DE PROCESSAMENTO EM TEMPO REAL
-          </span>
-          <span class="pipeline-status">
-            <span class="live-dot"></span> PIPELINE ATIVO
-          </span>
+          <div class="pipeline-header-main">
+            <div class="pipeline-title-icon-box">
+              <mat-icon>hub</mat-icon>
+            </div>
+            <div class="pipeline-title-texts">
+              <div class="pipeline-title-row">
+                <span class="pipeline-title">FLUXO DE PROCESSAMENTO EM TEMPO REAL</span>
+                <span class="pipeline-arch-badge">HEXAGONAL ARCHITECTURE</span>
+              </div>
+              <span class="pipeline-subtitle">Orquestração desacoplada de telemetria industrial via Strategy Pattern (OCP) e portas idempotentes</span>
+            </div>
+          </div>
+
+          <div class="pipeline-header-meta">
+            <div class="pipeline-specs-deck">
+              <div class="spec-chip" matTooltip="Topologia Desacoplada Hexagonal">
+                <span class="spec-label">TOPOLOGIA:</span>
+                <span class="spec-val">PORTS & ADAPTERS</span>
+              </div>
+              <div class="spec-chip" matTooltip="Buffer de memória com capacidade de absorção de surtos de telemetria">
+                <span class="spec-label">BUFFER:</span>
+                <span class="spec-val">RING BUFFER 64K</span>
+              </div>
+            </div>
+
+            <div class="pipeline-status" title="Status operacional em tempo real de todo o circuito">
+              <span class="live-dot-container">
+                <span class="radar-echo"></span>
+                <span class="live-dot"></span>
+              </span>
+              <span class="status-label">PIPELINE ATIVO</span>
+            </div>
+          </div>
         </div>
 
-        <svg class="pipeline-svg" viewBox="0 0 1000 240" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Diagrama esquemático do fluxo de processamento de telemetria industrial">
-          <defs>
-            <linearGradient id="gradFlow" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stop-color="#3b82f6" />
-              <stop offset="50%" stop-color="#6366f1" />
-              <stop offset="100%" stop-color="#10b981" />
-            </linearGradient>
+        <!-- Executive SVG Topology Canvas -->
+        <div class="svg-canvas-container">
+          <svg class="pipeline-svg" viewBox="0 0 1140 270" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Diagrama esquemático do fluxo de processamento de telemetria industrial">
+            <defs>
+              <!-- Technical Blueprint Grid Pattern -->
+              <pattern id="blueprintGrid" width="24" height="24" patternUnits="userSpaceOnUse">
+                <circle cx="12" cy="12" r="1.1" fill="#cbd5e1" opacity="0.45" />
+                <path d="M 24 0 L 24 24 M 0 24 L 24 24" stroke="#f1f5f9" stroke-width="0.75" />
+              </pattern>
 
-            <linearGradient id="gradAudit" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stop-color="#6366f1" />
-              <stop offset="100%" stop-color="#f59e0b" />
-            </linearGradient>
+              <!-- Glow & Shadow Filters -->
+              <filter id="neonGlowPulse" x="-30%" y="-30%" width="160%" height="160%">
+                <feGaussianBlur stdDeviation="2.5" result="blur" />
+                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+              </filter>
 
-            <pattern id="lightGrid" width="20" height="20" patternUnits="userSpaceOnUse">
-              <circle cx="2" cy="2" r="1" fill="#e2e8f0" />
-            </pattern>
-          </defs>
+              <filter id="cardElevation" x="-10%" y="-10%" width="120%" height="125%">
+                <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#0f172a" flood-opacity="0.06" />
+                <feDropShadow dx="0" dy="1" stdDeviation="2" flood-color="#0f172a" flood-opacity="0.04" />
+              </filter>
 
-          <rect width="1000" height="240" rx="14" fill="url(#lightGrid)" opacity="0.6" />
+              <!-- Node Border Gradients -->
+              <linearGradient id="edgeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#38bdf8" />
+                <stop offset="100%" stop-color="#0284c7" />
+              </linearGradient>
 
-          <!-- Connecting Circuit Lines with Animated Dash Arrays -->
-          <path d="M 170 120 L 320 120" stroke="#cbd5e1" stroke-width="3" stroke-linecap="round" />
-          <path d="M 170 120 L 320 120" stroke="#3b82f6" stroke-width="3" stroke-linecap="round" stroke-dasharray="8 12" class="anim-flow-line" />
+              <linearGradient id="portGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#60a5fa" />
+                <stop offset="100%" stop-color="#2563eb" />
+              </linearGradient>
 
-          <path d="M 440 120 L 540 120" stroke="#cbd5e1" stroke-width="3" stroke-linecap="round" />
-          <path d="M 440 120 L 540 120" stroke="#6366f1" stroke-width="3" stroke-linecap="round" stroke-dasharray="8 12" class="anim-flow-line" />
+              <linearGradient id="coreGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#a78bfa" />
+                <stop offset="100%" stop-color="#6366f1" />
+              </linearGradient>
 
-          <path d="M 660 120 C 730 120, 740 65, 800 65" stroke="#cbd5e1" stroke-width="3" fill="none" stroke-linecap="round" />
-          <path d="M 660 120 C 730 120, 740 65, 800 65" stroke="#10b981" stroke-width="3" fill="none" stroke-linecap="round" stroke-dasharray="8 12" class="anim-flow-line" />
+              <linearGradient id="prdGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#34d399" />
+                <stop offset="100%" stop-color="#059669" />
+              </linearGradient>
 
-          <path d="M 660 120 C 730 120, 740 175, 800 175" stroke="#cbd5e1" stroke-width="3" fill="none" stroke-linecap="round" />
-          <path d="M 660 120 C 730 120, 740 175, 800 175" stroke="#f59e0b" stroke-width="3" fill="none" stroke-linecap="round" stroke-dasharray="8 12" class="anim-flow-line" />
+              <linearGradient id="qltGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#fbbf24" />
+                <stop offset="100%" stop-color="#d97706" />
+              </linearGradient>
 
-          <!-- NODE 1: Sensor / SCADA Ingestion -->
-          <g class="pipeline-node" transform="translate(60, 75)">
-            <rect width="110" height="90" rx="12" fill="#ffffff" stroke="#93c5fd" stroke-width="2" />
-            <circle cx="55" cy="35" r="18" fill="#eff6ff" />
-            <text x="55" y="40" text-anchor="middle" font-family="'Material Icons'" font-size="20" fill="#2563eb">sensors</text>
-            <text x="55" y="68" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700" font-size="11" fill="#1e293b">SENSORES / IoT</text>
-            <text x="55" y="80" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif" font-weight="500" font-size="9" fill="#64748b">Telemetria Edge</text>
-          </g>
+              <!-- Circuit Flow Gradients -->
+              <linearGradient id="flowTrackBlue" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#0284c7" />
+                <stop offset="100%" stop-color="#38bdf8" />
+              </linearGradient>
 
-          <!-- NODE 2: Inbound Adapter / Gateway -->
-          <g class="pipeline-node" transform="translate(320, 75)">
-            <rect width="120" height="90" rx="12" fill="#ffffff" stroke="#60a5fa" stroke-width="2" />
-            <circle cx="60" cy="35" r="18" fill="#eff6ff" />
-            <text x="60" y="40" text-anchor="middle" font-family="'Material Icons'" font-size="20" fill="#2563eb">security</text>
-            <text x="60" y="68" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700" font-size="11" fill="#1e293b">INBOUND PORT</text>
-            <text x="60" y="80" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif" font-weight="500" font-size="9" fill="#2563eb">existsByEventId()</text>
-          </g>
+              <linearGradient id="flowTrackIndigo" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#2563eb" />
+                <stop offset="100%" stop-color="#818cf8" />
+              </linearGradient>
 
-          <!-- NODE 3: Domain Core / Strategy Router -->
-          <g class="pipeline-node" transform="translate(540, 75)">
-            <rect width="120" height="90" rx="12" fill="#ffffff" stroke="#818cf8" stroke-width="2" />
-            <circle cx="60" cy="35" r="18" fill="#eef2ff" />
-            <text x="60" y="40" text-anchor="middle" font-family="'Material Icons'" font-size="20" fill="#4f46e5">alt_route</text>
-            <text x="60" y="68" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700" font-size="11" fill="#1e293b">CORE STRATEGY</text>
-            <text x="60" y="80" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif" font-weight="500" font-size="9" fill="#4f46e5">EventProcessor OCP</text>
-          </g>
+              <linearGradient id="flowTrackEmerald" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#6366f1" />
+                <stop offset="100%" stop-color="#10b981" />
+              </linearGradient>
 
-          <!-- NODE 4: Production Processing Strategy -->
-          <g class="pipeline-node" transform="translate(800, 20)">
-            <rect width="140" height="85" rx="12" fill="#ffffff" stroke="#86efac" stroke-width="2" />
-            <circle cx="70" cy="30" r="16" fill="#f0fdf4" />
-            <text x="70" y="35" text-anchor="middle" font-family="'Material Icons'" font-size="18" fill="#059669">precision_manufacturing</text>
-            <text x="70" y="58" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700" font-size="11" fill="#1e293b">PRODUCTION</text>
-            <text x="70" y="70" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif" font-weight="500" font-size="9" fill="#059669">Operacional</text>
-          </g>
+              <linearGradient id="flowTrackAmber" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#6366f1" />
+                <stop offset="100%" stop-color="#f59e0b" />
+              </linearGradient>
+            </defs>
 
-          <!-- NODE 5: Quality Processing Strategy -->
-          <g class="pipeline-node" transform="translate(800, 135)">
-            <rect width="140" height="85" rx="12" fill="#ffffff" stroke="#fcd34d" stroke-width="2" />
-            <circle cx="70" cy="30" r="16" fill="#fffbeb" />
-            <text x="70" y="35" text-anchor="middle" font-family="'Material Icons'" font-size="18" fill="#d97706">verified_user</text>
-            <text x="70" y="58" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700" font-size="11" fill="#1e293b">QUALITY</text>
-            <text x="70" y="70" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif" font-weight="500" font-size="9" fill="#d97706">Auditado Obrigatório</text>
-          </g>
-        </svg>
+            <!-- Blueprint Canvas Background -->
+            <rect width="1140" height="270" rx="14" fill="#ffffff" />
+            <rect width="1140" height="270" rx="14" fill="url(#blueprintGrid)" />
+
+            <!-- BUS 1: SENSORS (x=210) to INBOUND PORT (x=330) -->
+            <g class="circuit-bus bus-1">
+              <!-- Physical bus carrier -->
+              <path d="M 210 135 L 330 135" stroke="#e2e8f0" stroke-width="5" stroke-linecap="round" />
+              <path d="M 210 135 L 330 135" stroke="rgba(2, 132, 199, 0.2)" stroke-width="2" stroke-dasharray="3 3" />
+              <!-- Active energy pulse -->
+              <path d="M 210 135 L 330 135" stroke="url(#flowTrackBlue)" stroke-width="3" stroke-linecap="round" class="anim-electron-beam" />
+              <!-- In-transit tag -->
+              <rect x="245" y="117" width="50" height="15" rx="4" fill="#ffffff" stroke="#93c5fd" stroke-width="1" />
+              <text x="270" y="128" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="8" font-weight="700" fill="#0284c7">mTLS 1.3</text>
+            </g>
+
+            <!-- BUS 2: INBOUND PORT (x=490) to CORE STRATEGY (x=590) -->
+            <g class="circuit-bus bus-2">
+              <path d="M 490 135 L 590 135" stroke="#e2e8f0" stroke-width="5" stroke-linecap="round" />
+              <path d="M 490 135 L 590 135" stroke="rgba(79, 70, 229, 0.2)" stroke-width="2" stroke-dasharray="3 3" />
+              <path d="M 490 135 L 590 135" stroke="url(#flowTrackIndigo)" stroke-width="3" stroke-linecap="round" class="anim-electron-beam beam-delay-1" />
+              <!-- In-transit tag -->
+              <rect x="515" y="117" width="52" height="15" rx="4" fill="#ffffff" stroke="#a5b4fc" stroke-width="1" />
+              <text x="541" y="128" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="8" font-weight="700" fill="#4338ca">VALIDADO</text>
+            </g>
+
+            <!-- BUS 3A: CORE STRATEGY (x=750) to PRODUCTION SINK (x=880, y=70) -->
+            <g class="circuit-bus bus-3a">
+              <path d="M 750 135 C 810 135, 830 70, 880 70" stroke="#e2e8f0" stroke-width="5" fill="none" stroke-linecap="round" />
+              <path d="M 750 135 C 810 135, 830 70, 880 70" stroke="rgba(16, 185, 129, 0.25)" stroke-width="2" fill="none" stroke-dasharray="4 4" />
+              <path d="M 750 135 C 810 135, 830 70, 880 70" stroke="url(#flowTrackEmerald)" stroke-width="3" fill="none" stroke-linecap="round" class="anim-electron-beam beam-delay-2" />
+              <!-- Branch tag -->
+              <rect x="792" y="86" width="62" height="15" rx="4" fill="#ffffff" stroke="#86efac" stroke-width="1" />
+              <text x="823" y="97" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="8" font-weight="700" fill="#059669">ROUTE: PRD</text>
+            </g>
+
+            <!-- BUS 3B: CORE STRATEGY (x=750) to QUALITY SINK (x=880, y=200) -->
+            <g class="circuit-bus bus-3b">
+              <path d="M 750 135 C 810 135, 830 200, 880 200" stroke="#e2e8f0" stroke-width="5" fill="none" stroke-linecap="round" />
+              <path d="M 750 135 C 810 135, 830 200, 880 200" stroke="rgba(245, 158, 11, 0.25)" stroke-width="2" fill="none" stroke-dasharray="4 4" />
+              <path d="M 750 135 C 810 135, 830 200, 880 200" stroke="url(#flowTrackAmber)" stroke-width="3" fill="none" stroke-linecap="round" class="anim-electron-beam beam-delay-3" />
+              <!-- Branch tag -->
+              <rect x="792" y="171" width="62" height="15" rx="4" fill="#ffffff" stroke="#fcd34d" stroke-width="1" />
+              <text x="823" y="182" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="8" font-weight="700" fill="#d97706">ROUTE: QLT</text>
+            </g>
+
+            <!-- ================= NODE 01: SENSORES / IoT ================= -->
+            <g class="pipeline-node node-sensors" transform="translate(50, 75)" filter="url(#cardElevation)">
+              <!-- Card Base -->
+              <rect width="160" height="120" rx="14" fill="#ffffff" stroke="url(#edgeGrad)" stroke-width="1.8" />
+              <!-- Stage Header Strip -->
+              <path d="M 0 14 C 0 6.27 6.27 0 14 0 L 146 0 C 153.73 0 160 6.27 160 14 L 160 26 L 0 26 Z" fill="#eff6ff" />
+              <text x="12" y="17" font-family="'JetBrains Mono', monospace" font-size="8.5" font-weight="800" fill="#0284c7" letter-spacing="0.5">STAGE 01 / EDGE</text>
+              <!-- Live Indicator Node -->
+              <circle cx="146" cy="13" r="3.5" fill="#0284c7" />
+              <circle cx="146" cy="13" r="6" stroke="#0284c7" stroke-width="1" opacity="0.6" class="anim-radar-ping" />
+              <!-- Icon Container -->
+              <circle cx="34" cy="54" r="16" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1" />
+              <text x="34" y="60" text-anchor="middle" font-family="'Material Icons'" font-size="19" fill="#0284c7">sensors</text>
+              <!-- Title & Texts (Strictly Preserves 'SENSORES / IoT') -->
+              <text x="58" y="52" font-family="'Plus Jakarta Sans', sans-serif" font-weight="800" font-size="11.5" fill="#0f172a">SENSORES / IoT</text>
+              <text x="58" y="66" font-family="'Plus Jakarta Sans', sans-serif" font-weight="600" font-size="9" fill="#64748b">Telemetria Edge</text>
+              <!-- Protocols / Contract Pill -->
+              <rect x="12" y="80" width="136" height="26" rx="6" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1" />
+              <text x="80" y="96" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-weight="700" font-size="8.5" fill="#0369a1">MQTT • OPC UA • REST</text>
+            </g>
+
+            <!-- ================= NODE 02: INBOUND PORT ================= -->
+            <g class="pipeline-node node-inbound" transform="translate(330, 75)" filter="url(#cardElevation)">
+              <!-- Card Base -->
+              <rect width="160" height="120" rx="14" fill="#ffffff" stroke="url(#portGrad)" stroke-width="1.8" />
+              <!-- Stage Header Strip -->
+              <path d="M 0 14 C 0 6.27 6.27 0 14 0 L 146 0 C 153.73 0 160 6.27 160 14 L 160 26 L 0 26 Z" fill="#eff6ff" />
+              <text x="12" y="17" font-family="'JetBrains Mono', monospace" font-size="8.5" font-weight="800" fill="#2563eb" letter-spacing="0.5">STAGE 02 / ADAPTER</text>
+              <circle cx="146" cy="13" r="3.5" fill="#2563eb" />
+              <circle cx="146" cy="13" r="6" stroke="#2563eb" stroke-width="1" opacity="0.6" class="anim-radar-ping" />
+              <!-- Icon Container -->
+              <circle cx="34" cy="54" r="16" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1" />
+              <text x="34" y="60" text-anchor="middle" font-family="'Material Icons'" font-size="19" fill="#2563eb">verified_user</text>
+              <!-- Title & Texts (Strictly Preserves 'INBOUND PORT' and 'existsByEventId()') -->
+              <text x="58" y="52" font-family="'Plus Jakarta Sans', sans-serif" font-weight="800" font-size="11.5" fill="#0f172a">INBOUND PORT</text>
+              <text x="58" y="66" font-family="'JetBrains Mono', monospace" font-weight="700" font-size="8.5" fill="#2563eb">existsByEventId()</text>
+              <!-- Contract Pill -->
+              <rect x="12" y="80" width="136" height="26" rx="6" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1" />
+              <text x="80" y="96" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700" font-size="8.5" fill="#15803d">Idempotência em 2 Níveis</text>
+            </g>
+
+            <!-- ================= NODE 03: CORE STRATEGY ================= -->
+            <g class="pipeline-node node-core" transform="translate(590, 75)" filter="url(#cardElevation)">
+              <!-- Card Base -->
+              <rect width="160" height="120" rx="14" fill="#ffffff" stroke="url(#coreGrad)" stroke-width="1.8" />
+              <!-- Stage Header Strip -->
+              <path d="M 0 14 C 0 6.27 6.27 0 14 0 L 146 0 C 153.73 0 160 6.27 160 14 L 160 26 L 0 26 Z" fill="#f5f3ff" />
+              <text x="12" y="17" font-family="'JetBrains Mono', monospace" font-size="8.5" font-weight="800" fill="#6366f1" letter-spacing="0.5">STAGE 03 / CORE DOMAIN</text>
+              <circle cx="146" cy="13" r="3.5" fill="#6366f1" />
+              <circle cx="146" cy="13" r="6" stroke="#6366f1" stroke-width="1" opacity="0.6" class="anim-radar-ping" />
+              <!-- Icon Container -->
+              <circle cx="34" cy="54" r="16" fill="#f5f3ff" stroke="#ddd6fe" stroke-width="1" />
+              <text x="34" y="60" text-anchor="middle" font-family="'Material Icons'" font-size="19" fill="#4f46e5">alt_route</text>
+              <!-- Title & Texts (Strictly Preserves 'CORE STRATEGY' and 'EventProcessor OCP') -->
+              <text x="58" y="52" font-family="'Plus Jakarta Sans', sans-serif" font-weight="800" font-size="11.5" fill="#0f172a">CORE STRATEGY</text>
+              <text x="58" y="66" font-family="'JetBrains Mono', monospace" font-weight="700" font-size="8.5" fill="#4f46e5">EventProcessor OCP</text>
+              <!-- Polymorphic Routing Pill -->
+              <rect x="12" y="80" width="136" height="26" rx="6" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1" />
+              <text x="80" y="96" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700" font-size="8.5" fill="#4338ca">Open-Closed Principle</text>
+            </g>
+
+            <!-- ================= NODE 04: PRODUCTION SINK ================= -->
+            <g class="pipeline-node node-production" transform="translate(880, 15)" filter="url(#cardElevation)">
+              <!-- Card Base -->
+              <rect width="180" height="105" rx="14" fill="#ffffff" stroke="url(#prdGrad)" stroke-width="1.8" />
+              <!-- Header Strip -->
+              <path d="M 0 14 C 0 6.27 6.27 0 14 0 L 166 0 C 173.73 0 180 6.27 180 14 L 180 24 L 0 24 Z" fill="#ecfdf5" />
+              <text x="12" y="16" font-family="'JetBrains Mono', monospace" font-size="8" font-weight="800" fill="#059669" letter-spacing="0.5">SINK 01 / DEDICATED</text>
+              <circle cx="166" cy="12" r="3.5" fill="#10b981" />
+              <circle cx="166" cy="12" r="6" stroke="#10b981" stroke-width="1" opacity="0.6" class="anim-radar-ping" />
+              <!-- Icon Container -->
+              <circle cx="34" cy="48" r="15" fill="#ecfdf5" stroke="#a7f3d0" stroke-width="1" />
+              <text x="34" y="54" text-anchor="middle" font-family="'Material Icons'" font-size="18" fill="#059669">precision_manufacturing</text>
+              <!-- Title & Texts (Strictly Preserves 'PRODUCTION' and 'Operacional') -->
+              <text x="56" y="46" font-family="'Plus Jakarta Sans', sans-serif" font-weight="800" font-size="11.5" fill="#0f172a">PRODUCTION</text>
+              <text x="56" y="60" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700" font-size="9" fill="#059669">Operacional</text>
+              <!-- Telemetry Chip -->
+              <rect x="12" y="70" width="156" height="24" rx="6" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1" />
+              <text x="90" y="85" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-weight="700" font-size="8.5" fill="#047857">ACID SINK • 99.999% SLA</text>
+            </g>
+
+            <!-- ================= NODE 05: QUALITY SINK ================= -->
+            <g class="pipeline-node node-quality" transform="translate(880, 145)" filter="url(#cardElevation)">
+              <!-- Card Base -->
+              <rect width="180" height="105" rx="14" fill="#ffffff" stroke="url(#qltGrad)" stroke-width="1.8" />
+              <!-- Header Strip -->
+              <path d="M 0 14 C 0 6.27 6.27 0 14 0 L 166 0 C 173.73 0 180 6.27 180 14 L 180 24 L 0 24 Z" fill="#fffbeb" />
+              <text x="12" y="16" font-family="'JetBrains Mono', monospace" font-size="8" font-weight="800" fill="#d97706" letter-spacing="0.5">SINK 02 / COMPLIANCE</text>
+              <circle cx="166" cy="12" r="3.5" fill="#f59e0b" />
+              <circle cx="166" cy="12" r="6" stroke="#f59e0b" stroke-width="1" opacity="0.6" class="anim-radar-ping" />
+              <!-- Icon Container -->
+              <circle cx="34" cy="48" r="15" fill="#fffbeb" stroke="#fde68a" stroke-width="1" />
+              <text x="34" y="54" text-anchor="middle" font-family="'Material Icons'" font-size="18" fill="#d97706">verified</text>
+              <!-- Title & Texts (Strictly Preserves 'QUALITY' and 'Auditado Obrigatório') -->
+              <text x="56" y="46" font-family="'Plus Jakarta Sans', sans-serif" font-weight="800" font-size="11.5" fill="#0f172a">QUALITY</text>
+              <text x="56" y="60" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700" font-size="9" fill="#d97706">Auditado Obrigatório</text>
+              <!-- Telemetry Chip -->
+              <rect x="12" y="70" width="156" height="24" rx="6" fill="#fffbeb" stroke="#fde68a" stroke-width="1" />
+              <text x="90" y="85" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-weight="700" font-size="8.5" fill="#b45309">SHA-256 HASH • SOC2</text>
+            </g>
+          </svg>
+        </div>
       </div>
     </section>
 
