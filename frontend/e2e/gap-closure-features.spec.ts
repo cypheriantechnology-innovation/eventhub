@@ -93,7 +93,6 @@ test.describe('End-to-End Gap Closure UI Flows', () => {
   test('Deve exibir menu mobile e gaveta de navegação em viewport responsivo pequeno', async ({ page }) => {
     // Simulate iPhone 12/13 viewport (390 x 844)
     await page.setViewportSize({ width: 390, height: 844 });
-    await page.goto('/', { waitUntil: 'domcontentloaded' });
 
     const mobileMenuBtn = page.locator('button.mobile-menu-btn');
     await expect(mobileMenuBtn).toBeVisible();

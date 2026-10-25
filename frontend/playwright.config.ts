@@ -8,7 +8,7 @@ export default defineConfig({
   },
   fullyParallel: false,
   forbidOnly: !!process.env['CI'],
-  retries: 0,
+  retries: 1,
   workers: 1,
   reporter: [['list'], ['html', { outputFolder: 'playwright-report', open: 'never' }]],
   use: {

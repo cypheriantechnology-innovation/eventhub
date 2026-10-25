@@ -38,79 +38,97 @@
       </div>
     </div>
 
-    <form [formGroup]="eventForm" (ngSubmit)="onSubmit()" class="horizontal-form-grid">
-      <!-- Col 1: Data Source Name / eventId -->
-      <div class="form-col col-id">
-        <label class="form-label" for="eventIdInput">
-          Data Source Name / ID <span class="req">*</span>
-        </label>
-        <mat-form-field appearance="outline" class="clean-field">
-          <mat-icon matPrefix class="field-prefix-icon">tag</mat-icon>
-          <input matInput id="eventIdInput" formControlName="eventId" placeholder="Ex: EVT-PRD-4091" required autocomplete="off">
-          <mat-error *ngIf="eventForm.get('eventId')?.hasError('required')">
-            O identificador do evento é obrigatório.
-          </mat-error>
-        </mat-form-field>
+    <form [formGroup]="eventForm" (ngSubmit)="onSubmit()" class="ingestion-form">
+      <!-- Tier 1: Spacious 3-Column Inputs Grid (Zero Text Truncation) -->
+      <div class="form-inputs-grid">
+        <!-- Col 1: Data Source Name / eventId -->
+        <div class="form-col col-id">
+          <div class="label-row">
+            <label class="form-label" for="eventIdInput">
+              Data Source Name / ID <span class="req">*</span>
+            </label>
+            <span class="field-hint-chip">ID Único Industrial</span>
+          </div>
+          <mat-form-field appearance="outline" class="clean-field">
+            <mat-icon matPrefix class="field-prefix-icon">tag</mat-icon>
+            <input matInput id="eventIdInput" formControlName="eventId" placeholder="Ex: EVT-PRD-4091" required autocomplete="off">
+            <mat-error *ngIf="eventForm.get('eventId')?.hasError('required')">
+              O identificador do evento é obrigatório.
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <!-- Col 2: Data Type / eventType (Spacious, Unclipped) -->
+        <div class="form-col col-type">
+          <div class="label-row">
+            <label class="form-label">
+              Data Type / Strategy <span class="req">*</span>
+            </label>
+            <span class="field-hint-chip">Roteamento Polimórfico</span>
+          </div>
+          <mat-form-field appearance="outline" class="clean-field">
+            <mat-icon matPrefix class="field-prefix-icon">alt_route</mat-icon>
+            <mat-select formControlName="eventType" required panelClass="strategy-select-panel">
+              <mat-option value="PRODUCTION">PRODUCTION (Operação)</mat-option>
+              <mat-option value="QUALITY">QUALITY (Auditoria)</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <!-- Col 3: API Endpoint / Description (Generous Width) -->
+        <div class="form-col col-desc">
+          <div class="label-row">
+            <label class="form-label" for="descInput">
+              API Endpoint / Descrição <span class="req">*</span>
+            </label>
+            <span class="field-hint-chip">Telemetria de Carga</span>
+          </div>
+          <mat-form-field appearance="outline" class="clean-field field-desc">
+            <mat-icon matPrefix class="field-prefix-icon">description</mat-icon>
+            <textarea matInput id="descInput" formControlName="description" rows="1" placeholder="Descreva os dados do sensor ou rota industrial..." required></textarea>
+            <mat-error *ngIf="eventForm.get('description')?.hasError('required')">
+              A descrição da ocorrência é obrigatória.
+            </mat-error>
+          </mat-form-field>
+        </div>
       </div>
 
-      <!-- Col 2: Data Type / eventType -->
-      <div class="form-col col-type">
-        <label class="form-label">
-          Data Type / Strategy <span class="req">*</span>
-        </label>
-        <mat-form-field appearance="outline" class="clean-field">
-          <mat-icon matPrefix class="field-prefix-icon">alt_route</mat-icon>
-          <mat-select formControlName="eventType" required>
-            <mat-option value="PRODUCTION">PRODUCTION (Operação)</mat-option>
-            <mat-option value="QUALITY">QUALITY (Auditoria)</mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
+      <!-- Tier 2: Executive Control Deck (Live OCP Routing & Action Buttons) -->
+      <div class="form-actions-deck">
+        <!-- Left: Architecture & Idempotency Live Indicators -->
+        <div class="deck-architecture">
+          <div class="strategy-badge" [ngClass]="eventForm.get('eventType')?.value === 'QUALITY' ? 'badge-qlt-route' : 'badge-prd-route'">
+            <mat-icon class="strategy-icon">{{ eventForm.get('eventType')?.value === 'QUALITY' ? 'verified_user' : 'precision_manufacturing' }}</mat-icon>
+            <span class="strategy-text">
+              ROTEAMENTO OCP: <strong>{{ eventForm.get('eventType')?.value === 'QUALITY' ? 'QualityEventProcessor (Trilha SHA-256)' : 'ProductionEventProcessor (Persistência ACID)' }}</strong>
+            </span>
+          </div>
+          <div class="idempotency-badge" title="Deduplicação atômica via chave primária no banco relacional">
+            <mat-icon class="shield-mini">verified</mat-icon>
+            <span>Idempotência Ativa: existsByEventId()</span>
+          </div>
+        </div>
 
-      <!-- Col 3: API Endpoint / Description -->
-      <div class="form-col col-desc">
-        <label class="form-label" for="descInput">
-          API Endpoint / Descrição <span class="req">*</span>
-        </label>
-        <mat-form-field appearance="outline" class="clean-field">
-          <mat-icon matPrefix class="field-prefix-icon">description</mat-icon>
-          <textarea matInput id="descInput" formControlName="description" rows="1" placeholder="Descreva os dados do sensor ou rota industrial..." required></textarea>
-          <mat-error *ngIf="eventForm.get('description')?.hasError('required')">
-            A descrição da ocorrência é obrigatória.
-          </mat-error>
-        </mat-form-field>
-      </div>
+        <!-- Right: Clear Action Buttons Hierarchy -->
+        <div class="deck-actions">
+          <input type="file" #fileInput id="batchFileInput" (change)="onFileSelected($event)" accept=".csv,.json" style="display:none">
+          
+          <!-- Secondary Action: Upload CSV -->
+          <button mat-button type="button" class="btn-upload-csv btn-sample-batch" (click)="fileInput.click()" [disabled]="isUploading" title="Ingerir lote via arquivo CSV / JSON segundo RFC 4180">
+            <mat-spinner *ngIf="isUploading" diameter="16" class="btn-spinner"></mat-spinner>
+            <mat-icon *ngIf="!isUploading">cloud_upload</mat-icon>
+            <span>{{ isUploading ? 'Enviando...' : 'Upload CSV' }}</span>
+            <span class="btn-micro-chip">RFC 4180</span>
+          </button>
 
-      <!-- Actions: Batch CSV Upload + Add Source / Submit -->
-      <div class="form-col col-actions">
-        <input type="file" #fileInput id="batchFileInput" (change)="onFileSelected($event)" accept=".csv,.json" style="display:none">
-        
-        <button mat-button type="button" class="btn-upload-csv btn-sample-batch" (click)="fileInput.click()" [disabled]="isUploading" title="Ingerir lote via arquivo CSV / JSON segundo RFC 4180">
-          <mat-spinner *ngIf="isUploading" diameter="16" class="btn-spinner"></mat-spinner>
-          <mat-icon *ngIf="!isUploading">cloud_upload</mat-icon>
-          <span>{{ isUploading ? 'Enviando...' : 'Upload CSV' }}</span>
-        </button>
-
-        <button mat-flat-button color="primary" type="submit" class="btn-add-source submit-action-btn" [disabled]="isSubmitting" title="Despachar evento atômico para o Inbound Port">
-          <mat-spinner *ngIf="isSubmitting" diameter="16" class="btn-spinner"></mat-spinner>
-          <mat-icon *ngIf="!isSubmitting">add</mat-icon>
-          <span>{{ isSubmitting ? 'Processando...' : 'Add Source' }}</span>
-        </button>
+          <!-- Primary Action: Add Source (Elevated CTA) -->
+          <button mat-flat-button color="primary" type="submit" class="btn-add-source submit-action-btn" [disabled]="isSubmitting" title="Despachar evento atômico para o Inbound Port">
+            <mat-spinner *ngIf="isSubmitting" diameter="16" class="btn-spinner"></mat-spinner>
+            <mat-icon *ngIf="!isSubmitting">add</mat-icon>
+            <span>{{ isSubmitting ? 'Processando...' : 'Add Source' }}</span>
+          </button>
+        </div>
       </div>
     </form>
-
-    <!-- Real-time Strategy & Architecture Routing Strip -->
-    <div class="form-architecture-strip">
-      <div class="strategy-badge" [ngClass]="eventForm.get('eventType')?.value === 'QUALITY' ? 'badge-qlt-route' : 'badge-prd-route'">
-        <mat-icon class="strategy-icon">{{ eventForm.get('eventType')?.value === 'QUALITY' ? 'verified_user' : 'precision_manufacturing' }}</mat-icon>
-        <span class="strategy-text">
-          ROTEAMENTO OCP: <strong>{{ eventForm.get('eventType')?.value === 'QUALITY' ? 'QualityEventProcessor (Trilha Criptográfica SHA-256)' : 'ProductionEventProcessor (Persistência ACID Imediata)' }}</strong>
-        </span>
-      </div>
-      <div class="idempotency-badge">
-        <mat-icon class="shield-mini">verified</mat-icon>
-        <span>Garantia Atômica: Chave Única existsByEventId()</span>
-      </div>
-    </div>
   </div>
 </div>
