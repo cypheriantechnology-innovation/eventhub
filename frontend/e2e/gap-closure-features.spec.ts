@@ -89,6 +89,47 @@ test.describe('End-to-End Gap Closure UI Flows', () => {
     // Confirm presence in table
     await expect(page.locator(`text=${sseEventId}`)).toBeVisible({ timeout: 10000 });
   });
+
+  test('Deve exibir menu mobile e gaveta de navegação em viewport responsivo pequeno', async ({ page }) => {
+    // Simulate iPhone 12/13 viewport (390 x 844)
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto('/');
+
+    const mobileMenuBtn = page.locator('button.mobile-menu-btn');
+    await expect(mobileMenuBtn).toBeVisible();
+
+    // Open drawer
+    await mobileMenuBtn.click();
+    const mobileDrawer = page.locator('.mobile-drawer');
+    await expect(mobileDrawer).toBeVisible();
+    await expect(mobileDrawer.locator('text=Pipelines Overview')).toBeVisible();
+    await expect(mobileDrawer.locator('text=Event Ingestion')).toBeVisible();
+
+    // Click link and verify drawer closes
+    await mobileDrawer.locator('text=Event Ingestion').click();
+    await expect(mobileDrawer).not.toBeVisible();
+  });
+
+  test('Deve processar CSV com descrições contendo vírgulas delimitadas por aspas segundo RFC 4180', async ({ page }) => {
+    const csvQuotedId = `EVT-QUOTED-${Date.now()}`;
+    const csvContent = `eventId,eventType,timestamp,description\n${csvQuotedId},QUALITY,2026-10-25T03:00:00Z,"Sensor óptico, calibrado no setor B"\n`;
+
+    const tempFilePath = path.join(process.cwd(), `temp-quoted-${Date.now()}.csv`);
+    fs.writeFileSync(tempFilePath, csvContent, 'utf8');
+
+    try {
+      const fileInput = page.locator('input#batchFileInput');
+      await fileInput.setInputFiles(tempFilePath);
+
+      const snackBar = page.locator('mat-snack-bar-container.snack-success');
+      await expect(snackBar).toBeVisible({ timeout: 10000 });
+      await expect(page.locator(`text=${csvQuotedId}`)).toBeVisible({ timeout: 10000 });
+    } finally {
+      if (fs.existsSync(tempFilePath)) {
+        fs.unlinkSync(tempFilePath);
+      }
+    }
+  });
 });
 
 test.describe('Observability, Tracing & Prometheus API', () => {

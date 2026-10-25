@@ -47,4 +47,9 @@ public class FindEventsService implements FindEventsUseCase {
         statsCache.set(new CachedStats(freshStats, now));
         return freshStats;
     }
+
+    @Override
+    public void invalidateStatsCache() {
+        statsCache.set(null);
+    }
 }

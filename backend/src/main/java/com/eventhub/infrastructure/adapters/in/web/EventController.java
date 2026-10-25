@@ -169,7 +169,7 @@ public class EventController {
                             }
                         }
                         totalRecords++;
-                        String[] parts = line.split("[,;]");
+                        String[] parts = line.split("[,;](?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)");
                         if (parts.length < 3) {
                             errors++;
                             details.add("Linha inválida (mínimo 3 colunas: id, tipo, descrição): " + line);
@@ -220,6 +220,9 @@ public class EventController {
                     "Falha ao ler dados do arquivo: " + e.getMessage()
             ));
         }
+
+        // Invalidate stats cache so dashboard KPIs update instantly
+        findEventsUseCase.invalidateStatsCache();
 
         BatchUploadResponse batchResponse = BatchUploadResponse.builder()
                 .filename(filename)

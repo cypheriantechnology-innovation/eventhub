@@ -3,6 +3,7 @@ package com.eventhub.application.usecase;
 import com.eventhub.application.strategy.EventProcessor;
 import com.eventhub.domain.exception.DuplicateEventException;
 import com.eventhub.domain.model.Event;
+import com.eventhub.domain.ports.in.FindEventsUseCase;
 import com.eventhub.domain.ports.in.ProcessEventUseCase;
 import com.eventhub.domain.ports.out.EventRepositoryPort;
 import com.eventhub.domain.ports.out.MetricsPort;
@@ -17,7 +18,6 @@ import java.time.Instant;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class ProcessEventService implements ProcessEventUseCase {
 
     private static final Logger log = LoggerFactory.getLogger(ProcessEventService.class);
@@ -25,6 +25,24 @@ public class ProcessEventService implements ProcessEventUseCase {
     private final List<EventProcessor> eventProcessors;
     private final EventRepositoryPort eventRepositoryPort;
     private final MetricsPort metricsPort;
+    private final FindEventsUseCase findEventsUseCase;
+
+    @org.springframework.beans.factory.annotation.Autowired
+    public ProcessEventService(List<EventProcessor> eventProcessors,
+                               EventRepositoryPort eventRepositoryPort,
+                               MetricsPort metricsPort,
+                               @org.springframework.beans.factory.annotation.Autowired(required = false) FindEventsUseCase findEventsUseCase) {
+        this.eventProcessors = eventProcessors;
+        this.eventRepositoryPort = eventRepositoryPort;
+        this.metricsPort = metricsPort;
+        this.findEventsUseCase = findEventsUseCase;
+    }
+
+    public ProcessEventService(List<EventProcessor> eventProcessors,
+                               EventRepositoryPort eventRepositoryPort,
+                               MetricsPort metricsPort) {
+        this(eventProcessors, eventRepositoryPort, metricsPort, null);
+    }
 
     @Override
     @Transactional
@@ -50,6 +68,10 @@ public class ProcessEventService implements ProcessEventUseCase {
         if (metricsPort != null) {
             metricsPort.incrementProcessed(event.getEventType());
             metricsPort.recordProcessingTime(event.getEventType(), duration);
+        }
+
+        if (findEventsUseCase != null) {
+            findEventsUseCase.invalidateStatsCache();
         }
 
         log.info("Evento processado com sucesso: id={}, eventId={}, tipo={}",

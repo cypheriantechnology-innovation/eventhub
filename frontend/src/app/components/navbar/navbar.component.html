@@ -91,6 +91,38 @@
       <div class="user-avatar-pill" title="Operador Logado: Admin (Secured)">
         <mat-icon class="avatar-icon">account_circle</mat-icon>
       </div>
+
+      <!-- Mobile Menu Toggle Button (Visible < 992px) -->
+      <button mat-icon-button class="nav-icon-btn mobile-menu-btn" (click)="toggleMobileMenu()" aria-label="Abrir Menu de Navegação" [attr.aria-expanded]="isMobileMenuOpen">
+        <mat-icon>{{ isMobileMenuOpen ? 'close' : 'menu' }}</mat-icon>
+      </button>
     </div>
   </div>
 </mat-toolbar>
+
+<!-- Collapsible Mobile Navigation Drawer (< 992px) -->
+<nav class="mobile-drawer" *ngIf="isMobileMenuOpen" aria-label="Menu Mobile de Navegação">
+  <div class="mobile-drawer-inner">
+    <a class="mobile-nav-link" (click)="scrollTo('pipelines-overview')">
+      <mat-icon>dashboard</mat-icon>
+      <span>Pipelines Overview</span>
+    </a>
+    <a class="mobile-nav-link" (click)="scrollTo('ingestion-section')">
+      <mat-icon>input</mat-icon>
+      <span>Event Ingestion</span>
+    </a>
+    <a class="mobile-nav-link" (click)="scrollTo('stream-section')">
+      <mat-icon>stream</mat-icon>
+      <span>Real-time Stream & Logs</span>
+    </a>
+    <div class="mobile-divider"></div>
+    <a class="mobile-nav-link" (click)="openSwagger()">
+      <mat-icon>api</mat-icon>
+      <span>Swagger API Docs</span>
+    </a>
+    <a class="mobile-nav-link" (click)="openActuator()">
+      <mat-icon>monitor_heart</mat-icon>
+      <span>Spring Actuator Health</span>
+    </a>
+  </div>
+</nav>

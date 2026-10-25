@@ -44,7 +44,7 @@
       </div>
       <div class="meta-row">
         <span class="meta-key">Timestamp</span>
-        <span class="meta-val">{{ auditLogs[0].createdAt | date:'yyyy-MM-dd HH:mm:ss.SSS' || '2026-10-25 03:54:35.369' }}</span>
+        <span class="meta-val">{{ firstLog?.createdAt ? (firstLog?.createdAt | date:'yyyy-MM-dd HH:mm:ss.SSS') : '2026-10-25 03:54:35.369' }}</span>
       </div>
       <div class="meta-row">
         <span class="meta-key">User / Operador</span>
@@ -53,7 +53,7 @@
       <div class="meta-row">
         <span class="meta-key">Ação</span>
         <span class="meta-val">
-          <span class="action-pill">{{ auditLogs[0].action || 'QUALITY_EVENT_REGISTERED' }}</span>
+          <span class="action-pill">{{ firstLog?.action || 'QUALITY_EVENT_REGISTERED' }}</span>
         </span>
       </div>
       <div class="meta-row">

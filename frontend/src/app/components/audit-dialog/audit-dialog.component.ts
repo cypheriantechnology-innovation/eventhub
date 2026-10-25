@@ -29,6 +29,10 @@ export class AuditDialogComponent implements OnInit {
   public errorMessage: string = '';
   public displayedColumns: string[] = ['id', 'action', 'createdAt', 'status'];
 
+  get firstLog(): AuditLog | null {
+    return this.auditLogs && this.auditLogs.length > 0 ? this.auditLogs[0] : null;
+  }
+
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: { eventId: string },
     private dialogRef: MatDialogRef<AuditDialogComponent>,

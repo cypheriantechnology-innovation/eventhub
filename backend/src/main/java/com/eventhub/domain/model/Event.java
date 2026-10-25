@@ -15,9 +15,17 @@ public class Event {
 
     public Event(UUID id, String eventId, EventType eventType, String description, LocalDateTime timestamp, LocalDateTime createdAt) {
         this.id = id != null ? id : UUID.randomUUID();
-        this.eventId = Objects.requireNonNull(eventId, "eventId must not be null");
+        Objects.requireNonNull(eventId, "eventId must not be null");
+        if (eventId.trim().isEmpty()) {
+            throw new IllegalArgumentException("eventId must not be blank");
+        }
+        this.eventId = eventId.trim();
         this.eventType = Objects.requireNonNull(eventType, "eventType must not be null");
-        this.description = Objects.requireNonNull(description, "description must not be null");
+        Objects.requireNonNull(description, "description must not be null");
+        if (description.trim().isEmpty()) {
+            throw new IllegalArgumentException("description must not be blank");
+        }
+        this.description = description.trim();
         this.timestamp = timestamp != null ? timestamp : LocalDateTime.now();
         this.createdAt = createdAt != null ? createdAt : LocalDateTime.now();
     }

@@ -290,3 +290,10 @@
     font-weight: 700 !important;
   }
 }
+
+/* Responsiveness */
+@media (max-width: 640px) {
+  .hide-on-mobile {
+    display: none !important;
+  }
+}

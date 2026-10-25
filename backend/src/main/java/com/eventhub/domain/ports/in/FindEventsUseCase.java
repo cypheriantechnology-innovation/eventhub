@@ -10,4 +10,6 @@ public interface FindEventsUseCase {
     Event findByEventId(String eventId);
 
     com.eventhub.domain.model.EventStats getStats();
+
+    void invalidateStatsCache();
 }

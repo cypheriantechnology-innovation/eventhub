@@ -48,7 +48,7 @@ public class RateLimitingFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         String requestUri = request.getRequestURI();
-        if (!requestUri.startsWith("/api/")) {
+        if (!requestUri.startsWith("/api/") || "/api/events/stream".equals(requestUri)) {
             filterChain.doFilter(request, response);
             return;
         }
