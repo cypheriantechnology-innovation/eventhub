@@ -4,13 +4,14 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 import { EventFormComponent } from './components/event-form/event-form.component';
 import { EventListComponent } from './components/event-list/event-list.component';
 import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { EventService } from './services/event.service';
 import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, NavbarComponent, EventFormComponent, EventListComponent, MatIconModule],
+  imports: [CommonModule, NavbarComponent, EventFormComponent, EventListComponent, MatIconModule, MatTooltipModule],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
@@ -55,5 +56,12 @@ export class AppComponent implements OnInit, OnDestroy {
         });
       }
     });
+  }
+
+  scrollTo(elementId: string): void {
+    const el = document.getElementById(elementId);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   }
 }

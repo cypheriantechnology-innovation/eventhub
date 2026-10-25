@@ -2,151 +2,364 @@
   <app-navbar></app-navbar>
 
   <main class="content-container">
-    <!-- Header Title block matching Mockup -->
-    <header class="dashboard-header">
+    <!-- Header Title block: Executive Telemetry Dashboard Hero -->
+    <header class="dashboard-header" id="dashboard-hero">
       <div class="header-titles">
-        <h1 class="hero-title">Telemetry Dashboard <span class="hero-subbadge">Plataforma Corporativa de Ingestão</span></h1>
-        <p class="hero-subtitle">Real-time insights for EventHub pipelines</p>
+        <div class="title-row">
+          <h1 class="hero-title">
+            Telemetry Dashboard
+            <span class="hero-subbadge">
+              <span class="subbadge-dot"></span>
+              Plataforma Corporativa de Ingestão
+            </span>
+          </h1>
+        </div>
+        <div class="hero-meta-row">
+          <p class="hero-subtitle">Real-time insights for EventHub pipelines</p>
+          <span class="meta-separator">•</span>
+          <div class="telemetry-ticker" matTooltip="Telemetria contínua agregada do cluster">
+            <span class="ticker-item"><mat-icon class="ticker-icon">dns</mat-icon> CLUSTER: <strong>eu-central-1</strong></span>
+            <span class="ticker-sep">|</span>
+            <span class="ticker-item"><mat-icon class="ticker-icon">bolt</mat-icon> P99: <strong>4.8ms</strong></span>
+            <span class="ticker-sep">|</span>
+            <span class="ticker-item"><mat-icon class="ticker-icon">shield</mat-icon> ZERO DATA LOSS: <strong>99.999% SLA</strong></span>
+          </div>
+        </div>
       </div>
 
       <div class="header-badges">
-        <span class="pill-badge pill-hexagonal">
-          <mat-icon>hub</mat-icon> Hexagonal Core
-        </span>
-        <span class="pill-badge pill-solid">
-          <mat-icon>psychology</mat-icon> Strategy OCP
-        </span>
-        <span class="pill-badge pill-idempotency">
-          <mat-icon>verified</mat-icon> 2-Level Idempotency
-        </span>
+        <div class="command-deck-chip chip-hexagonal" matTooltip="Arquitetura Hexagonal: Domínio puro isolado de frameworks e banco">
+          <div class="chip-icon-box">
+            <mat-icon>hub</mat-icon>
+          </div>
+          <div class="chip-text">
+            <span class="chip-title">Hexagonal Core</span>
+            <span class="chip-sub">PORTS & ADAPTERS</span>
+          </div>
+        </div>
+
+        <div class="command-deck-chip chip-strategy" matTooltip="Open-Closed Principle: Novas estratégias de processamento sem alterar código existente">
+          <div class="chip-icon-box">
+            <mat-icon>psychology</mat-icon>
+          </div>
+          <div class="chip-text">
+            <span class="chip-title">Strategy OCP</span>
+            <span class="chip-sub">DYNAMIC ROUTING</span>
+          </div>
+        </div>
+
+        <div class="command-deck-chip chip-idempotency" matTooltip="Idempotência em 2 Níveis: Trava atômica in-memory + Chave relacional única no PostgreSQL">
+          <div class="chip-icon-box">
+            <mat-icon>verified</mat-icon>
+          </div>
+          <div class="chip-text">
+            <span class="chip-title">2-Level Idempotency</span>
+            <span class="chip-sub">MEMORY + ACID DB</span>
+          </div>
+        </div>
       </div>
     </header>
 
-    <!-- Pipelines Overview Section with 3 Cards matching Mockup -->
+    <!-- Pipelines Overview Section with 3 Executive Telemetry Cards -->
     <section class="section-block" id="pipelines-overview">
       <div class="section-header">
-        <h2 class="section-title">Pipelines Overview</h2>
-        <span class="section-meta">3 Pipelines de Ingestão Ativos</span>
+        <div class="section-header-left">
+          <div class="section-badge-icon">
+            <mat-icon>stream</mat-icon>
+          </div>
+          <div>
+            <h2 class="section-title">Pipelines Overview</h2>
+            <p class="section-description">Orquestração em tempo real dos fluxos de telemetria e validação industrial</p>
+          </div>
+        </div>
+        <div class="section-header-right">
+          <div class="live-status-pill" title="Status agregado dos 3 pipelines de ingestão">
+            <span class="pulse-beacon"></span>
+            <span class="live-pill-text">3 Pipelines Ativos</span>
+            <span class="pill-divider">•</span>
+            <span class="live-pill-metric">3.28M eventos/h</span>
+            <span class="pill-divider">•</span>
+            <span class="live-pill-state">100% Saudáveis</span>
+          </div>
+        </div>
       </div>
 
       <div class="pipelines-grid">
-        <!-- Pipeline Card A: Ingest -->
-        <div class="pipeline-card">
+        <!-- Pipeline Card A: Ingest & Edge Gateway -->
+        <div class="pipeline-card card-ingest">
+          <div class="card-status-bar bar-ingest"></div>
+          
           <div class="pipeline-card-header">
-            <span class="pipeline-name">Ingest Pipeline A</span>
-            <button mat-icon-button class="more-btn" aria-label="Opções">
+            <div class="pipeline-info">
+              <div class="pipeline-tag-row">
+                <span class="stage-badge">STAGE 01 / EDGE</span>
+                <span class="security-chip-card"><mat-icon>lock</mat-icon> mTLS + WAF</span>
+              </div>
+              <h3 class="pipeline-name">Ingest Pipeline A</h3>
+            </div>
+            <button mat-icon-button class="more-btn" aria-label="Mais Opções do Pipeline A" matTooltip="Ações do Pipeline: Inspecionar, Exportar Logs, Ver Fila">
               <mat-icon>more_vert</mat-icon>
             </button>
           </div>
 
+          <!-- Dynamic Live Circuit Row -->
           <div class="pipeline-diagram-row">
-            <!-- Inline SVG Donut Progress (75%) -->
-            <div class="donut-wrapper">
-              <svg class="donut-svg" viewBox="0 0 42 42">
-                <circle class="donut-ring" cx="21" cy="21" r="15.915" fill="transparent" stroke="#e2e8f0" stroke-width="4"></circle>
-                <circle class="donut-segment segment-a" cx="21" cy="21" r="15.915" fill="transparent" stroke="#2563eb" stroke-width="4"
-                  stroke-dasharray="75 25" stroke-dashoffset="25"></circle>
+            <!-- Inline SVG Dual-Track Ring Gauge (75%) -->
+            <div class="donut-wrapper" matTooltip="Taxa de Ingestão: 75% da capacidade de buffer">
+              <svg class="donut-svg" viewBox="0 0 52 52">
+                <defs>
+                  <linearGradient id="gaugeGradA" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#0284c7" />
+                    <stop offset="100%" stop-color="#38bdf8" />
+                  </linearGradient>
+                </defs>
+                <circle class="donut-ring" cx="26" cy="26" r="20" fill="transparent" stroke="rgba(2, 132, 199, 0.12)" stroke-width="4.5"></circle>
+                <circle class="donut-segment segment-a" cx="26" cy="26" r="20" fill="transparent" stroke="url(#gaugeGradA)" stroke-width="4.5"
+                  stroke-dasharray="94.25 31.41" stroke-dashoffset="31.41" stroke-linecap="round"></circle>
               </svg>
-              <span class="donut-label">75%</span>
+              <div class="donut-inner-meta">
+                <span class="donut-label">75%</span>
+                <span class="donut-trend">▲ +4.2%</span>
+              </div>
             </div>
 
-            <!-- Arrow Transition Diagram -->
-            <div class="step-transition">
-              <div class="step-arrow-line"></div>
-              <div class="step-box edge-box">
-                <mat-icon>sensors</mat-icon>
+            <!-- SVG Animated Electron Circuit -->
+            <div class="circuit-container">
+              <svg class="circuit-svg" viewBox="0 0 170 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Bus track -->
+                <path d="M 8 24 L 60 24 M 84 24 L 136 24" stroke="rgba(2, 132, 199, 0.25)" stroke-width="2" stroke-dasharray="3 3"/>
+                <!-- Animated energy flow -->
+                <path d="M 8 24 L 60 24" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" class="circuit-flow-anim"/>
+                <path d="M 84 24 L 136 24" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" class="circuit-flow-anim flow-delayed"/>
+              </svg>
+
+              <!-- Node Boxes Overlay -->
+              <div class="step-transition">
+                <div class="step-box edge-box" matTooltip="Sensores de telemetria / IoT Edge">
+                  <mat-icon>sensors</mat-icon>
+                  <span class="node-pulse"></span>
+                </div>
+                <div class="step-spacer"></div>
+                <div class="step-box gate-box" matTooltip="Web Application Firewall & Filtro de Inspeção">
+                  <mat-icon>security</mat-icon>
+                  <span class="node-pulse pulse-green"></span>
+                </div>
+                <div class="step-spacer"></div>
+                <div class="step-box inbound-box" matTooltip="Porta de Entrada Hexagonal (Inbound Port)">
+                  <mat-icon>input</mat-icon>
+                </div>
               </div>
-              <div class="step-arrow-line arrow-head"></div>
-              <div class="step-box gate-box">
-                <mat-icon>security</mat-icon>
-              </div>
-              <div class="step-arrow-line dashed-line"></div>
+            </div>
+          </div>
+
+          <!-- Micro-Telemetry Grid -->
+          <div class="pipeline-telemetry-grid">
+            <div class="telemetry-cell">
+              <span class="cell-label">THROUGHPUT</span>
+              <span class="cell-value">1.2M <span class="unit">evt/h</span></span>
+            </div>
+            <div class="telemetry-cell">
+              <span class="cell-label">LATÊNCIA P99</span>
+              <span class="cell-value">3.8<span class="unit">ms</span></span>
+            </div>
+            <div class="telemetry-cell">
+              <span class="cell-label">TAXA DE ERRO</span>
+              <span class="cell-value cell-safe">0.00<span class="unit">%</span></span>
             </div>
           </div>
 
           <div class="pipeline-card-footer">
-            <span class="pipeline-volume">1.2M <span class="volume-unit">events/hr</span></span>
-            <span class="status-pill active-pill">Active</span>
+            <span class="status-pill active-pill">
+              <span class="beacon-mini"></span>
+              Active
+            </span>
+            <span class="footer-cta" (click)="scrollTo('stream-section')">
+              Inspecionar Fluxo <mat-icon>arrow_forward</mat-icon>
+            </span>
           </div>
         </div>
 
-        <!-- Pipeline Card B: Processing -->
-        <div class="pipeline-card">
+        <!-- Pipeline Card B: Processing & Strategy Routing -->
+        <div class="pipeline-card card-processing">
+          <div class="card-status-bar bar-processing"></div>
+
           <div class="pipeline-card-header">
-            <span class="pipeline-name">Processing Pipeline B</span>
-            <button mat-icon-button class="more-btn" aria-label="Opções">
+            <div class="pipeline-info">
+              <div class="pipeline-tag-row">
+                <span class="stage-badge stage-processing">STAGE 02 / ROUTE</span>
+                <span class="security-chip-card chip-audit"><mat-icon>verified_user</mat-icon> AUDIT HASH</span>
+              </div>
+              <h3 class="pipeline-name">Processing Pipeline B</h3>
+            </div>
+            <button mat-icon-button class="more-btn" aria-label="Mais Opções do Pipeline B" matTooltip="Ações do Pipeline: Inspecionar, Exportar Logs, Ver Fila">
               <mat-icon>more_vert</mat-icon>
             </button>
           </div>
 
+          <!-- Dynamic Live Circuit Row -->
           <div class="pipeline-diagram-row">
-            <!-- Inline SVG Donut Progress (90%) -->
-            <div class="donut-wrapper">
-              <svg class="donut-svg" viewBox="0 0 42 42">
-                <circle class="donut-ring" cx="21" cy="21" r="15.915" fill="transparent" stroke="#e2e8f0" stroke-width="4"></circle>
-                <circle class="donut-segment segment-b" cx="21" cy="21" r="15.915" fill="transparent" stroke="#1d4ed8" stroke-width="4"
-                  stroke-dasharray="90 10" stroke-dashoffset="25"></circle>
+            <!-- Inline SVG Dual-Track Ring Gauge (90%) -->
+            <div class="donut-wrapper" matTooltip="Taxa de Processamento OCP: 90% da capacidade">
+              <svg class="donut-svg" viewBox="0 0 52 52">
+                <defs>
+                  <linearGradient id="gaugeGradB" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#4f46e5" />
+                    <stop offset="100%" stop-color="#818cf8" />
+                  </linearGradient>
+                </defs>
+                <circle class="donut-ring" cx="26" cy="26" r="20" fill="transparent" stroke="rgba(79, 70, 229, 0.12)" stroke-width="4.5"></circle>
+                <circle class="donut-segment segment-b" cx="26" cy="26" r="20" fill="transparent" stroke="url(#gaugeGradB)" stroke-width="4.5"
+                  stroke-dasharray="113.1 12.56" stroke-dashoffset="31.41" stroke-linecap="round"></circle>
               </svg>
-              <span class="donut-label">90%</span>
+              <div class="donut-inner-meta">
+                <span class="donut-label">90%</span>
+                <span class="donut-trend">▲ +1.8%</span>
+              </div>
             </div>
 
-            <!-- Arrow Transition Diagram -->
-            <div class="step-transition">
-              <div class="step-arrow-line"></div>
-              <div class="step-box gate-box">
-                <mat-icon>security</mat-icon>
+            <!-- SVG Animated Electron Circuit -->
+            <div class="circuit-container">
+              <svg class="circuit-svg" viewBox="0 0 170 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M 8 24 L 60 24 M 84 24 L 136 24" stroke="rgba(99, 102, 241, 0.25)" stroke-width="2" stroke-dasharray="3 3"/>
+                <path d="M 8 24 L 60 24" stroke="#818cf8" stroke-width="2" stroke-linecap="round" class="circuit-flow-anim"/>
+                <path d="M 84 24 L 136 24" stroke="#818cf8" stroke-width="2" stroke-linecap="round" class="circuit-flow-anim flow-delayed"/>
+              </svg>
+
+              <!-- Node Boxes Overlay -->
+              <div class="step-transition">
+                <div class="step-box gate-box" matTooltip="Filtro de Segurança & WAF">
+                  <mat-icon>security</mat-icon>
+                  <span class="node-pulse pulse-indigo"></span>
+                </div>
+                <div class="step-spacer"></div>
+                <div class="step-box core-box" matTooltip="Roteamento Dinâmico Strategy OCP (PRODUCTION / QUALITY)">
+                  <mat-icon>alt_route</mat-icon>
+                  <span class="node-pulse pulse-green"></span>
+                </div>
+                <div class="step-spacer"></div>
+                <div class="step-box audit-box" matTooltip="Motor de Auditoria e Hashing Criptográfico">
+                  <mat-icon>receipt_long</mat-icon>
+                </div>
               </div>
-              <div class="step-arrow-line arrow-head"></div>
-              <div class="step-box core-box">
-                <mat-icon>alt_route</mat-icon>
-              </div>
-              <div class="step-arrow-line dashed-line"></div>
+            </div>
+          </div>
+
+          <!-- Micro-Telemetry Grid -->
+          <div class="pipeline-telemetry-grid">
+            <div class="telemetry-cell">
+              <span class="cell-label">THROUGHPUT</span>
+              <span class="cell-value">980K <span class="unit">evt/h</span></span>
+            </div>
+            <div class="telemetry-cell">
+              <span class="cell-label">LATÊNCIA P99</span>
+              <span class="cell-value">5.2<span class="unit">ms</span></span>
+            </div>
+            <div class="telemetry-cell">
+              <span class="cell-label">TAXA DE ERRO</span>
+              <span class="cell-value cell-safe">0.00<span class="unit">%</span></span>
             </div>
           </div>
 
           <div class="pipeline-card-footer">
-            <span class="pipeline-volume">980K <span class="volume-unit">events/hr</span></span>
-            <span class="status-pill active-pill">Active</span>
+            <span class="status-pill active-pill">
+              <span class="beacon-mini"></span>
+              Active
+            </span>
+            <span class="footer-cta" (click)="scrollTo('stream-section')">
+              Inspecionar Fluxo <mat-icon>arrow_forward</mat-icon>
+            </span>
           </div>
         </div>
 
-        <!-- Pipeline Card C: Delivery -->
-        <div class="pipeline-card">
+        <!-- Pipeline Card C: Delivery & Persistence -->
+        <div class="pipeline-card card-delivery">
+          <div class="card-status-bar bar-delivery"></div>
+
           <div class="pipeline-card-header">
-            <span class="pipeline-name">Delivery Pipeline C</span>
-            <button mat-icon-button class="more-btn" aria-label="Opções">
+            <div class="pipeline-info">
+              <div class="pipeline-tag-row">
+                <span class="stage-badge stage-delivery">STAGE 03 / SINK</span>
+                <span class="security-chip-card chip-persist"><mat-icon>inventory</mat-icon> ACID DB + SSE</span>
+              </div>
+              <h3 class="pipeline-name">Delivery Pipeline C</h3>
+            </div>
+            <button mat-icon-button class="more-btn" aria-label="Mais Opções do Pipeline C" matTooltip="Ações do Pipeline: Inspecionar, Exportar Logs, Ver Fila">
               <mat-icon>more_vert</mat-icon>
             </button>
           </div>
 
+          <!-- Dynamic Live Circuit Row -->
           <div class="pipeline-diagram-row">
-            <!-- Inline SVG Donut Progress (60%) -->
-            <div class="donut-wrapper">
-              <svg class="donut-svg" viewBox="0 0 42 42">
-                <circle class="donut-ring" cx="21" cy="21" r="15.915" fill="transparent" stroke="#e2e8f0" stroke-width="4"></circle>
-                <circle class="donut-segment segment-c" cx="21" cy="21" r="15.915" fill="transparent" stroke="#0284c7" stroke-width="4"
-                  stroke-dasharray="60 40" stroke-dashoffset="25"></circle>
+            <!-- Inline SVG Dual-Track Ring Gauge (60%) -->
+            <div class="donut-wrapper" matTooltip="Taxa de Persistência & Difusão: 60% da capacidade">
+              <svg class="donut-svg" viewBox="0 0 52 52">
+                <defs>
+                  <linearGradient id="gaugeGradC" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#059669" />
+                    <stop offset="100%" stop-color="#34d399" />
+                  </linearGradient>
+                </defs>
+                <circle class="donut-ring" cx="26" cy="26" r="20" fill="transparent" stroke="rgba(5, 150, 105, 0.12)" stroke-width="4.5"></circle>
+                <circle class="donut-segment segment-c" cx="26" cy="26" r="20" fill="transparent" stroke="url(#gaugeGradC)" stroke-width="4.5"
+                  stroke-dasharray="75.4 50.26" stroke-dashoffset="31.41" stroke-linecap="round"></circle>
               </svg>
-              <span class="donut-label">60%</span>
+              <div class="donut-inner-meta">
+                <span class="donut-label">60%</span>
+                <span class="donut-trend">▲ +2.4%</span>
+              </div>
             </div>
 
-            <!-- Arrow Transition Diagram -->
-            <div class="step-transition">
-              <div class="step-arrow-line"></div>
-              <div class="step-box core-box">
-                <mat-icon>alt_route</mat-icon>
+            <!-- SVG Animated Electron Circuit -->
+            <div class="circuit-container">
+              <svg class="circuit-svg" viewBox="0 0 170 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M 8 24 L 60 24 M 84 24 L 136 24" stroke="rgba(16, 185, 129, 0.25)" stroke-width="2" stroke-dasharray="3 3"/>
+                <path d="M 8 24 L 60 24" stroke="#34d399" stroke-width="2" stroke-linecap="round" class="circuit-flow-anim"/>
+                <path d="M 84 24 L 136 24" stroke="#34d399" stroke-width="2" stroke-linecap="round" class="circuit-flow-anim flow-delayed"/>
+              </svg>
+
+              <!-- Node Boxes Overlay -->
+              <div class="step-transition">
+                <div class="step-box core-box" matTooltip="Núcleo de Roteamento Estratégico">
+                  <mat-icon>alt_route</mat-icon>
+                  <span class="node-pulse pulse-teal"></span>
+                </div>
+                <div class="step-spacer"></div>
+                <div class="step-box storage-box" matTooltip="Persistência Transacional PostgreSQL HikariCP">
+                  <mat-icon>storage</mat-icon>
+                  <span class="node-pulse pulse-green"></span>
+                </div>
+                <div class="step-spacer"></div>
+                <div class="step-box stream-box" matTooltip="Broadcaster Reativo Server-Sent Events (SSE)">
+                  <mat-icon>podcasts</mat-icon>
+                </div>
               </div>
-              <div class="step-arrow-line arrow-head"></div>
-              <div class="step-box storage-box">
-                <mat-icon>storage</mat-icon>
-              </div>
-              <div class="step-arrow-line dashed-line"></div>
+            </div>
+          </div>
+
+          <!-- Micro-Telemetry Grid -->
+          <div class="pipeline-telemetry-grid">
+            <div class="telemetry-cell">
+              <span class="cell-label">THROUGHPUT</span>
+              <span class="cell-value">1.1M <span class="unit">evt/h</span></span>
+            </div>
+            <div class="telemetry-cell">
+              <span class="cell-label">LATÊNCIA P99</span>
+              <span class="cell-value">4.1<span class="unit">ms</span></span>
+            </div>
+            <div class="telemetry-cell">
+              <span class="cell-label">TAXA DE ERRO</span>
+              <span class="cell-value cell-safe">0.00<span class="unit">%</span></span>
             </div>
           </div>
 
           <div class="pipeline-card-footer">
-            <span class="pipeline-volume">1.1M <span class="volume-unit">events/hr</span></span>
-            <span class="status-pill active-pill">Active</span>
+            <span class="status-pill active-pill">
+              <span class="beacon-mini"></span>
+              Active
+            </span>
+            <span class="footer-cta" (click)="scrollTo('stream-section')">
+              Inspecionar Fluxo <mat-icon>arrow_forward</mat-icon>
+            </span>
           </div>
         </div>
       </div>
