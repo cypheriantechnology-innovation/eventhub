@@ -49,20 +49,27 @@ O **EventHub Enterprise** é uma plataforma corporativa de missão crítica proj
 
 ## 🖥️ Interface do Usuário & Telemetria em Tempo Real (Executive Design System)
 
-A interface do EventHub foi concebida sob rigorosos padrões visuais corporativos modernos, combinando uma barra de navegação executiva de alto contraste com superfícies de dados em **Light Mode**, microinterações responsivas e animações vetoriais inline em SVG:
+A interface do EventHub foi concebida sob rigorosos padrões visuais corporativos modernos, combinando uma barra de comando executiva translúcida (`backdrop-filter: blur`), superfícies de dados analíticas em **Light Mode**, microinterações responsivas e animações vetoriais inline em SVG:
+
+<p align="center">
+  <img src="docs/images/executive_navbar_preview.png" alt="EventHub Executive Navbar Preview" width="100%" />
+</p>
 
 <p align="center">
   <img src="docs/images/eventhub_dashboard_preview.jpg" alt="EventHub Dashboard Preview" width="100%" />
 </p>
 
 ### Destaques da Experiência do Usuário (UI/UX):
-- **Executive Dark Navbar (`#0f172a`)**: Barra de navegação corporativa com logotipo de pulso eletrocardiograma (ECG) animado via SVG inline, abas de acesso rápido (`Dashboard`, `Pipelines`, `Ingestion`, `Logs`, `Settings`, `Admin`), beacon de status `API ONLINE` e botões de ação rápida.
+- **Executive Command Navigation Bar (`#0f172a` a `#080d1a`)**: Barra de comando com escudo hexagonal cyber SVG inline, animação de pulso eletrocardiograma (ECG) em tempo real, partícula quântica orbital e tipografia corporativa com badge `ENTERPRISE` neon.
+- **Deck de Abas Segmentadas em Cápsula**: Abas com cantos arredondados e ícones corporativos (`Dashboard`, `Pipelines`, `Ingestion`, `Logs`, `Settings`, `Admin`), com indicador ciano iluminado ativo e microinterações de elevação.
+- **Beacon de Telemetria DevSecOps Contido**: Indicador de status de missão crítica rigorosamente alinhado à grade horizontal (sem extrusão), com radar de ondas concêntricas, chips `HEXAGONAL CORE`, `WAF ACTIVE` e status `100% OPERACIONAL`.
 - **Pipelines Overview (Gauges Circulares SVG)**: Três cartões modulares com indicadores visuais de capacidade e vazão em anel circular SVG inline (`75%`, `90%`, `60%`), diagramas de fluxo em degraus e métricas horárias em tempo real (`1.2M`, `980K`, `1.1M events/hr`).
 - **Diagrama Esquemático Hexagonal SVG**: Representação vetorial viva do pipeline ativo (*IoT Sensors ➔ Inbound Port ➔ Core Strategy ➔ Production & Quality Branches*), com nós reativos e micro-animações de pulso.
 - **Cartões de Telemetria com Curvas Sparkline SVG**: Quatro cartões com gráficos vetoriais inline de tendência histórica, gradientes de preenchimento translúcidos e métricas auditadas (*Disponibilidade 100%, Vazão Total Ingerida, Latência P99 de 18ms e Uptime de 99.99%*).
 - **Formulário Horizontal Industrial**: Ingestão ágil com layout em linha única (`Data Source ID`, `Data Type / Strategy`, `API Endpoint / Descrição`), botões de preenchimento rápido para prototipação e upload integrado de lotes em CSV/JSON.
 - **Tabela Reativa com Indicador `Success (LIVE)`**: Atualização dinâmica orientada a eventos via Server-Sent Events (SSE) com badge pulsante e botão de ação rápida `[Inspect]`.
 - **Modal de Inspeção Regulatória (Compliance Audit Log Inspection)**: Diálogo flutuante elevado com campo de busca em tempo real, filtro por nível de severidade, grid de integridade e tabela imutável de registros com timestamp em milissegundos e certificação *Append-Only*.
+- **Responsividade & Gaveta Mobile (< 992px)**: Menu hambúrguer acessível com gaveta retrátil animada e foco com anel WCAG 2.2 `:focus-visible`.
 
 ---
 
@@ -344,7 +351,7 @@ A qualidade da plataforma é assegurada por quatro camadas complementares de tes
 ```
            / \
           /   \     Nível 4: Testes de Mutação (Pitest STRONGER) -> 97% Line Coverage
-         / E2E \    Nível 3: Testes de Ponta a Ponta (Playwright) -> 17 Testes Verdes
+         / E2E \    Nível 3: Testes de Ponta a Ponta (Playwright) -> 19 Testes Verdes
         / Integ \   Nível 2: Testes de Integração & WAF (Spring + Testcontainers) -> 28 Testes
        / Unitário\  Nível 1: Testes Unitários de Domínio & Estratégias (JUnit 5) -> 56 Testes
       /___________\
@@ -362,7 +369,7 @@ A qualidade da plataforma é assegurada por quatro camadas complementares de tes
 
 ### 3. Nível 3: Testes End-to-End no Navegador
 - **Tecnologia**: Microsoft Playwright (Headless Chromium).
-- **Cenários Cobertos (17 cenários)**:
+- **Cenários Cobertos (19 cenários)**:
   1. Carregamento de branding corporativo e navegação.
   2. Renderização do esquemático SVG dinâmico do pipeline.
   3. Atualização dos 4 cards executivos de KPI de telemetria.
@@ -380,6 +387,8 @@ A qualidade da plataforma é assegurada por quatro camadas complementares de tes
   15. Conexão reativa e difusão em tempo real via Server-Sent Events (SSE).
   16. Rastreabilidade com cabeçalho `X-Correlation-Id`.
   17. Exposição de métricas operacionais autenticadas no Actuator Prometheus.
+  18. Abertura e fechamento de gaveta mobile responsiva (`button.mobile-menu-btn`).
+  19. Ingestão de CSV com campos de texto contendo vírgulas conforme RFC 4180.
 - **Execução**: `npm run test:e2e`
 
 ### 4. Nível 4: Testes de Mutação (Pitest)
