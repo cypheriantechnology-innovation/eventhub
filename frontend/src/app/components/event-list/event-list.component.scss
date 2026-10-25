@@ -1,0 +1,153 @@
+.table-card {
+  padding: 1.5rem;
+}
+
+mat-card-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+
+  .header-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    background: rgba(56, 189, 248, 0.15);
+    color: #38bdf8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 14px;
+  }
+
+  .header-text {
+    mat-card-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    mat-card-subtitle {
+      font-size: 0.85rem;
+      color: #94a3b8;
+    }
+  }
+
+  button {
+    color: #94a3b8;
+    &:hover {
+      color: #fff;
+    }
+
+    .spinning {
+      animation: spin 1s linear infinite;
+    }
+  }
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.loading-bar {
+  margin-bottom: 10px;
+}
+
+.table-container {
+  overflow-x: auto;
+}
+
+.event-table {
+  width: 100%;
+
+  .cell-event-id {
+    font-weight: 600;
+    color: #e2e8f0;
+
+    code {
+      background: rgba(255, 255, 255, 0.08);
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      color: #818cf8;
+      border: 1px solid rgba(129, 140, 248, 0.2);
+    }
+  }
+
+  .cell-description {
+    max-width: 350px;
+    color: #cbd5e1;
+    line-height: 1.4;
+  }
+
+  .cell-time {
+    font-size: 0.85rem;
+    white-space: nowrap;
+
+    &.text-muted {
+      color: #64748b;
+    }
+  }
+
+  .audit-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 6px;
+
+    mat-icon {
+      font-size: 14px;
+      width: 14px;
+      height: 14px;
+    }
+
+    &.audit-active {
+      background: rgba(245, 158, 11, 0.15);
+      color: #f59e0b;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    &.audit-none {
+      background: rgba(100, 116, 139, 0.15);
+      color: #94a3b8;
+    }
+  }
+
+  .empty-table {
+    text-align: center;
+    padding: 3rem 1rem !important;
+
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      color: #64748b;
+
+      mat-icon {
+        font-size: 48px;
+        width: 48px;
+        height: 48px;
+        opacity: 0.5;
+      }
+
+      p {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #94a3b8;
+      }
+
+      small {
+        font-size: 0.85rem;
+      }
+    }
+  }
+}
+
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}

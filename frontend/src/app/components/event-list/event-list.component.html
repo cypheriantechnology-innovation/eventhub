@@ -1,0 +1,100 @@
+<mat-card class="glass-panel table-card">
+  <mat-card-header>
+    <div class="header-icon">
+      <mat-icon>table_chart</mat-icon>
+    </div>
+    <div class="header-text">
+      <mat-card-title>Eventos Registrados</mat-card-title>
+      <mat-card-subtitle>Histórico em tempo real (ordenado por mais recentes)</mat-card-subtitle>
+    </div>
+    <span class="spacer"></span>
+    <button mat-icon-button (click)="loadEvents()" [disabled]="isLoading" matTooltip="Atualizar dados">
+      <mat-icon [class.spinning]="isLoading">refresh</mat-icon>
+    </button>
+  </mat-card-header>
+
+  <mat-progress-bar *ngIf="isLoading" mode="indeterminate" class="loading-bar"></mat-progress-bar>
+
+  <mat-card-content class="table-container">
+    <table mat-table [dataSource]="events" class="event-table">
+
+      <!-- Event ID Column -->
+      <ng-container matColumnDef="eventId">
+        <th mat-header-cell *matHeaderCellDef> ID do Evento </th>
+        <td mat-cell *matCellDef="let event" class="cell-event-id">
+          <code>{{ event.eventId }}</code>
+        </td>
+      </ng-container>
+
+      <!-- Event Type Column -->
+      <ng-container matColumnDef="eventType">
+        <th mat-header-cell *matHeaderCellDef> Tipo </th>
+        <td mat-cell *matCellDef="let event">
+          <span [ngClass]="{'badge-production': event.eventType === 'PRODUCTION', 'badge-quality': event.eventType === 'QUALITY'}">
+            {{ event.eventType }}
+          </span>
+        </td>
+      </ng-container>
+
+      <!-- Description Column -->
+      <ng-container matColumnDef="description">
+        <th mat-header-cell *matHeaderCellDef> Descrição </th>
+        <td mat-cell *matCellDef="let event" class="cell-description">
+          {{ event.description }}
+        </td>
+      </ng-container>
+
+      <!-- Timestamp Column -->
+      <ng-container matColumnDef="timestamp">
+        <th mat-header-cell *matHeaderCellDef> Data/Hora Ocorrência </th>
+        <td mat-cell *matCellDef="let event" class="cell-time">
+          {{ event.timestamp | date:'dd/MM/yyyy HH:mm:ss' }}
+        </td>
+      </ng-container>
+
+      <!-- Created At Column -->
+      <ng-container matColumnDef="createdAt">
+        <th mat-header-cell *matHeaderCellDef> Recepção </th>
+        <td mat-cell *matCellDef="let event" class="cell-time text-muted">
+          {{ event.createdAt | date:'HH:mm:ss' }}
+        </td>
+      </ng-container>
+
+      <!-- Audit Status Column -->
+      <ng-container matColumnDef="auditStatus">
+        <th mat-header-cell *matHeaderCellDef> Trilha de Auditoria </th>
+        <td mat-cell *matCellDef="let event">
+          <span *ngIf="event.eventType === 'QUALITY'" class="audit-badge audit-active" matTooltip="Log de auditoria gerado na tabela audit_logs">
+            <mat-icon>verified_user</mat-icon> Auditado
+          </span>
+          <span *ngIf="event.eventType === 'PRODUCTION'" class="audit-badge audit-none">
+            Operacional
+          </span>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="event-row"></tr>
+
+      <!-- Row shown when there is no data -->
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell empty-table" [attr.colspan]="displayedColumns.length">
+          <div class="empty-state">
+            <mat-icon>inbox</mat-icon>
+            <p>Nenhum evento registrado ainda.</p>
+            <small>Utilize o formulário acima para registrar um novo evento.</small>
+          </div>
+        </td>
+      </tr>
+    </table>
+
+    <mat-paginator
+      [length]="totalElements"
+      [pageSize]="pageSize"
+      [pageIndex]="pageIndex"
+      [pageSizeOptions]="[5, 10, 20, 50]"
+      (page)="onPageChange($event)"
+      showFirstLastButtons>
+    </mat-paginator>
+  </mat-card-content>
+</mat-card>

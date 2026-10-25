@@ -1,0 +1,29 @@
+<div class="app-layout">
+  <app-navbar></app-navbar>
+
+  <main class="content-container">
+    <div class="hero-section">
+      <div class="hero-badge">
+        <span class="badge-dot"></span>
+        <span>Arquitetura Hexagonal & SOLID</span>
+      </div>
+      <h1 class="hero-title">Painel Operacional de Telemetria Industrial</h1>
+      <p class="hero-subtitle">
+        Recebimento, deduplicação com garantia de idempotência, trilha de auditoria para eventos de qualidade e observabilidade contínua.
+      </p>
+    </div>
+
+    <!-- Event Ingestion Form -->
+    <app-event-form></app-event-form>
+
+    <!-- Event History Table -->
+    <app-event-list></app-event-list>
+  </main>
+
+  <footer class="app-footer">
+    <div class="footer-content">
+      <span>EventHub &copy; 2026 - Solução Full Stack Industrial</span>
+      <span class="tech-stack">Java 17 &bull; Spring Boot 3 &bull; Angular &bull; PostgreSQL &bull; Actuator &bull; Micrometer</span>
+    </div>
+  </footer>
+</div>

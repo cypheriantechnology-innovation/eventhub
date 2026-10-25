@@ -1,0 +1,28 @@
+<mat-toolbar class="navbar">
+  <div class="brand">
+    <div class="logo-icon">
+      <mat-icon>precision_manufacturing</mat-icon>
+    </div>
+    <div class="brand-text">
+      <span class="title">EventHub</span>
+      <span class="subtitle">Industrial Telemetry & Event Ingestion</span>
+    </div>
+  </div>
+
+  <span class="spacer"></span>
+
+  <div class="nav-actions">
+    <button mat-button class="action-btn" (click)="openSwagger()">
+      <mat-icon>api</mat-icon>
+      <span>Swagger Docs</span>
+    </button>
+    <button mat-button class="action-btn" (click)="openActuator()">
+      <mat-icon>monitor_heart</mat-icon>
+      <span>Actuator Health</span>
+    </button>
+    <div class="status-indicator">
+      <span class="dot pulse"></span>
+      <span class="label">System Online</span>
+    </div>
+  </div>
+</mat-toolbar>

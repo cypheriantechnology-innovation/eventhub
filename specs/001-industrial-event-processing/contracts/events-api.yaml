@@ -1,0 +1,231 @@
+openapi: 3.0.3
+info:
+  title: EventHub Industrial Event API
+  description: API REST para recepção, processamento, deduplicação e consulta de eventos industriais.
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+    description: Servidor de desenvolvimento local
+
+paths:
+  /api/events:
+    post:
+      summary: Ingestão e processamento de novo evento industrial
+      operationId: createEvent
+      tags:
+        - Events
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateEventRequest'
+            examples:
+              productionEvent:
+                summary: Exemplo de evento de produção
+                value:
+                  eventId: "EVT-1001"
+                  eventType: "PRODUCTION"
+                  description: "Linha de montagem A1 iniciada com sucesso"
+                  timestamp: "2026-05-20T10:00:00"
+              qualityEvent:
+                summary: Exemplo de evento de qualidade
+                value:
+                  eventId: "EVT-2001"
+                  eventType: "QUALITY"
+                  description: "Inspeção visual acusou desvio de tolerância no lote 44"
+                  timestamp: "2026-05-20T10:05:00"
+      responses:
+        '201':
+          description: Evento registrado e processado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventResponse'
+        '400':
+          description: Payload inválido ou campos obrigatórios ausentes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Conflito de duplicidade - eventId já registrado anteriormente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 409
+                error: "Conflict"
+                message: "Evento com identificador 'EVT-1001' já foi processado anteriormente."
+                timestamp: "2026-10-24T21:00:00"
+        '500':
+          description: Erro interno de processamento
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    get:
+      summary: Consulta paginada de eventos industriais registrados
+      operationId: listEvents
+      tags:
+        - Events
+      parameters:
+        - name: page
+          in: query
+          description: Número da página (0-indexed)
+          required: false
+          schema:
+            type: integer
+            default: 0
+        - name: size
+          in: query
+          description: Quantidade de itens por página
+          required: false
+          schema:
+            type: integer
+            default: 20
+        - name: sort
+          in: query
+          description: Critério de ordenação (padrão decrescente por timestamp)
+          required: false
+          schema:
+            type: string
+            default: "timestamp,desc"
+      responses:
+        '200':
+          description: Lista paginada de eventos retornada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PageEventResponse'
+
+  /api/events/{eventId}:
+    get:
+      summary: Consulta detalhada de evento por identificador único
+      operationId: getEventById
+      tags:
+        - Events
+      parameters:
+        - name: eventId
+          in: path
+          required: true
+          description: Identificador de negócio do evento (ex. EVT-1001)
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Evento localizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventResponse'
+        '404':
+          description: Evento não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    CreateEventRequest:
+      type: object
+      required:
+        - eventId
+        - eventType
+        - description
+      properties:
+        eventId:
+          type: string
+          example: "EVT-1001"
+          description: Identificador único do evento no chão de fábrica
+          minLength: 1
+          maxLength: 100
+        eventType:
+          type: string
+          enum: [PRODUCTION, QUALITY]
+          example: "PRODUCTION"
+          description: Categoria de processamento do evento
+        description:
+          type: string
+          example: "Linha de montagem A1 iniciada"
+          description: Detalhamento operacional da ocorrência
+          minLength: 1
+          maxLength: 500
+        timestamp:
+          type: string
+          format: date-time
+          example: "2026-05-20T10:00:00"
+          description: Data/hora da ocorrência (se omitido, o servidor preenche automaticamente com o horário atual)
+
+    EventResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "e6f9d2c1-234b-4b2e-a579-246e7f123456"
+        eventId:
+          type: string
+          example: "EVT-1001"
+        eventType:
+          type: string
+          example: "PRODUCTION"
+        description:
+          type: string
+          example: "Linha de montagem A1 iniciada"
+        timestamp:
+          type: string
+          format: date-time
+          example: "2026-05-20T10:00:00"
+        createdAt:
+          type: string
+          format: date-time
+          example: "2026-10-24T21:00:00"
+
+    PageEventResponse:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/EventResponse'
+        pageNumber:
+          type: integer
+          example: 0
+        pageSize:
+          type: integer
+          example: 20
+        totalElements:
+          type: integer
+          example: 45
+        totalPages:
+          type: integer
+          example: 3
+        last:
+          type: boolean
+          example: false
+
+    ErrorResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          example: 409
+        error:
+          type: string
+          example: "Conflict"
+        message:
+          type: string
+          example: "Evento com identificador 'EVT-1001' já foi processado anteriormente."
+        timestamp:
+          type: string
+          format: date-time
+          example: "2026-10-24T21:00:00"
+        details:
+          type: array
+          items:
+            type: string
+          example: []

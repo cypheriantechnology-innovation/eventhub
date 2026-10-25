@@ -1,0 +1,11 @@
+.git
+.gitignore
+node_modules
+target
+dist
+.angular
+*.log
+.idea
+.vscode
+Dockerfile*
+docker-compose*.yml
