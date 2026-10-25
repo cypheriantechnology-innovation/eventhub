@@ -634,113 +634,173 @@
       <div class="kpi-grid">
         <!-- Card 1: Total Events Ingested / Throughput -->
         <div class="kpi-card card-total">
-          <div class="kpi-top-row">
-            <span class="kpi-label">TOTAL DE EVENTOS INGERIDOS</span>
-            <span class="kpi-badge badge-green">Operational</span>
+          <div class="kpi-header-strip">
+            <div class="kpi-icon-halo halo-blue">
+              <mat-icon>stream</mat-icon>
+            </div>
+            <div class="kpi-title-block">
+              <span class="kpi-label">TOTAL DE EVENTOS INGERIDOS</span>
+              <span class="kpi-caption">Throughput Agregado Industrial</span>
+            </div>
+            <span class="kpi-badge badge-green"><span class="kpi-pulse-dot"></span> Operational</span>
           </div>
 
           <div class="kpi-middle-row">
-            <span class="kpi-value">{{ totalEvents }}</span>
-            <span class="kpi-sub-unit">events</span>
+            <div class="kpi-main-metric">
+              <span class="kpi-value">{{ totalEvents }}</span>
+              <span class="kpi-sub-unit">events</span>
+            </div>
+            <span class="trend-pill trend-up">▲ +8.2%/h</span>
           </div>
 
-          <!-- Inline SVG Sparkline Curve -->
+          <!-- Inline SVG Sparkline Curve with Peak Glow -->
           <div class="sparkline-container">
-            <svg class="sparkline-svg" viewBox="0 0 160 40">
+            <svg class="sparkline-svg" viewBox="0 0 200 44" preserveAspectRatio="none">
               <defs>
                 <linearGradient id="sparkGradTotal" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stop-color="#0284c7" stop-opacity="0.25" />
+                  <stop offset="0%" stop-color="#0284c7" stop-opacity="0.32" />
                   <stop offset="100%" stop-color="#0284c7" stop-opacity="0.0" />
                 </linearGradient>
               </defs>
-              <path class="sparkline-area" d="M0,35 Q30,10 60,25 T120,12 T160,8 L160,40 L0,40 Z" fill="url(#sparkGradTotal)" />
-              <path class="sparkline-line line-blue" d="M0,35 Q30,10 60,25 T120,12 T160,8" fill="none" stroke="#0284c7" stroke-width="2" />
+              <path class="sparkline-grid-guide" d="M0,22 L200,22" stroke="rgba(2, 132, 199, 0.1)" stroke-dasharray="3 3" />
+              <path class="sparkline-area" d="M0,38 Q35,16 75,28 T150,14 T200,8 L200,44 L0,44 Z" fill="url(#sparkGradTotal)" />
+              <path class="sparkline-line line-blue" d="M0,38 Q35,16 75,28 T150,14 T200,8" fill="none" stroke="#0284c7" stroke-width="2.2" stroke-linecap="round" />
+              <circle cx="200" cy="8" r="3.5" fill="#0284c7" />
+              <circle cx="200" cy="8" r="6" stroke="#0284c7" stroke-width="1.2" opacity="0.6" class="anim-peak-pulse" />
             </svg>
-            <span class="sparkline-legend">Availability</span>
+            <div class="sparkline-footer">
+              <span class="sparkline-legend">Disponibilidade 99.999%</span>
+              <span class="sparkline-chip">Buffer Ring 64K</span>
+            </div>
           </div>
         </div>
 
         <!-- Card 2: Production Events / Throughput -->
         <div class="kpi-card card-production">
-          <div class="kpi-top-row">
-            <span class="kpi-label">EVENTOS DE PRODUÇÃO</span>
-            <span class="kpi-badge badge-green">Operational</span>
+          <div class="kpi-header-strip">
+            <div class="kpi-icon-halo halo-sapphire">
+              <mat-icon>precision_manufacturing</mat-icon>
+            </div>
+            <div class="kpi-title-block">
+              <span class="kpi-label">EVENTOS DE PRODUÇÃO</span>
+              <span class="kpi-caption">Persistência Operacional ACID</span>
+            </div>
+            <span class="kpi-badge badge-green"><span class="kpi-pulse-dot"></span> Operational</span>
           </div>
 
           <div class="kpi-middle-row">
-            <span class="kpi-value text-production">{{ productionCount }}</span>
-            <span class="kpi-sub-unit">events/hr</span>
+            <div class="kpi-main-metric">
+              <span class="kpi-value text-production">{{ productionCount }}</span>
+              <span class="kpi-sub-unit">events/hr</span>
+            </div>
+            <span class="trend-pill trend-up">▲ ACID 99.999%</span>
           </div>
 
-          <!-- Inline SVG Sparkline Curve -->
+          <!-- Inline SVG Sparkline Curve with Peak Glow -->
           <div class="sparkline-container">
-            <svg class="sparkline-svg" viewBox="0 0 160 40">
+            <svg class="sparkline-svg" viewBox="0 0 200 44" preserveAspectRatio="none">
               <defs>
                 <linearGradient id="sparkGradPrd" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stop-color="#2563eb" stop-opacity="0.25" />
+                  <stop offset="0%" stop-color="#2563eb" stop-opacity="0.32" />
                   <stop offset="100%" stop-color="#2563eb" stop-opacity="0.0" />
                 </linearGradient>
               </defs>
-              <path class="sparkline-area" d="M0,32 Q25,20 50,30 T100,10 T160,5 L160,40 L0,40 Z" fill="url(#sparkGradPrd)" />
-              <path class="sparkline-line line-navy" d="M0,32 Q25,20 50,30 T100,10 T160,5" fill="none" stroke="#2563eb" stroke-width="2" />
+              <path class="sparkline-grid-guide" d="M0,22 L200,22" stroke="rgba(37, 99, 235, 0.1)" stroke-dasharray="3 3" />
+              <path class="sparkline-area" d="M0,34 Q30,22 65,30 T130,12 T200,6 L200,44 L0,44 Z" fill="url(#sparkGradPrd)" />
+              <path class="sparkline-line line-navy" d="M0,34 Q30,22 65,30 T130,12 T200,6" fill="none" stroke="#2563eb" stroke-width="2.2" stroke-linecap="round" />
+              <circle cx="200" cy="6" r="3.5" fill="#2563eb" />
+              <circle cx="200" cy="6" r="6" stroke="#2563eb" stroke-width="1.2" opacity="0.6" class="anim-peak-pulse" />
             </svg>
-            <span class="sparkline-legend">Throughput</span>
+            <div class="sparkline-footer">
+              <span class="sparkline-legend">Vazão Contínua</span>
+              <span class="sparkline-chip">Commit 1.2ms</span>
+            </div>
           </div>
         </div>
 
         <!-- Card 3: Quality Events / Latency -->
         <div class="kpi-card card-quality">
-          <div class="kpi-top-row">
-            <span class="kpi-label">EVENTOS DE QUALIDADE</span>
-            <span class="kpi-badge badge-green">Operational</span>
+          <div class="kpi-header-strip">
+            <div class="kpi-icon-halo halo-indigo">
+              <mat-icon>verified</mat-icon>
+            </div>
+            <div class="kpi-title-block">
+              <span class="kpi-label">EVENTOS DE QUALIDADE</span>
+              <span class="kpi-caption">Auditoria &amp; Conformidade SOC2</span>
+            </div>
+            <span class="kpi-badge badge-green"><span class="kpi-pulse-dot"></span> Operational</span>
           </div>
 
           <div class="kpi-middle-row">
-            <span class="kpi-value text-quality">{{ qualityCount }}</span>
-            <span class="kpi-sub-unit">18ms audit</span>
+            <div class="kpi-main-metric">
+              <span class="kpi-value text-quality">{{ qualityCount }}</span>
+              <span class="kpi-sub-unit">18ms audit</span>
+            </div>
+            <span class="trend-pill trend-info">p99 &lt; 20ms</span>
           </div>
 
-          <!-- Inline SVG Sparkline Curve -->
+          <!-- Inline SVG Sparkline Curve with Peak Glow -->
           <div class="sparkline-container">
-            <svg class="sparkline-svg" viewBox="0 0 160 40">
+            <svg class="sparkline-svg" viewBox="0 0 200 44" preserveAspectRatio="none">
               <defs>
                 <linearGradient id="sparkGradQlt" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stop-color="#4f46e5" stop-opacity="0.25" />
+                  <stop offset="0%" stop-color="#4f46e5" stop-opacity="0.32" />
                   <stop offset="100%" stop-color="#4f46e5" stop-opacity="0.0" />
                 </linearGradient>
               </defs>
-              <path class="sparkline-area" d="M0,28 Q35,34 70,18 T130,22 T160,10 L160,40 L0,40 Z" fill="url(#sparkGradQlt)" />
-              <path class="sparkline-line line-indigo" d="M0,28 Q35,34 70,18 T130,22 T160,10" fill="none" stroke="#4f46e5" stroke-width="2" />
+              <path class="sparkline-grid-guide" d="M0,22 L200,22" stroke="rgba(79, 70, 229, 0.1)" stroke-dasharray="3 3" />
+              <path class="sparkline-area" d="M0,32 Q40,36 80,20 T150,22 T200,10 L200,44 L0,44 Z" fill="url(#sparkGradQlt)" />
+              <path class="sparkline-line line-indigo" d="M0,32 Q40,36 80,20 T150,22 T200,10" fill="none" stroke="#4f46e5" stroke-width="2.2" stroke-linecap="round" />
+              <circle cx="200" cy="10" r="3.5" fill="#4f46e5" />
+              <circle cx="200" cy="10" r="6" stroke="#4f46e5" stroke-width="1.2" opacity="0.6" class="anim-peak-pulse" />
             </svg>
-            <span class="sparkline-legend">Latency</span>
+            <div class="sparkline-footer">
+              <span class="sparkline-legend">Latência Baixa</span>
+              <span class="sparkline-chip">SHA-256 Hash</span>
+            </div>
           </div>
         </div>
 
         <!-- Card 4: Idempotency & Deduplication / Uptime -->
         <div class="kpi-card card-idempotency">
-          <div class="kpi-top-row">
-            <span class="kpi-label">GARANTIA DE IDEMPOTÊNCIA</span>
-            <span class="kpi-badge badge-green">Operational</span>
+          <div class="kpi-header-strip">
+            <div class="kpi-icon-halo halo-emerald">
+              <mat-icon>shield</mat-icon>
+            </div>
+            <div class="kpi-title-block">
+              <span class="kpi-label">GARANTIA DE IDEMPOTÊNCIA</span>
+              <span class="kpi-caption">Motor de Deduplicação Atômica</span>
+            </div>
+            <span class="kpi-badge badge-green"><span class="kpi-pulse-dot"></span> Operational</span>
           </div>
 
           <div class="kpi-middle-row">
-            <span class="kpi-value text-purple">100%</span>
-            <span class="kpi-sub-unit">99.99% SLA</span>
+            <div class="kpi-main-metric">
+              <span class="kpi-value text-purple">100%</span>
+              <span class="kpi-sub-unit">99.99% SLA</span>
+            </div>
+            <span class="trend-pill trend-safe">🛡️ 0 Conflitos</span>
           </div>
 
-          <!-- Inline SVG Sparkline Curve -->
+          <!-- Inline SVG Sparkline Curve with Peak Glow -->
           <div class="sparkline-container">
-            <svg class="sparkline-svg" viewBox="0 0 160 40">
+            <svg class="sparkline-svg" viewBox="0 0 200 44" preserveAspectRatio="none">
               <defs>
                 <linearGradient id="sparkGradIdem" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stop-color="#059669" stop-opacity="0.25" />
+                  <stop offset="0%" stop-color="#059669" stop-opacity="0.32" />
                   <stop offset="100%" stop-color="#059669" stop-opacity="0.0" />
                 </linearGradient>
               </defs>
-              <path class="sparkline-area" d="M0,20 Q40,15 80,18 T140,12 T160,8 L160,40 L0,40 Z" fill="url(#sparkGradIdem)" />
-              <path class="sparkline-line line-emerald" d="M0,20 Q40,15 80,18 T140,12 T160,8" fill="none" stroke="#059669" stroke-width="2" />
+              <path class="sparkline-grid-guide" d="M0,22 L200,22" stroke="rgba(5, 150, 105, 0.1)" stroke-dasharray="3 3" />
+              <path class="sparkline-area" d="M0,26 Q45,18 90,22 T160,14 T200,8 L200,44 L0,44 Z" fill="url(#sparkGradIdem)" />
+              <path class="sparkline-line line-emerald" d="M0,26 Q45,18 90,22 T160,14 T200,8" fill="none" stroke="#059669" stroke-width="2.2" stroke-linecap="round" />
+              <circle cx="200" cy="8" r="3.5" fill="#059669" />
+              <circle cx="200" cy="8" r="6" stroke="#059669" stroke-width="1.2" opacity="0.6" class="anim-peak-pulse" />
             </svg>
-            <span class="sparkline-legend">U99.99% YTD</span>
+            <div class="sparkline-footer">
+              <span class="sparkline-legend">Trava em 2 Níveis</span>
+              <span class="sparkline-chip">RAM + DB Único</span>
+            </div>
           </div>
         </div>
       </div>
